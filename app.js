@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    initMobileMenu(); // <--- Mobile Menu Initialization Hook
+    initMobileMenu();
     
     if (document.getElementById('api-data-results')) {
         initOperatorPage();
@@ -26,7 +26,6 @@ function initMobileMenu() {
             toggleBtn.classList.toggle('is-active');
         });
         
-        // Closes the menu smoothly if the user clicks anywhere else on the screen
         document.addEventListener('click', (e) => {
             if (!nav.contains(e.target) && !toggleBtn.contains(e.target) && nav.classList.contains('is-open')) {
                 nav.classList.remove('is-open');
@@ -37,16 +36,13 @@ function initMobileMenu() {
 }
 
 /* ==========================================
-   GLOBAL ROUTE CACHE ENGINE (HYBRID EDITION)
-   Loads static server cache, then dynamically fetches 
-   any new routes that started running between server sweeps.
+   GLOBAL ROUTE CACHE ENGINE
    ========================================== */
 let SWIFT_ROUTE_CACHE = {};
 let IS_CACHE_INITIALIZED = false;
 
 async function ensureGlobalRouteCacheLoaded() {
     if (IS_CACHE_INITIALIZED) return;
-    
     try {
         const res = await fetch(`./global_routes_cache.json?t=${new Date().getTime()}`);
         if (res.ok) {
@@ -71,7 +67,6 @@ function injectLocalRouteData(record) {
 
 async function patchMissingRoutesOnTheFly(trackingRecords) {
     const missingRouteIds = new Set();
-    
     trackingRecords.forEach(record => {
         if (record._extractedRouteId && !SWIFT_ROUTE_CACHE[record._extractedRouteId]) {
             missingRouteIds.add(record._extractedRouteId);
@@ -79,13 +74,11 @@ async function patchMissingRoutesOnTheFly(trackingRecords) {
     });
 
     if (missingRouteIds.size > 0) {
-        console.log(`Hybrid Cache: Fetching ${missingRouteIds.size} missing routes on the fly...`);
+        console.log(`Hybrid Cache: Fetching ${missingRouteIds.size} missing routes...`);
         const fetchPromises = Array.from(missingRouteIds).map(async (routeId) => {
             try {
                 const res = await fetch(`https://www.mybustimes.cc/api/operator/route/${routeId}/`);
-                if (res.ok) {
-                    SWIFT_ROUTE_CACHE[routeId] = await res.json();
-                }
+                if (res.ok) SWIFT_ROUTE_CACHE[routeId] = await res.json();
             } catch (e) {
                 console.warn(`Failed to dynamically patch route ID: ${routeId}`, e);
             }
@@ -168,16 +161,13 @@ function applyBrandingEngine(operatorName) {
     if (normalize.includes('wrekin')) {
         bodyDom.setAttribute('data-theme', 'wrekin');
         if (visualAccent) visualAccent.src = 'Wrekin Connect White Long.png';
-    } 
-    else if (normalize.includes('railway') || normalize.includes('rail')) {
+    } else if (normalize.includes('railway') || normalize.includes('rail')) {
         bodyDom.setAttribute('data-theme', 'swift-rail');
         if (visualAccent) visualAccent.src = 'Swift Connect White Full.png';
-    } 
-    else if (normalize.includes('preservation') || normalize.includes('classic')) {
+    } else if (normalize.includes('preservation') || normalize.includes('classic')) {
         bodyDom.setAttribute('data-theme', 'swift-classic');
         if (visualAccent) visualAccent.src = 'Swift Short White.png';
-    } 
-    else if (normalize.includes('express')) {
+    } else if (normalize.includes('express')) {
         bodyDom.setAttribute('data-theme', 'swift-express');
         if (visualAccent) visualAccent.src = 'Swift Connect Express.png';
     }
@@ -307,6 +297,7 @@ function renderRouteList(routes, container) {
 
     let html = '';
     routes.forEach(r => {
+        const routeId = r.id || '';
         const routeNum = r.route_num || '?';
         const routeName = r.route_name ? ` (${r.route_name})` : '';
         const start = r.inbound_destination || 'Unknown Start';
@@ -316,11 +307,13 @@ function renderRouteList(routes, container) {
         let operatorLinkHtml = '';
         if (r.operator_name) {
             const encodedOp = encodeURIComponent(r.operator_name.trim());
-            operatorLinkHtml = `<a href="operator.html?op=${encodedOp}" class="route-pill-operator">Division: ${r.operator_name}</a>`;
+            // stopPropagation ensures clicking the operator doesn't also click the route box behind it
+            operatorLinkHtml = `<a href="operator.html?op=${encodedOp}" class="route-pill-operator" onclick="event.stopPropagation();">Division: ${r.operator_name}</a>`;
         }
         
+        // Turns the entire box into a button link to the blank route filler page
         html += `
-            <div class="route-pill" style="border-left-color: ${borderCol}">
+            <div class="route-pill route-pill-interactive" style="border-left-color: ${borderCol};" onclick="window.location.href='route.html?id=${routeId}'">
                 <strong>${routeNum}${routeName}</strong>
                 <span class="route-pill-dest">${start} &rarr; ${end}</span>
                 ${operatorLinkHtml}
@@ -376,6 +369,9 @@ async function initLiveFleetPage() {
                         fleetNum = vehObj.name.trim();
                     }
                 }
+
+                const vehUrl = vehObj.url ? `https://www.mybustimes.cc${vehObj.url}` : '#';
+                const routeUrl = record._extractedRouteId ? `route.html?id=${record._extractedRouteId}` : 'route.html';
                 
                 let routeDisplay = record.route || 'Not in service';
                 if (record._extractedRouteId && SWIFT_ROUTE_CACHE[record._extractedRouteId]) {
@@ -387,6 +383,7 @@ async function initLiveFleetPage() {
 
                 const dest = record.destination || 'Depot';
                 const operator = vehObj.operator_name || record.operator_name || record.operator || 'Swift Connect';
+                const opUrl = `operator.html?op=${encodeURIComponent(operator)}`;
                 
                 let rawFeatures = vehObj.features || record.features || '';
                 let featuresList = 'None specified';
@@ -397,15 +394,17 @@ async function initLiveFleetPage() {
 
                 html += `
                     <div class="card fleet-card">
-                        <p style="margin-bottom: 4px; font-size: 1.05rem;"><strong>Route:</strong> ${routeDisplay}</p>
+                        <p style="margin-bottom: 4px; font-size: 1.05rem;"><strong>Route:</strong> <a href="${routeUrl}" style="color: var(--primary); text-decoration: none; font-weight: bold;">${routeDisplay}</a></p>
                         <p style="margin-bottom: 12px; font-size: 0.95rem;"><strong>To:</strong> ${dest}</p>
                         
-                        <h3 style="color: var(--primary); margin-bottom: 6px; font-size: 1.3rem;">${fleetNum}</h3>
-                        <p style="display: inline-block; background-color: #FFFF00; color: black; border: 1px solid #ccc; padding: 4px 10px; border-radius: 6px; font-weight: 800; font-family: monospace; font-size: 0.9rem; margin-bottom: 10px;">${reg}</p>
+                        <a href="${vehUrl}" target="_blank" style="text-decoration: none; display: block; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
+                            <h3 style="color: var(--primary); margin-bottom: 6px; font-size: 1.3rem;">${fleetNum}</h3>
+                            <p style="display: inline-block; background-color: #FFFF00; color: black; border: 1px solid #ccc; padding: 4px 10px; border-radius: 6px; font-weight: 800; font-family: monospace; font-size: 0.9rem; margin-bottom: 10px;">${reg}</p>
+                        </a>
                         
                         <p style="margin-bottom: 5px; font-size: 0.85rem; color: var(--secondary);"><strong>Features:</strong> ${featuresList}</p>
                         <hr style="margin:15px 0 10px 0; border:0; border-top:1px solid #edf2f7;">
-                        <p style="margin:0; font-size:0.9rem; color:var(--secondary); font-weight: bold;">${operator}</p>
+                        <p style="margin:0; font-size:0.9rem; font-weight: bold;"><a href="${opUrl}" style="color: var(--secondary); text-decoration: none; border-bottom: 1px dashed var(--secondary);">${operator}</a></p>
                     </div>
                 `;
             });
@@ -450,22 +449,8 @@ async function initNetworkMap() {
             html: `
                 <div style="transform: rotate(${heading}deg); transform-origin: center; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 200" width="28" height="56" style="filter: drop-shadow(0px 3px 4px rgba(0,0,0,0.5));">
-                        <path d="M 10 180 
-                                 A 10 10 0 0 0 20 190 
-                                 L 80 190 
-                                 A 10 10 0 0 0 90 180 
-                                 L 90 70 
-                                 C 90 30, 80 10, 65 10 
-                                 Q 50 5, 35 10 
-                                 C 20 10, 10 30, 10 70 
-                                 Z" 
-                              fill="${hexColor}" stroke="#111" stroke-width="4" />
-                        <path d="M 13 65 
-                                 C 13 35, 25 18, 38 14 
-                                 Q 50 10, 62 14 
-                                 C 75 18, 87 35, 87 65 
-                                 Q 50 75, 13 65 Z" 
-                              fill="#1a1a1a" />
+                        <path d="M 10 180 A 10 10 0 0 0 20 190 L 80 190 A 10 10 0 0 0 90 180 L 90 70 C 90 30, 80 10, 65 10 Q 50 5, 35 10 C 20 10, 10 30, 10 70 Z" fill="${hexColor}" stroke="#111" stroke-width="4" />
+                        <path d="M 13 65 C 13 35, 25 18, 38 14 Q 50 10, 62 14 C 75 18, 87 35, 87 65 Q 50 75, 13 65 Z" fill="#1a1a1a" />
                         <rect x="25" y="100" width="50" height="35" rx="4" fill="#e2e8f0" stroke="#94a3b8" stroke-width="2"/>
                         <line x1="35" y1="105" x2="65" y2="105" stroke="#94a3b8" stroke-width="2"/>
                         <line x1="35" y1="110" x2="65" y2="110" stroke="#94a3b8" stroke-width="2"/>
@@ -531,6 +516,10 @@ async function initNetworkMap() {
                         iconColor = '#2292ef'; 
                     }
 
+                    // Hyperlink Setup
+                    const vehUrl = vehObj.url ? `https://www.mybustimes.cc${vehObj.url}` : '#';
+                    const routeUrl = record._extractedRouteId ? `route.html?id=${record._extractedRouteId}` : 'route.html';
+
                     let routeDisplay = record.route || 'Not in service';
                     if (record._extractedRouteId && SWIFT_ROUTE_CACHE[record._extractedRouteId]) {
                         const rData = SWIFT_ROUTE_CACHE[record._extractedRouteId];
@@ -541,6 +530,7 @@ async function initNetworkMap() {
 
                     const dest = record.destination || 'Depot';
                     const operator = vehObj.operator_name || record.operator_name || record.operator || 'Swift Connect';
+                    const opUrl = `operator.html?op=${encodeURIComponent(operator)}`;
                     
                     let rawFeatures = vehObj.features || record.features || '';
                     let featuresList = 'None specified';
@@ -554,16 +544,18 @@ async function initNetworkMap() {
 
                     const popupHtml = `
                         <div style="font-family: inherit; color: #0b1922; min-width: 220px;">
-                            <p style="margin: 0 0 5px 0; font-size: 1.05rem;"><strong>Route:</strong> ${routeDisplay}</p>
+                            <p style="margin: 0 0 5px 0; font-size: 1.05rem;"><strong>Route:</strong> <a href="${routeUrl}" style="color: #2292ef; text-decoration: none; font-weight: bold;">${routeDisplay}</a></p>
                             <p style="margin: 0 0 12px 0; font-size: 0.95rem;"><strong>To:</strong> ${dest}</p>
                             
-                            <h3 style="margin: 0 0 6px 0; color: #2292ef; font-size: 1.2rem;">${fleetNum}</h3>
-                            <p style="margin: 0 0 10px 0; display: inline-block; background: #FFFF00; color: black; padding: 3px 8px; border-radius: 4px; font-weight: 800; font-size: 0.85rem; border: 1px solid #ccc; font-family: monospace;">${reg}</p>
+                            <a href="${vehUrl}" target="_blank" style="text-decoration: none; display: block; transition: opacity 0.2s;" onmouseover="this.style.opacity=0.8" onmouseout="this.style.opacity=1">
+                                <h3 style="margin: 0 0 6px 0; color: #2292ef; font-size: 1.2rem;">${fleetNum}</h3>
+                                <p style="margin: 0 0 10px 0; display: inline-block; background: #FFFF00; color: black; padding: 3px 8px; border-radius: 4px; font-weight: 800; font-size: 0.85rem; border: 1px solid #ccc; font-family: monospace;">${reg}</p>
+                            </a>
                             
                             <p style="margin: 0 0 5px 0; font-size: 0.85rem; color: #4a5d6c;"><strong>Features:</strong> ${featuresList}</p>
     
                             <hr style="margin: 12px 0; border: 0; border-top: 1px solid #ccc;">
-                            <p style="margin: 0; font-size: 0.85rem; color: #4a5d6c; font-weight: bold;">${operator}</p>
+                            <p style="margin: 0; font-size: 0.85rem; font-weight: bold;"><a href="${opUrl}" style="color: #4a5d6c; text-decoration: none; border-bottom: 1px dashed #4a5d6c;">${operator}</a></p>
                         </div>
                     `;
 

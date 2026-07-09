@@ -11,8 +11,9 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /* ==========================================
-   GLOBAL ROUTE CACHE ENGINE (STATIC FILE EDITION)
-   Loads pre-compiled static ledger compiled by server actions
+   GLOBAL ROUTE CACHE ENGINE (HYBRID EDITION)
+   Loads static server cache, then dynamically fetches 
+   any new routes that started running between server sweeps.
    ========================================== */
 let SWIFT_ROUTE_CACHE = {};
 let IS_CACHE_INITIALIZED = false;
@@ -21,26 +22,51 @@ async function ensureGlobalRouteCacheLoaded() {
     if (IS_CACHE_INITIALIZED) return;
     
     try {
-        // Appends a cache-busting timestamp query to guarantee fresh file pulls on reload
         const res = await fetch(`./global_routes_cache.json?t=${new Date().getTime()}`);
         if (res.ok) {
             SWIFT_ROUTE_CACHE = await res.json();
             console.log("Global static routes cache loaded successfully.");
         }
     } catch (e) {
-        console.warn("Static global_routes_cache.json unavailable or missing on host root. Falling back.", e);
+        console.warn("Static global_routes_cache.json unavailable. Falling back to dynamic fetching.", e);
     } finally {
         IS_CACHE_INITIALIZED = true;
     }
 }
 
-// Intercepts and parses runtime route data directly out of static memory
 function injectLocalRouteData(record) {
     if (record.service && record.service.url) {
         const match = record.service.url.match(/\/route\/(\d+)\/?/);
         if (match && match[1]) {
             record._extractedRouteId = match[1];
         }
+    }
+}
+
+// HYBRID FALLBACK: Finds vehicles running routes not yet in our static cache and fetches them directly.
+async function patchMissingRoutesOnTheFly(trackingRecords) {
+    const missingRouteIds = new Set();
+    
+    trackingRecords.forEach(record => {
+        if (record._extractedRouteId && !SWIFT_ROUTE_CACHE[record._extractedRouteId]) {
+            missingRouteIds.add(record._extractedRouteId);
+        }
+    });
+
+    if (missingRouteIds.size > 0) {
+        console.log(`Hybrid Cache: Fetching ${missingRouteIds.size} missing routes on the fly...`);
+        const fetchPromises = Array.from(missingRouteIds).map(async (routeId) => {
+            try {
+                // Fetching exactly the ID missing from the cache
+                const res = await fetch(`https://www.mybustimes.cc/api/operator/route/${routeId}/`);
+                if (res.ok) {
+                    SWIFT_ROUTE_CACHE[routeId] = await res.json();
+                }
+            } catch (e) {
+                console.warn(`Failed to dynamically patch route ID: ${routeId}`, e);
+            }
+        });
+        await Promise.all(fetchPromises);
     }
 }
 
@@ -306,13 +332,17 @@ async function initLiveFleetPage() {
                 return;
             }
 
+            // Phase 1: Load Static Cache
             await ensureGlobalRouteCacheLoaded();
 
+            // Phase 2: Inject route IDs and run Hybrid Dynamic Patch for any missing
+            trackingRecords.forEach(record => injectLocalRouteData(record));
+            await patchMissingRoutesOnTheFly(trackingRecords);
+
+            // Phase 3: Render
             let html = '<div class="data-grid fleet-grid">';
             
             trackingRecords.forEach(record => {
-                injectLocalRouteData(record);
-                
                 const vehObj = record.vehicle || {};
                 let fleetNum = 'N/A';
                 let reg = 'UNKNOWN REG';
@@ -421,7 +451,12 @@ async function initNetworkMap() {
             const data = await response.json();
             const vehicles = data.results || data;
 
+            // Phase 1: Load Static Cache
             await ensureGlobalRouteCacheLoaded();
+
+            // Phase 2: Inject route IDs and run Hybrid Dynamic Patch for any missing
+            vehicles.forEach(record => injectLocalRouteData(record));
+            await patchMissingRoutesOnTheFly(vehicles);
 
             const currentVehicleIds = new Set();
             const boundsData = [];
@@ -431,7 +466,6 @@ async function initNetworkMap() {
                 const lng = record.lon || record.lng || record.longitude || record.x;
 
                 if (lat && lng) {
-                    injectLocalRouteData(record);
                     const vehObj = record.vehicle || {};
                     
                     let fleetNum = 'N/A';

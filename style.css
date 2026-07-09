@@ -498,19 +498,31 @@ a.card:hover {
 .route-pill {
     background-color: var(--light);
     border: 1px solid #e2e8f0;
-    border-left: 6px solid var(--primary); /* Configured dynamically by Javascript values */
-    padding: 10px 18px;
+    border-left: 6px solid var(--primary);
+    padding: 12px 18px;
     border-radius: 8px;
-    font-size: 0.95rem;
     color: var(--dark);
     box-shadow: 0 2px 6px rgba(11,25,34,0.03);
-    flex: 1 1 calc(50% - 12px); /* Formats routes beautifully down into balanced rows */
+    flex: 1 1 calc(50% - 12px); 
     min-width: 250px;
+    
+    /* New Layout rules for the stacked destinations */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .route-pill strong {
-    font-size: 1.1rem;
-    margin-right: 5px;
+    font-size: 1.2rem;
+    margin-bottom: 4px;
+    line-height: 1.2;
+}
+
+.route-pill-dest {
+    font-size: 0.9rem;
+    color: var(--secondary);
+    font-weight: 500;
+    line-height: 1.4;
 }
 
 /* ==========================================
@@ -578,7 +590,7 @@ a.card:hover {
         gap: 20px;
     }
     .main-nav ul {
-        display: none; /* Can be paired with toggles for collapsible drawers */
+        display: none; 
     }
     .route-pill {
         flex: 1 1 100%;

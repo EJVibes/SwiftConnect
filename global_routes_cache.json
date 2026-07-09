@@ -3078,5 +3078,86 @@
     "service_updates": [],
     "full_searchable_name": "32 Westbury Park Newcastle",
     "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "91965": {
+    "id": 91965,
+    "route_num": "7",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#dc421f",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Wellington",
+    "outbound_destination": "Telford",
+    "route_operators_data": [
+      {
+        "id": 978,
+        "operator_name": "Swift Connecting Shropshire",
+        "operator_slug": "swift-connecting-shropshire",
+        "operator_code": "SWSH"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [
+      {
+        "id": 2394,
+        "effected_route": [
+          {
+            "id": 91986,
+            "route_num": "100",
+            "inbound_destination": "Bus Station",
+            "outbound_destination": "Selbourne"
+          },
+          {
+            "id": 19712,
+            "route_num": "X2",
+            "inbound_destination": "Madeley",
+            "outbound_destination": "Telford College"
+          },
+          {
+            "id": 91965,
+            "route_num": "7",
+            "inbound_destination": "Wellington",
+            "outbound_destination": "Telford"
+          },
+          {
+            "id": 158679,
+            "route_num": "5C",
+            "inbound_destination": "Telford",
+            "outbound_destination": "Muxton - Donnington ASDA - Priorslee"
+          },
+          {
+            "id": 173925,
+            "route_num": "11B",
+            "inbound_destination": "Telford",
+            "outbound_destination": "Lightmoor"
+          },
+          {
+            "id": 173928,
+            "route_num": "11C",
+            "inbound_destination": "Lightmoor",
+            "outbound_destination": "Wellington"
+          },
+          {
+            "id": 19711,
+            "route_num": "X3",
+            "inbound_destination": "Madeley",
+            "outbound_destination": "Telford College"
+          }
+        ],
+        "start_date": "2026-06-08",
+        "end_date": "2026-06-08",
+        "update_title": "Timetable Updates",
+        "update_description": "From the 8th of June 2026, we will be altering timetables of all Travel Telford branded routes for better efficiency."
+      }
+    ],
+    "full_searchable_name": "7 Wellington Telford",
+    "route_colour_rgba": "rgba(220, 66, 31, 1)"
   }
 }

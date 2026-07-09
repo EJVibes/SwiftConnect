@@ -261,3 +261,43 @@ ul {
     opacity: 0.6;
     font-size: 0.9rem;
 }
+
+/* Base Swift Livery */
+body[data-theme="swift-base"] {
+    --primary: #2292ef;    /* Bluebird */
+    --secondary: #4a5d6c;  /* Wood Pigeon */
+    --dark: #0b1922;       /* Jackdaw */
+}
+
+/* Swift Electric Livery */
+body[data-theme="swift-electric"] {
+    --primary: #26cc78;    /* Parakeet */
+    --secondary: #2292ef;  /* Bluebird */
+    --dark: #0b1922;       /* Jackdaw */
+}
+
+/* Swift Express Livery */
+body[data-theme="swift-express"] {
+    --primary: #c31b6b;    /* Australian Robin */
+    --secondary: #4b5164;  /* Nuthatch */
+    --dark: #0b1321;       /* Crow */
+}
+
+/* Classic Livery */
+body[data-theme="swift-classic"] {
+    --primary: #06b9ff;    /* Blue Tit */
+    --secondary: #0c47ea;  /* Blue Jay */
+    --dark: #141623;       /* Rook */
+}
+
+/* Wrekin Connect */
+body[data-theme="wrekin"] {
+    --primary: #f46300;    /* Chaffinch */
+    --secondary: #4a5d6c;  /* Wood Pigeon */
+    --dark: #0b1922;
+}
+
+.operator-hero {
+    background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 100%);
+    padding: 80px 0;
+}

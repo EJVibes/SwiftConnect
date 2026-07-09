@@ -2882,5 +2882,201 @@
     "service_updates": [],
     "full_searchable_name": "54 Cotmanhay Beeston",
     "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "237416": {
+    "id": 237416,
+    "route_num": "WC9",
+    "route_name": "Wrekin Connect",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#122935",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Wellington",
+    "outbound_destination": "Madeley",
+    "route_operators_data": [
+      {
+        "id": 14320,
+        "operator_name": "Wrekin Connect",
+        "operator_slug": "wrekin-connect",
+        "operator_code": "WRCO"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "WC9 Wellington Madeley",
+    "route_colour_rgba": "rgba(18, 41, 53, 1)"
+  },
+  "158679": {
+    "id": 158679,
+    "route_num": "5C",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#dc241f",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Telford",
+    "outbound_destination": "Muxton - Donnington ASDA - Priorslee",
+    "route_operators_data": [
+      {
+        "id": 978,
+        "operator_name": "Swift Connecting Shropshire",
+        "operator_slug": "swift-connecting-shropshire",
+        "operator_code": "SWSH"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [
+      {
+        "id": 2394,
+        "effected_route": [
+          {
+            "id": 91986,
+            "route_num": "100",
+            "inbound_destination": "Bus Station",
+            "outbound_destination": "Selbourne"
+          },
+          {
+            "id": 19712,
+            "route_num": "X2",
+            "inbound_destination": "Madeley",
+            "outbound_destination": "Telford College"
+          },
+          {
+            "id": 91965,
+            "route_num": "7",
+            "inbound_destination": "Wellington",
+            "outbound_destination": "Telford"
+          },
+          {
+            "id": 158679,
+            "route_num": "5C",
+            "inbound_destination": "Telford",
+            "outbound_destination": "Muxton - Donnington ASDA - Priorslee"
+          },
+          {
+            "id": 173925,
+            "route_num": "11B",
+            "inbound_destination": "Telford",
+            "outbound_destination": "Lightmoor"
+          },
+          {
+            "id": 173928,
+            "route_num": "11C",
+            "inbound_destination": "Lightmoor",
+            "outbound_destination": "Wellington"
+          },
+          {
+            "id": 19711,
+            "route_num": "X3",
+            "inbound_destination": "Madeley",
+            "outbound_destination": "Telford College"
+          }
+        ],
+        "start_date": "2026-06-08",
+        "end_date": "2026-06-08",
+        "update_title": "Timetable Updates",
+        "update_description": "From the 8th of June 2026, we will be altering timetables of all Travel Telford branded routes for better efficiency."
+      }
+    ],
+    "full_searchable_name": "5C Telford Muxton - Donnington ASDA - Priorslee",
+    "route_colour_rgba": "rgba(220, 36, 31, 1)"
+  },
+  "145829": {
+    "id": 145829,
+    "route_num": "53",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#1a3b70",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Bridgend",
+    "outbound_destination": "Bridgend Designer Outlet",
+    "route_operators_data": [
+      {
+        "id": 9238,
+        "operator_name": "Swift Connecting Wales",
+        "operator_slug": "swift-connecting-wales",
+        "operator_code": "SWCW"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [
+      {
+        "id": 2435,
+        "effected_route": [
+          {
+            "id": 145822,
+            "route_num": "1",
+            "inbound_destination": "Cardiff",
+            "outbound_destination": "Porthcawl"
+          },
+          {
+            "id": 145829,
+            "route_num": "53",
+            "inbound_destination": "Bridgend",
+            "outbound_destination": "Bridgend Designer Outlet"
+          },
+          {
+            "id": 145830,
+            "route_num": "PTC",
+            "inbound_destination": "Port Talbot Circular",
+            "outbound_destination": ""
+          }
+        ],
+        "start_date": "2026-06-15",
+        "end_date": "2026-06-15",
+        "update_title": "Timetable Alterations",
+        "update_description": "From 15/06/2026 There Will Be Timetable Alterations To The Affected Routes Below.\r\n\r\nThis Is Due To The Withdrawal From United Travel."
+      }
+    ],
+    "full_searchable_name": "53 Bridgend Bridgend Designer Outlet",
+    "route_colour_rgba": "rgba(26, 59, 112, 1)"
+  },
+  "119120": {
+    "id": 119120,
+    "route_num": "32",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Westbury Park",
+    "outbound_destination": "Newcastle",
+    "route_operators_data": [
+      {
+        "id": 10118,
+        "operator_name": "Swift Connecting Staffordshire",
+        "operator_slug": "swift-connecting-staffordshire",
+        "operator_code": "SWST"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "32 Westbury Park Newcastle",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
   }
 }

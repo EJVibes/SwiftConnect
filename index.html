@@ -3,105 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Swift Connecting Shropshire | Swift Connect</title>
+    <title>Swift Connect | Home</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body data-theme="swift-base">
 
-    <!-- Top Navigation -->
     <header class="site-header">
         <div class="container header-container">
             <div class="brand-logo">
-                <h1>Swift <span>Connecting Shropshire</span></h1>
+                <a href="index.html">
+                    <img src="frontswiftlogo_new.png" alt="Swift Connect Logo" class="nav-logo">
+                </a>
             </div>
             <nav class="main-nav">
                 <ul>
-                    <li><a href="#">Timetables & Maps</a></li>
-                    <li><a href="#">Buy Tickets</a></li>
-                    <li><a href="#">Service Updates</a></li>
-                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="index.html" class="active">Home</a></li>
+                    <li><a href="#network">Our Divisions</a></li>
+                    <li><a href="#">Network Map</a></li>
+                    <li><a href="#">Contact</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
-    <!-- Service Alert Banner -->
     <div class="service-alert">
         <div class="container">
-            <strong>Update:</strong> Minor delays on the local network due to roadworks. Please check the app for live tracking.
+            <strong>Network Status:</strong> All regional divisions are operating normal services. Check live tracking before traveling.
         </div>
     </div>
 
-    <!-- Hero / Journey Planner Section -->
     <section class="hero-section">
         <div class="container hero-content">
             <div class="journey-planner">
-                <h2>Plan your journey</h2>
-                <form action="#" method="GET">
+                <h2>Plan Your Journey</h2>
+                <form onsubmit="event.preventDefault();">
                     <div class="input-group">
                         <label for="from">Leaving from</label>
-                        <input type="text" id="from" placeholder="Stop, postcode or area">
+                        <input type="text" id="from" placeholder="Bus stop, station or postcode">
                     </div>
                     <div class="input-group">
                         <label for="to">Going to</label>
-                        <input type="text" id="to" placeholder="Stop, postcode or area">
+                        <input type="text" id="to" placeholder="Bus stop, station or postcode">
                     </div>
-                    <button type="submit" class="btn-primary">Find buses</button>
+                    <button type="submit" class="btn-primary">Find Connected Routes</button>
                 </form>
             </div>
             <div class="hero-text">
-                <h2>Welcome aboard.</h2>
-                <p>Reliable, modern travel across Shropshire and beyond.</p>
+                <h2>Connecting Communities.</h2>
+                <p>Explore regional timetables, track vehicle assets live, and buy tickets across our collective transit group.</p>
             </div>
         </div>
     </section>
 
-    <!-- Quick Links Grid -->
-    <section class="quick-links container">
+    <main class="container quick-links">
         <div class="card">
-            <h3>Live Map</h3>
-            <p>Track your bus in real-time across the network.</p>
-            <a href="#" class="btn-secondary">View Map</a>
+            <h3>Live Vehicle Fleet</h3>
+            <p>Monitor operations across the Canaries, Wales, and the Midlands via our real-time database dashboard.</p>
+            <a href="#" class="btn-secondary">Track Live Bus</a>
         </div>
         <div class="card">
-            <h3>Mobile Ticketing</h3>
-            <p>Download our app for the cheapest day and weekly tickets.</p>
-            <a href="#" class="btn-secondary">Get the App</a>
+            <h3>Preservation Group</h3>
+            <p>Step back in time. View our heritage assets, historic rosters, and upcoming vehicle restoration galas.</p>
+            <a href="operator.html?op=Swift Connect Preservation" class="btn-secondary">View Heritage</a>
         </div>
         <div class="card">
-            <h3>Fleet & Preservation</h3>
-            <p>Discover our vehicle history and preservation projects.</p>
-            <a href="#" class="btn-secondary">Read More</a>
+            <h3>Wrekin Connect</h3>
+            <p>Discover localized community routes serving Wellington, Telford, and surrounding rural Shropshire corridors.</p>
+            <a href="operator.html?op=Wrekin Connect" class="btn-secondary">Explore Wrekin</a>
         </div>
-    </section>
+    </main>
 
-    <!-- Footer with Network Links -->
-    <footer class="site-footer">
+    <footer id="network" class="site-footer">
         <div class="container footer-grid">
             <div class="footer-col">
-                <h4>Our Network</h4>
+                <h4>Core Bus Divisions</h4>
                 <ul class="operator-list">
-                    <li><a href="#">Swift Connecting the Canaries</a></li>
-                    <li><a href="#">Swift Connecting East Anglia</a></li>
-                    <li><a href="#">Swift Connecting East Midlands</a></li>
-                    <li><a href="#">Swift Connecting Railway</a></li>
-                    <li><a href="#">Swift Connecting Shropshire</a></li>
-                    <li><a href="#">Swift Connecting South London</a></li>
-                    <li><a href="#">Swift Connecting Staffordshire</a></li>
-                    <li><a href="#">Swift Connecting Wales</a></li>
-                    <li><a href="#">Swift Connecting West Midlands</a></li>
+                    <li><a href="operator.html?op=Swift Connecting the Canaries">Swift Connecting the Canaries</a></li>
+                    <li><a href="operator.html?op=Swift Connecting East Anglia">Swift Connecting East Anglia</a></li>
+                    <li><a href="operator.html?op=Swift Connecting East Midlands">Swift Connecting East Midlands</a></li>
+                    <li><a href="operator.html?op=Swift Connecting Shropshire">Swift Connecting Shropshire</a></li>
+                    <li><a href="operator.html?op=Swift Connecting South London">Swift Connecting South London</a></li>
+                    <li><a href="operator.html?op=Swift Connecting Staffordshire">Swift Connecting Staffordshire</a></li>
+                    <li><a href="operator.html?op=Swift Connecting Wales">Swift Connecting Wales</a></li>
+                    <li><a href="operator.html?op=Swift Connecting West Midlands">Swift Connecting West Midlands</a></li>
                 </ul>
             </div>
             <div class="footer-col">
-                <h4>Specialist Divisions</h4>
+                <h4>Specialist Operations</h4>
                 <ul class="operator-list">
-                    <li><a href="#">Swift Connect Preservation</a></li>
-                    <li><a href="#">Wrekin Connect</a></li>
+                    <li><a href="operator.html?op=Swift Connecting Railway">Swift Connecting Railway</a></li>
+                    <li><a href="operator.html?op=Swift Connect Preservation">Swift Connect Preservation</a></li>
+                    <li><a href="operator.html?op=Wrekin Connect">Wrekin Connect</a></li>
                 </ul>
             </div>
             <div class="footer-col brand-col">
-                <h2>Swift Connect</h2>
-                <p>&copy; 2026 Swift Connect Ltd. All rights reserved.</p>
+                <img src="swift_white.png" alt="Swift Group Icon" class="footer-logo">
+                <h3>Swift Connect Group</h3>
+                <p>Modern transport solutions across regional operating centers.</p>
+                <p class="copyright">&copy; 2026 Swift Connect Ltd. All rights reserved.</p>
             </div>
         </div>
     </footer>

@@ -38,7 +38,6 @@ async function initOperatorPage() {
     let apiEndpointUrl = `https://www.mybustimes.cc/api/operator/?operator_name__icontains=${queryTarget}`;
 
     try {
-        // Sweep pagination
         while (apiEndpointUrl) {
             const fetchResponse = await fetch(apiEndpointUrl);
             if (!fetchResponse.ok) throw new Error("Network response error.");
@@ -100,14 +99,10 @@ function applyBrandingEngine(operatorName) {
 }
 
 function renderOperatorMetrics(dataRecord) {
-    // Debug helper: Prints the exact JSON from the API to your browser's F12 Console
-    console.log("Division API Payload Received:", dataRecord);
-
     document.getElementById('operator-title-name').innerText = dataRecord.operator_name || 'Unknown Operator';
     document.getElementById('operator-badge-code').innerText = `ID: ${dataRecord.operator_code || 'SWFT'}`;
 
     // ULTIMATE EXTRACTION: A recursive function that deeply searches the entire JSON 
-    // object for the "region_name" key, regardless of how far down it is nested.
     function extractRegionName(obj) {
         if (obj === null || typeof obj !== 'object') return null;
         for (const [key, value] of Object.entries(obj)) {
@@ -122,12 +117,10 @@ function renderOperatorMetrics(dataRecord) {
 
     let regionDisplay = extractRegionName(dataRecord);
 
-    // If the deep search STILL returns nothing, the string is empty in the database
     if (regionDisplay === null || regionDisplay === undefined || String(regionDisplay).trim() === '') {
         regionDisplay = "Not Provided by API";
     }
 
-    // Layout order: Routes on top, metadata boxes underneath
     const html = `
         <div class="data-item-row" style="grid-column: span 2; background: transparent; border: none; padding: 0; margin-bottom: 30px;">
             <div class="data-label" style="margin-bottom: 15px;">Registered Routes</div>
@@ -174,7 +167,6 @@ async function fetchStandardRoutes(operatorCode, operatorName) {
         const data = await res.json();
         let routes = data.results || [];
 
-        // Manual exclusion rule for the "Swift Connecting Railway" ghosts
         if (operatorName.toLowerCase().includes('railway')) {
             routes = routes.filter(r => r.route_num !== 'X45' && r.route_num !== 'X46');
         }
@@ -191,11 +183,9 @@ async function fetchExpressRoutes() {
     container.innerHTML = '<p>Loading targeted Swift Express network lines...</p>';
     
     try {
-        // Direct integration of target API parameter configuration
         let expressUrl = 'https://www.mybustimes.cc/api/operator/route/?id=&route_name__icontains=Swift+Express&route_num__icontains=&operator_code=&has_stops=unknown&stops_have_cords=unknown';
         let expressRoutes = [];
 
-        // Handle structural API pagination changes automatically
         while (expressUrl) {
             const res = await fetch(expressUrl);
             if (!res.ok) throw new Error("Target pipeline integration error.");
@@ -204,7 +194,6 @@ async function fetchExpressRoutes() {
             expressUrl = data.next;
         }
 
-        // Deduplicate output collections accurately via unique identifier fields
         const uniqueRoutesMap = new Map();
         expressRoutes.forEach(r => {
             if (r.route_num) {
@@ -226,7 +215,6 @@ function renderRouteList(routes, container) {
         return;
     }
 
-    // Alphanumeric sorting logic for route numbers
     routes.sort((a, b) => {
         const numA = a.route_num ? a.route_num.toString() : '';
         const numB = b.route_num ? b.route_num.toString() : '';
@@ -241,11 +229,10 @@ function renderRouteList(routes, container) {
         const end = r.outbound_destination || 'Unknown Destination';
         const borderCol = r.route_colour ? (r.route_colour.startsWith('#') ? r.route_colour : `#${r.route_colour}`) : 'var(--primary)';
         
-        // Generate clickable link block conditionally if operator metadata exists
         let operatorLinkHtml = '';
         if (r.operator_name) {
             const encodedOp = encodeURIComponent(r.operator_name.trim());
-            operatorLinkHtml = `<a href="?op=${encodedOp}" class="route-pill-operator">Division: ${r.operator_name}</a>`;
+            operatorLinkHtml = `<a href="operator.html?op=${encodedOp}" class="route-pill-operator">Division: ${r.operator_name}</a>`;
         }
         
         html += `
@@ -277,7 +264,6 @@ async function initLiveFleetPage() {
         if (!response.ok) throw new Error("Could not fetch fleet data.");
         const data = await response.json();
         
-        // Handle depending on API structure (DRF pagination vs flat array)
         const trackingRecords = data.results || data; 
         
         if (trackingRecords.length === 0) {
@@ -289,17 +275,13 @@ async function initLiveFleetPage() {
                 let fleetNum = 'N/A';
                 let reg = 'UNKNOWN REG';
 
-                // Target the nested 'vehicle.name' to split the Fleet ID and Registration
                 if (record.vehicle && record.vehicle.name) {
                     const nameParts = record.vehicle.name.split('-');
                     
                     if (nameParts.length >= 2) {
-                        // Takes the left side of the dash for the Fleet ID
                         fleetNum = nameParts[0].trim();
-                        // Re-joins the right side just in case the registration itself contains a dash
                         reg = nameParts.slice(1).join('-').trim(); 
                     } else {
-                        // Fallback if there is no dash in the name string
                         fleetNum = record.vehicle.name.trim();
                     }
                 }

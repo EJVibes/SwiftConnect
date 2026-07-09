@@ -1,4 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
+    initMobileMenu(); // <--- Mobile Menu Initialization Hook
+    
     if (document.getElementById('api-data-results')) {
         initOperatorPage();
     }
@@ -9,6 +11,30 @@ document.addEventListener("DOMContentLoaded", () => {
         initNetworkMap();
     }
 });
+
+/* ==========================================
+   MOBILE MENU LOGIC
+   ========================================== */
+function initMobileMenu() {
+    const toggleBtn = document.querySelector('.mobile-toggle');
+    const nav = document.querySelector('.main-nav');
+    
+    if (toggleBtn && nav) {
+        toggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            nav.classList.toggle('is-open');
+            toggleBtn.classList.toggle('is-active');
+        });
+        
+        // Closes the menu smoothly if the user clicks anywhere else on the screen
+        document.addEventListener('click', (e) => {
+            if (!nav.contains(e.target) && !toggleBtn.contains(e.target) && nav.classList.contains('is-open')) {
+                nav.classList.remove('is-open');
+                toggleBtn.classList.remove('is-active');
+            }
+        });
+    }
+}
 
 /* ==========================================
    GLOBAL ROUTE CACHE ENGINE (HYBRID EDITION)
@@ -418,15 +444,12 @@ async function initNetworkMap() {
     
     const apiUrl = "https://www.mybustimes.cc/api/group/Swift%20Connect%20Group/vehicles/?ymax=56.96749375372495&ymin=22.98020869942421&xmax=26.253456525775164&xmin=-46.11789196263385&limit=5000";
 
-    // GENERATES A TOP-DOWN BLUEPRINT SILHOUETTE OF AN OPTARE VERSA
     function getBusIcon(hexColor, heading) {
         return L.divIcon({
             className: '', 
             html: `
                 <div style="transform: rotate(${heading}deg); transform-origin: center; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 200" width="28" height="56" style="filter: drop-shadow(0px 3px 4px rgba(0,0,0,0.5));">
-                        
-                        <!-- Optare Versa Aerodynamic Body (Tapered stealth front) -->
                         <path d="M 10 180 
                                  A 10 10 0 0 0 20 190 
                                  L 80 190 
@@ -437,31 +460,21 @@ async function initNetworkMap() {
                                  C 20 10, 10 30, 10 70 
                                  Z" 
                               fill="${hexColor}" stroke="#111" stroke-width="4" />
-                              
-                        <!-- Swept-back Curved Windshield -->
                         <path d="M 13 65 
                                  C 13 35, 25 18, 38 14 
                                  Q 50 10, 62 14 
                                  C 75 18, 87 35, 87 65 
                                  Q 50 75, 13 65 Z" 
                               fill="#1a1a1a" />
-                              
-                        <!-- Roof AC Unit (Standard UK Spec) -->
                         <rect x="25" y="100" width="50" height="35" rx="4" fill="#e2e8f0" stroke="#94a3b8" stroke-width="2"/>
                         <line x1="35" y1="105" x2="65" y2="105" stroke="#94a3b8" stroke-width="2"/>
                         <line x1="35" y1="110" x2="65" y2="110" stroke="#94a3b8" stroke-width="2"/>
                         <line x1="35" y1="115" x2="65" y2="115" stroke="#94a3b8" stroke-width="2"/>
                         <line x1="35" y1="120" x2="65" y2="120" stroke="#94a3b8" stroke-width="2"/>
                         <line x1="35" y1="125" x2="65" y2="125" stroke="#94a3b8" stroke-width="2"/>
-
-                        <!-- Rear Window -->
                         <rect x="18" y="182" width="64" height="8" rx="2" fill="#1a1a1a" />
-
-                        <!-- Front Headlights (Yellow, sitting in the curved cowl) -->
                         <circle cx="28" cy="17" r="4" fill="#FFFF00" />
                         <circle cx="72" cy="17" r="4" fill="#FFFF00" />
-                        
-                        <!-- Roof Escape Hatch -->
                         <rect x="40" y="150" width="20" height="20" rx="3" fill="none" stroke="#111" stroke-width="2" stroke-opacity="0.3"/>
                     </svg>
                 </div>

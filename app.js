@@ -251,84 +251,81 @@ function showOperatorError() {
 }
 
 /* ==========================================
-   LIVE FLEET TRACKING LOGIC
+   LIVE FLEET TRACKING LOGIC (GRID VIEW)
    ========================================== */
 async function initLiveFleetPage() {
     const container = document.getElementById('live-fleet-container');
     const loading = document.getElementById('fleet-loading');
-    
     const apiUrl = "https://www.mybustimes.cc/api/group/Swift%20Connect%20Group/vehicles/?ymax=56.96749375372495&ymin=22.98020869942421&xmax=26.253456525775164&xmin=-46.11789196263385&limit=5000";
 
-    try {
-        const response = await fetch(apiUrl);
-        if (!response.ok) throw new Error("Could not fetch fleet data.");
-        const data = await response.json();
-        
-        const trackingRecords = data.results || data; 
-        
-        if (trackingRecords.length === 0) {
-            container.innerHTML = '<p class="error-box">No vehicles currently active in this sector.</p>';
-        } else {
-            let html = '<div class="data-grid fleet-grid">';
+    async function loadFleetGrid() {
+        try {
+            const response = await fetch(apiUrl);
+            if (!response.ok) throw new Error("Could not fetch fleet data.");
+            const data = await response.json();
+            const trackingRecords = data.results || data; 
             
-            trackingRecords.forEach(record => {
-                const vehObj = record.vehicle || {};
+            if (trackingRecords.length === 0) {
+                container.innerHTML = '<p class="error-box">No vehicles currently active in this sector.</p>';
+            } else {
+                let html = '<div class="data-grid fleet-grid">';
                 
-                let fleetNum = 'N/A';
-                let reg = 'UNKNOWN REG';
+                trackingRecords.forEach(record => {
+                    const vehObj = record.vehicle || {};
+                    let fleetNum = 'N/A';
+                    let reg = 'UNKNOWN REG';
 
-                if (vehObj.name) {
-                    const nameParts = vehObj.name.split('-');
-                    if (nameParts.length >= 2) {
-                        fleetNum = nameParts[0].trim();
-                        reg = nameParts.slice(1).join('-').trim(); 
-                    } else {
-                        fleetNum = vehObj.name.trim();
+                    if (vehObj.name) {
+                        const nameParts = vehObj.name.split('-');
+                        if (nameParts.length >= 2) {
+                            fleetNum = nameParts[0].trim();
+                            reg = nameParts.slice(1).join('-').trim(); 
+                        } else {
+                            fleetNum = vehObj.name.trim();
+                        }
                     }
-                }
-                
-                const route = record.route || 'Not in service';
-                const dest = record.destination || 'Depot';
-                
-                // Deep extraction for Features and Operator Name
-                const operator = vehObj.operator_name || record.operator_name || record.operator || 'Swift Connect';
-                
-                let rawFeatures = vehObj.features || record.features || '';
-                let featuresList = 'None specified';
-                
-                if (Array.isArray(rawFeatures)) {
-                    rawFeatures = rawFeatures.join(', ');
-                }
-                if (typeof rawFeatures === 'string' && rawFeatures.trim() !== '') {
-                    // Replace all <br>, <br/>, <br > tags globally with a comma and space
-                    featuresList = rawFeatures.replace(/<br\s*\/?>/gi, ', ');
-                }
+                    
+                    const route = record.route || 'Not in service';
+                    const dest = record.destination || 'Depot';
+                    const operator = vehObj.operator_name || record.operator_name || record.operator || 'Swift Connect';
+                    
+                    let rawFeatures = vehObj.features || record.features || '';
+                    let featuresList = 'None specified';
+                    if (Array.isArray(rawFeatures)) rawFeatures = rawFeatures.join(', ');
+                    if (typeof rawFeatures === 'string' && rawFeatures.trim() !== '') {
+                        featuresList = rawFeatures.replace(/<br\s*\/?>/gi, ', ');
+                    }
 
-                html += `
-                    <div class="card fleet-card">
-                        <p style="margin-bottom: 4px; font-size: 1.05rem;"><strong>Route:</strong> ${route}</p>
-                        <p style="margin-bottom: 12px; font-size: 0.95rem;"><strong>To:</strong> ${dest}</p>
-                        
-                        <h3 style="color: var(--primary); margin-bottom: 6px; font-size: 1.3rem;">${fleetNum}</h3>
-                        <p style="display: inline-block; background-color: #FFFF00; color: black; border: 1px solid #ccc; padding: 4px 10px; border-radius: 6px; font-weight: 800; font-family: monospace; font-size: 0.9rem; margin-bottom: 10px;">${reg}</p>
-                        
-                        <p style="margin-bottom: 5px; font-size: 0.85rem; color: var(--secondary);"><strong>Features:</strong> ${featuresList}</p>
-                        
-                        <hr style="margin:15px 0 10px 0; border:0; border-top:1px solid #edf2f7;">
-                        <p style="margin:0; font-size:0.9rem; color:var(--secondary); font-weight: bold;">${operator}</p>
-                    </div>
-                `;
-            });
-            html += '</div>';
-            container.innerHTML = html;
+                    html += `
+                        <div class="card fleet-card">
+                            <p style="margin-bottom: 4px; font-size: 1.05rem;"><strong>Route:</strong> ${route}</p>
+                            <p style="margin-bottom: 12px; font-size: 0.95rem;"><strong>To:</strong> ${dest}</p>
+                            
+                            <h3 style="color: var(--primary); margin-bottom: 6px; font-size: 1.3rem;">${fleetNum}</h3>
+                            <p style="display: inline-block; background-color: #FFFF00; color: black; border: 1px solid #ccc; padding: 4px 10px; border-radius: 6px; font-weight: 800; font-family: monospace; font-size: 0.9rem; margin-bottom: 10px;">${reg}</p>
+                            
+                            <p style="margin-bottom: 5px; font-size: 0.85rem; color: var(--secondary);"><strong>Features:</strong> ${featuresList}</p>
+                            <hr style="margin:15px 0 10px 0; border:0; border-top:1px solid #edf2f7;">
+                            <p style="margin:0; font-size:0.9rem; color:var(--secondary); font-weight: bold;">${operator}</p>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                container.innerHTML = html;
+            }
+        } catch (error) {
+            console.error("Live Fleet Error:", error);
+            container.innerHTML = '<p class="error-box">Error connecting to the live tracking satellite.</p>';
+        } finally {
+            loading.classList.add('hidden');
         }
-    } catch (error) {
-        console.error("Live Fleet Error:", error);
-        container.innerHTML = '<p class="error-box">Error connecting to the live tracking satellite.</p>';
-    } finally {
-        loading.classList.add('hidden');
     }
+
+    // Initial load, then update every 60 seconds
+    await loadFleetGrid();
+    setInterval(loadFleetGrid, 60000);
 }
+
 
 /* ==========================================
    INTERACTIVE NETWORK MAP LOGIC
@@ -344,79 +341,146 @@ async function initNetworkMap() {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
+    // Layer Group to hold our custom bus icons
+    const markersLayer = L.layerGroup().addTo(map);
+    const activeMarkers = {}; // Stores fleet markers by ID so we can update them without reloading
+    
     const apiUrl = "https://www.mybustimes.cc/api/group/Swift%20Connect%20Group/vehicles/?ymax=56.96749375372495&ymin=22.98020869942421&xmax=26.253456525775164&xmin=-46.11789196263385&limit=5000";
 
-    try {
-        const response = await fetch(apiUrl);
-        if (!response.ok) throw new Error("Could not fetch map fleet data.");
-        const data = await response.json();
-        const vehicles = data.results || data;
+    // Reusable function to generate the SVG bus icon dynamically based on color and heading
+    function getBusIcon(hexColor, heading) {
+        return L.divIcon({
+            className: '', // Passing empty string removes default leaflet box styling
+            html: `
+                <div style="transform: rotate(${heading}deg); transform-origin: center; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 200" width="24" height="48" style="filter: drop-shadow(0px 3px 3px rgba(0,0,0,0.4));">
+                        <rect x="10" y="10" width="80" height="180" rx="20" fill="${hexColor}" stroke="#111" stroke-width="4"/>
+                        <rect x="20" y="25" width="60" height="35" rx="5" fill="#222" />
+                        <rect x="20" y="150" width="60" height="25" rx="5" fill="#222" />
+                        <circle cx="25" cy="18" r="5" fill="yellow" />
+                        <circle cx="75" cy="18" r="5" fill="yellow" />
+                    </svg>
+                </div>
+            `,
+            iconSize: [24, 48],
+            iconAnchor: [12, 24],
+            popupAnchor: [0, -24]
+        });
+    }
 
-        const boundsData = [];
+    async function loadMapData(isInitialLoad = false) {
+        try {
+            const response = await fetch(apiUrl);
+            if (!response.ok) throw new Error("Could not fetch map fleet data.");
+            const data = await response.json();
+            const vehicles = data.results || data;
 
-        vehicles.forEach(record => {
-            const lat = record.lat || record.latitude || record.y;
-            const lng = record.lon || record.lng || record.longitude || record.x;
+            const currentVehicleIds = new Set();
+            const boundsData = [];
 
-            if (lat && lng) {
-                const vehObj = record.vehicle || {};
-                
-                let fleetNum = 'N/A';
-                let reg = 'UNKNOWN REG';
+            vehicles.forEach(record => {
+                const lat = record.lat || record.latitude || record.y;
+                const lng = record.lon || record.lng || record.longitude || record.x;
 
-                if (vehObj.name) {
-                    const nameParts = vehObj.name.split('-');
-                    if (nameParts.length >= 2) {
-                        fleetNum = nameParts[0].trim();
-                        reg = nameParts.slice(1).join('-').trim();
+                if (lat && lng) {
+                    const vehObj = record.vehicle || {};
+                    
+                    // Fleet ID & Registration extraction
+                    let fleetNum = 'N/A';
+                    let reg = 'UNKNOWN REG';
+                    if (vehObj.name) {
+                        const nameParts = vehObj.name.split('-');
+                        if (nameParts.length >= 2) {
+                            fleetNum = nameParts[0].trim();
+                            reg = nameParts.slice(1).join('-').trim();
+                        } else {
+                            fleetNum = vehObj.name.trim();
+                        }
+                    }
+                    
+                    // Prevent rendering completely broken records
+                    if (fleetNum === 'N/A') return;
+                    currentVehicleIds.add(fleetNum);
+
+                    // Scrape Heading and Color
+                    const heading = record.heading || vehObj.heading || 0;
+                    let rawColour = vehObj.colour || record.colour || '2292ef';
+                    
+                    // Ensure valid hex code format
+                    let iconColor = rawColour;
+                    if (!iconColor.startsWith('#') && /^[0-9A-F]{3,6}$/i.test(iconColor)) {
+                        iconColor = '#' + iconColor;
+                    } else if (!iconColor.startsWith('#')) {
+                        iconColor = '#2292ef'; // Fallback if API passes weird text
+                    }
+
+                    // Scrape Route & Metadata
+                    const route = record.route || 'Not in service';
+                    const dest = record.destination || 'Depot';
+                    const operator = vehObj.operator_name || record.operator_name || record.operator || 'Swift Connect';
+                    
+                    let rawFeatures = vehObj.features || record.features || '';
+                    let featuresList = 'None specified';
+                    if (Array.isArray(rawFeatures)) rawFeatures = rawFeatures.join(', ');
+                    if (typeof rawFeatures === 'string' && rawFeatures.trim() !== '') {
+                        featuresList = rawFeatures.replace(/<br\s*\/?>/gi, ', ');
+                    }
+
+                    const busIcon = getBusIcon(iconColor, heading);
+                    boundsData.push([lat, lng]);
+
+                    const popupHtml = `
+                        <div style="font-family: inherit; color: #0b1922; min-width: 220px;">
+                            <p style="margin: 0 0 5px 0; font-size: 1.05rem;"><strong>Route:</strong> ${route}</p>
+                            <p style="margin: 0 0 12px 0; font-size: 0.95rem;"><strong>To:</strong> ${dest}</p>
+                            
+                            <h3 style="margin: 0 0 6px 0; color: #2292ef; font-size: 1.2rem;">${fleetNum}</h3>
+                            <p style="margin: 0 0 10px 0; display: inline-block; background: #FFFF00; color: black; padding: 3px 8px; border-radius: 4px; font-weight: 800; font-size: 0.85rem; border: 1px solid #ccc; font-family: monospace;">${reg}</p>
+                            
+                            <p style="margin: 0 0 5px 0; font-size: 0.85rem; color: #4a5d6c;"><strong>Features:</strong> ${featuresList}</p>
+    
+                            <hr style="margin: 12px 0; border: 0; border-top: 1px solid #ccc;">
+                            <p style="margin: 0; font-size: 0.85rem; color: #4a5d6c; font-weight: bold;">${operator}</p>
+                        </div>
+                    `;
+
+                    // Update existing marker or create a new one
+                    if (activeMarkers[fleetNum]) {
+                        const existingMarker = activeMarkers[fleetNum];
+                        existingMarker.setLatLng([lat, lng]);
+                        existingMarker.setIcon(busIcon);
+                        // Updating content allows users to keep the popup open while the bus moves
+                        existingMarker.getPopup().setContent(popupHtml); 
                     } else {
-                        fleetNum = vehObj.name.trim();
+                        const newMarker = L.marker([lat, lng], { icon: busIcon }).addTo(markersLayer);
+                        newMarker.bindPopup(popupHtml);
+                        activeMarkers[fleetNum] = newMarker;
                     }
                 }
+            });
 
-                const route = record.route || 'Not in service';
-                const dest = record.destination || 'Depot';
-                
-                // Deep extraction for Features and Operator Name
-                const operator = vehObj.operator_name || record.operator_name || record.operator || 'Swift Connect';
-                
-                let rawFeatures = vehObj.features || record.features || '';
-                let featuresList = 'None specified';
-                
-                if (Array.isArray(rawFeatures)) {
-                    rawFeatures = rawFeatures.join(', ');
+            // Cleanup routine: Remove buses that are no longer tracking in the API response
+            for (const activeFleetId in activeMarkers) {
+                if (!currentVehicleIds.has(activeFleetId)) {
+                    markersLayer.removeLayer(activeMarkers[activeFleetId]);
+                    delete activeMarkers[activeFleetId];
                 }
-                if (typeof rawFeatures === 'string' && rawFeatures.trim() !== '') {
-                    featuresList = rawFeatures.replace(/<br\s*\/?>/gi, ', ');
-                }
-
-                const marker = L.marker([lat, lng]).addTo(map);
-                boundsData.push([lat, lng]);
-
-                const popupHtml = `
-                    <div style="font-family: inherit; color: #0b1922; min-width: 220px;">
-                        <p style="margin: 0 0 5px 0; font-size: 1.05rem;"><strong>Route:</strong> ${route}</p>
-                        <p style="margin: 0 0 12px 0; font-size: 0.95rem;"><strong>To:</strong> ${dest}</p>
-                        
-                        <h3 style="margin: 0 0 6px 0; color: #2292ef; font-size: 1.2rem;">${fleetNum}</h3>
-                        <p style="margin: 0 0 10px 0; display: inline-block; background: #FFFF00; color: black; padding: 3px 8px; border-radius: 4px; font-weight: 800; font-size: 0.85rem; border: 1px solid #ccc; font-family: monospace;">${reg}</p>
-                        
-                        <p style="margin: 0 0 5px 0; font-size: 0.85rem; color: #4a5d6c;"><strong>Features:</strong> ${featuresList}</p>
-
-                        <hr style="margin: 12px 0; border: 0; border-top: 1px solid #ccc;">
-                        <p style="margin: 0; font-size: 0.85rem; color: #4a5d6c; font-weight: bold;">${operator}</p>
-                    </div>
-                `;
-                marker.bindPopup(popupHtml);
             }
-        });
 
-        if (boundsData.length > 0) {
-            map.fitBounds(boundsData, { padding: [30, 30] });
+            // Only auto-frame the camera on the very first load to avoid annoying the user while they pan around
+            if (isInitialLoad && boundsData.length > 0) {
+                map.fitBounds(boundsData, { padding: [30, 30] });
+            }
+
+        } catch (error) {
+            console.error("Map rendering error:", error);
+            if (isInitialLoad) {
+                mapContainer.innerHTML = '<div style="padding: 40px; text-align: center; color: #e53e3e; font-weight: bold;">Could not connect to map rendering satellite.</div>';
+            }
         }
-
-    } catch (error) {
-        console.error("Map rendering error:", error);
-        mapContainer.innerHTML = '<div style="padding: 40px; text-align: center; color: #e53e3e; font-weight: bold;">Could not connect to map rendering satellite.</div>';
     }
+
+    // Trigger initial load and set the 60 second recurring heartbeat
+    await loadMapData(true);
+    setInterval(() => loadMapData(false), 60000);
 }

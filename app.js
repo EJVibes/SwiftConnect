@@ -89,8 +89,11 @@ function renderOperatorMetrics(dataRecord) {
     document.getElementById('operator-title-name').innerText = dataRecord.operator_name;
     document.getElementById('operator-badge-code').innerText = `ID: ${dataRecord.operator_code || 'SWFT'}`;
 
-    // Strictly looking for region_name as requested
-    const regionDisplay = dataRecord.region_name || 'System Wide';
+    // Strictly pull region_name, fallback only if it's empty or undefined
+    let regionDisplay = 'System Wide';
+    if (dataRecord.region_name && dataRecord.region_name.trim() !== '') {
+        regionDisplay = dataRecord.region_name;
+    }
 
     const html = `
         <div class="data-item-row">
@@ -122,11 +125,11 @@ function triggerRouteFetch(operatorCode, operatorName) {
     if (operatorName.toLowerCase().includes("express")) {
         fetchExpressRoutes();
     } else {
-        fetchStandardRoutes(operatorCode);
+        fetchStandardRoutes(operatorCode, operatorName);
     }
 }
 
-async function fetchStandardRoutes(operatorCode) {
+async function fetchStandardRoutes(operatorCode, operatorName) {
     const container = document.getElementById('routes-container');
     if (!operatorCode) {
         container.innerHTML = `<p class="error-box">No Operator Code found to query routes.</p>`;
@@ -136,7 +139,14 @@ async function fetchStandardRoutes(operatorCode) {
     try {
         const res = await fetch(`https://www.mybustimes.cc/api/operator/route/?operator_code=${operatorCode}&limit=200`);
         const data = await res.json();
-        renderRouteList(data.results || [], container);
+        let routes = data.results || [];
+
+        // Manual exclusion rule for the "Swift Connecting Railway" ghosts
+        if (operatorName.toLowerCase().includes('railway')) {
+            routes = routes.filter(r => r.route_num !== 'X45' && r.route_num !== 'X46');
+        }
+
+        renderRouteList(routes, container);
     } catch (e) {
         console.error("Route Fetch Error:", e);
         container.innerHTML = `<p class="error-box">Could not load routes from the network.</p>`;
@@ -148,38 +158,43 @@ async function fetchExpressRoutes() {
     container.innerHTML = '<p>Sweeping entire network for Express routes (#C31B6B)... This may take a moment.</p>';
     
     try {
-        // 1. Fetch ALL operators under "Swift Connecting"
-        let opsUrl = 'https://www.mybustimes.cc/api/operator/?operator_name__icontains=Swift+Connecting';
+        // 1. Search "Swift Connecting"
+        let opsUrl = 'https://www.mybustimes.cc/api/operator/?operator_name__icontains=Swift%20Connecting';
         let allOps = [];
         while (opsUrl) {
             const res = await fetch(opsUrl);
             const data = await res.json();
-            allOps = allOps.concat(data.results);
+            allOps = allOps.concat(data.results || []);
             opsUrl = data.next;
         }
 
-        // 2. Fetch routes for all those operators concurrently
-        const routePromises = allOps
-            .filter(op => op.operator_code) // Ensure they have a code before fetching
-            .map(op => fetch(`https://www.mybustimes.cc/api/operator/route/?operator_code=${op.operator_code}&limit=200`)
-                .then(r => r.json())
-                .catch(() => ({results: []}))
-            );
-            
-        const routesDataArray = await Promise.all(routePromises);
+        // 2. Gather all the "operator_code"s
+        const operatorCodes = allOps.map(op => op.operator_code).filter(code => code);
 
-        // 3. Filter strictly by route_colour #C31B6B
+        // 3. Search all of the collected codes one by one
         let expressRoutes = [];
-        routesDataArray.forEach(data => {
-            if (data.results) {
-                const matched = data.results.filter(r => 
-                    r.route_colour && r.route_colour.toUpperCase().includes('C31B6B')
-                );
+        for (const code of operatorCodes) {
+            try {
+                const routeRes = await fetch(`https://www.mybustimes.cc/api/operator/route/?operator_code=${code}&limit=200`);
+                const routeData = await routeRes.json();
+                const routes = routeData.results || [];
+                
+                // 4. Search the routes for the hex colour "#C31B6B"
+                const matched = routes.filter(r => {
+                    if (!r.route_colour) return false;
+                    // Standardize the check to avoid case or hashtag mismatch issues
+                    const hex = r.route_colour.replace('#', '').toUpperCase();
+                    return hex === 'C31B6B';
+                });
+                
+                // 5. Gather matching routes
                 expressRoutes = expressRoutes.concat(matched);
+            } catch (e) {
+                console.warn(`Failed to sweep routes for code: ${code}`, e);
             }
-        });
+        }
 
-        // 4. Remove exact duplicates based on route_num
+        // Remove exact duplicates just in case multiple operators share a route
         const uniqueRoutesMap = new Map();
         expressRoutes.forEach(r => {
             if (r.route_num) {
@@ -188,6 +203,7 @@ async function fetchExpressRoutes() {
         });
         const finalRoutes = Array.from(uniqueRoutesMap.values());
 
+        // 6. Display all routes
         renderRouteList(finalRoutes, container);
     } catch (e) {
         console.error("Express Sweep Error:", e);
@@ -201,7 +217,7 @@ function renderRouteList(routes, container) {
         return;
     }
 
-    // Alphanumeric sorting logic for route numbers (e.g., 1, 2, 2A, 10)
+    // Alphanumeric sorting logic for route numbers
     routes.sort((a, b) => {
         const numA = a.route_num ? a.route_num.toString() : '';
         const numB = b.route_num ? b.route_num.toString() : '';
@@ -210,7 +226,6 @@ function renderRouteList(routes, container) {
 
     let html = '';
     routes.forEach(r => {
-        // Target specific keys requested
         const routeNum = r.route_num || '?';
         const routeName = r.route_name ? ` (${r.route_name})` : '';
         const start = r.inbound_destination || 'Unknown Start';

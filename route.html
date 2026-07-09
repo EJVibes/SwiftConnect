@@ -6,7 +6,7 @@
     <title>Route Information | Swift Connect</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body data-theme="swift-base" style="background-color: #0b1321;">
+<body data-theme="swift-base">
 
     <header class="site-header">
         <div class="container header-container">
@@ -31,11 +31,25 @@
         </div>
     </header>
 
-    <main class="container simple-page-content" style="text-align: center; min-height: 60vh; display: flex; align-items: center; justify-content: center;">
-        <div class="card" style="background-color: #1a202c; border-top: 6px solid var(--primary); padding: 60px; max-width: 600px; width: 100%;">
-            <h2 style="color: #ffffff; margin-bottom: 15px; font-size: 2.2rem;">Route Database</h2>
-            <p style="color: #a0aec0; font-size: 1.1rem; line-height: 1.6;">Detailed route timetables, stopping patterns, and service alerts will be available here soon.</p>
-            <a href="javascript:history.back()" class="btn-primary" style="display: inline-block; margin-top: 30px; width: auto; padding: 12px 30px;">Go Back</a>
+    <div class="simple-page-header">
+        <div class="container">
+            <h1 id="route-page-title">Loading Route...</h1>
+            <p id="route-page-subtitle">Fetching route databanks from the server.</p>
+        </div>
+    </div>
+
+    <main class="container simple-page-content" style="max-width: 900px; margin: 0 auto;">
+        <div id="route-loading" class="loading-spinner-box">
+            <p>Downloading route database...</p>
+        </div>
+
+        <div id="route-error-state" class="error-box hidden">
+            <p>Could not locate route information. The route may have been withdrawn or suspended.</p>
+            <a href="javascript:history.back()" class="btn-secondary">Go Back</a>
+        </div>
+
+        <div id="route-detail-container" class="hidden">
+            <!-- Dynamically populated by JS -->
         </div>
     </main>
 

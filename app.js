@@ -257,7 +257,6 @@ async function initLiveFleetPage() {
     const container = document.getElementById('live-fleet-container');
     const loading = document.getElementById('fleet-loading');
     
-    // UPDATED API URL
     const apiUrl = "https://www.mybustimes.cc/api/group/Swift%20Connect%20Group/vehicles/?ymax=56.96749375372495&ymin=22.98020869942421&xmax=26.253456525775164&xmin=-46.11789196263385&limit=5000";
 
     try {
@@ -288,16 +287,21 @@ async function initLiveFleetPage() {
                 
                 const route = record.route || 'Not in service';
                 const dest = record.destination || 'Depot';
-                const operator = record.operator || 'Swift Connect';
+                const operator = record.operator_name || record.operator || 'Swift Connect';
+                const featuresList = (Array.isArray(record.features) ? record.features.join(', ') : record.features) || 'None specified';
 
                 html += `
                     <div class="card fleet-card">
-                        <h3>Vehicle ${fleetNum}</h3>
-                        <p class="badge">${reg}</p>
-                        <hr style="margin:10px 0; border:0; border-top:1px solid #edf2f7;">
-                        <p><strong>Route:</strong> ${route}</p>
-                        <p><strong>To:</strong> ${dest}</p>
-                        <p style="margin-top:10px; font-size:0.85rem; color:var(--secondary)">${operator}</p>
+                        <p style="margin-bottom: 4px; font-size: 1.05rem;"><strong>Route:</strong> ${route}</p>
+                        <p style="margin-bottom: 12px; font-size: 0.95rem;"><strong>To:</strong> ${dest}</p>
+                        
+                        <h3 style="color: var(--primary); margin-bottom: 6px; font-size: 1.3rem;">${fleetNum}</h3>
+                        <p style="display: inline-block; background-color: #FFFF00; color: black; border: 1px solid #ccc; padding: 4px 10px; border-radius: 6px; font-weight: 800; font-family: monospace; font-size: 0.9rem; margin-bottom: 10px;">${reg}</p>
+                        
+                        <p style="margin-bottom: 5px; font-size: 0.85rem; color: var(--secondary);"><strong>Features:</strong> ${featuresList}</p>
+                        
+                        <hr style="margin:15px 0 10px 0; border:0; border-top:1px solid #edf2f7;">
+                        <p style="margin:0; font-size:0.9rem; color:var(--secondary); font-weight: bold;">${operator}</p>
                     </div>
                 `;
             });
@@ -326,7 +330,6 @@ async function initNetworkMap() {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    // UPDATED API URL
     const apiUrl = "https://www.mybustimes.cc/api/group/Swift%20Connect%20Group/vehicles/?ymax=56.96749375372495&ymin=22.98020869942421&xmax=26.253456525775164&xmin=-46.11789196263385&limit=5000";
 
     try {
@@ -357,19 +360,24 @@ async function initNetworkMap() {
 
                 const route = record.route || 'Not in service';
                 const dest = record.destination || 'Depot';
-                const operator = record.operator || 'Swift Connect';
+                const operator = record.operator_name || record.operator || 'Swift Connect';
+                const featuresList = (Array.isArray(record.features) ? record.features.join(', ') : record.features) || 'None specified';
 
                 const marker = L.marker([lat, lng]).addTo(map);
                 boundsData.push([lat, lng]);
 
                 const popupHtml = `
-                    <div style="font-family: inherit; color: #0b1922; min-width: 200px;">
-                        <h3 style="margin: 0 0 5px 0; color: #2292ef; font-size: 1.1rem;">Vehicle ${fleetNum}</h3>
-                        <p style="margin: 0 0 8px 0; display: inline-block; background: #2292ef; color: white; padding: 2px 8px; border-radius: 4px; font-weight: bold; font-size: 0.8rem;">${reg}</p>
-                        <p style="margin: 5px 0; font-size: 0.95rem;"><strong>Route:</strong> ${route}</p>
-                        <p style="margin: 5px 0; font-size: 0.95rem;"><strong>To:</strong> ${dest}</p>
-                        <hr style="margin: 10px 0; border: 0; border-top: 1px solid #ccc;">
-                        <p style="margin: 0; font-size: 0.8rem; color: #4a5d6c;">${operator}</p>
+                    <div style="font-family: inherit; color: #0b1922; min-width: 220px;">
+                        <p style="margin: 0 0 5px 0; font-size: 1.05rem;"><strong>Route:</strong> ${route}</p>
+                        <p style="margin: 0 0 12px 0; font-size: 0.95rem;"><strong>To:</strong> ${dest}</p>
+                        
+                        <h3 style="margin: 0 0 6px 0; color: #2292ef; font-size: 1.2rem;">${fleetNum}</h3>
+                        <p style="margin: 0 0 10px 0; display: inline-block; background: #FFFF00; color: black; padding: 3px 8px; border-radius: 4px; font-weight: 800; font-size: 0.85rem; border: 1px solid #ccc; font-family: monospace;">${reg}</p>
+                        
+                        <p style="margin: 0 0 5px 0; font-size: 0.85rem; color: #4a5d6c;"><strong>Features:</strong> ${featuresList}</p>
+
+                        <hr style="margin: 12px 0; border: 0; border-top: 1px solid #ccc;">
+                        <p style="margin: 0; font-size: 0.85rem; color: #4a5d6c; font-weight: bold;">${operator}</p>
                     </div>
                 `;
                 marker.bindPopup(popupHtml);

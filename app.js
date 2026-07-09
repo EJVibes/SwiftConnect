@@ -50,10 +50,9 @@ async function ensureGlobalRouteCacheLoaded() {
         const res = await fetch(`./global_routes_cache.json?t=${new Date().getTime()}`);
         if (res.ok) {
             SWIFT_ROUTE_CACHE = await res.json();
-            console.log("Global static routes cache loaded successfully.");
         }
     } catch (e) {
-        console.warn("Static global_routes_cache.json unavailable. Falling back to dynamic fetching.", e);
+        console.warn("Static global_routes_cache.json unavailable.");
     } finally {
         IS_CACHE_INITIALIZED = true;
     }
@@ -340,25 +339,27 @@ async function fetchAndRenderTimetable(routeId) {
     try {
         let records = [];
 
-        // 1. ALWAYS check the static Python-generated cache first
+        // 1. Check Python static cache first
         await ensureGlobalRouteCacheLoaded();
         if (SWIFT_ROUTE_CACHE[routeId] && Array.isArray(SWIFT_ROUTE_CACHE[routeId].timetable) && SWIFT_ROUTE_CACHE[routeId].timetable.length > 0) {
             records = SWIFT_ROUTE_CACHE[routeId].timetable;
         }
 
-        // 2. If the cache is empty, attempt a dynamic browser fetch
+        // 2. If empty, browser fetches via a secure CORS Proxy bridge to bypass the security block
         if (records.length === 0) {
             const urlsToTry = [
                 `https://www.mybustimes.cc/api/get_timetables/?route_id=${routeId}`,
-                `https://www.mybustimes.cc/api/get_timetables/?route=${routeId}`,
-                `https://www.mybustimes.cc/api/get_timetables/${routeId}/`
+                `https://www.mybustimes.cc/api/get_timetables/?route=${routeId}`
             ];
 
             for (const url of urlsToTry) {
                 try {
-                    const res = await fetch(url);
+                    // allorigins.win proxies the API so the browser allows the download
+                    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+                    const res = await fetch(proxyUrl);
                     if (res.ok) {
                         const data = await res.json();
+                        
                         // Array hunter
                         if (Array.isArray(data)) records = data;
                         else if (data.results && Array.isArray(data.results)) records = data.results;
@@ -367,7 +368,7 @@ async function fetchAndRenderTimetable(routeId) {
                         if (records.length > 0) break; 
                     }
                 } catch (e) {
-                    console.warn(`Dynamic fetch failed (likely CORS) on ${url}`);
+                    console.warn(`Proxy fetch failed for ${url}`);
                 }
             }
         }
@@ -383,11 +384,7 @@ async function fetchAndRenderTimetable(routeId) {
 
         // Generic Table Builder - Extracts headers dynamically
         let headers = Object.keys(records[0]).filter(k => typeof records[0][k] !== 'object' && !Array.isArray(records[0][k]));
-        
-        // Safety net: if all keys were weirdly formatted, just grab all keys
-        if (headers.length === 0) {
-            headers = Object.keys(records[0]);
-        }
+        if (headers.length === 0) headers = Object.keys(records[0]);
         
         let tableHtml = `<div style="overflow-x: auto; border-radius: var(--radius-soft); border: 1px solid #edf2f7;"><table class="route-data-table" style="margin: 0; width: 100%; text-align: center; white-space: nowrap;"><thead><tr>`;
         
@@ -402,7 +399,7 @@ async function fetchAndRenderTimetable(routeId) {
             headers.forEach(h => {
                 let val = row[h];
                 if (typeof val === 'object' && val !== null) {
-                    val = JSON.stringify(val); // Safety to prevent rendering [object Object]
+                    val = JSON.stringify(val); 
                 }
                 tableHtml += `<td style="padding: 12px; border-bottom: 1px solid #edf2f7;">${val !== null && val !== undefined && val !== '' ? val : '-'}</td>`;
             });
@@ -458,7 +455,7 @@ async function initRoutePage() {
         const opName = extractOperatorName(data) || data.operator || 'Unknown Operator';
         applyBrandingEngine(opName); 
 
-        // Safely construct the exact format requested
+        // Constructs exact requested format: {route_num} {route_name} - {inbound} - {outbound}
         const routeNum = data.route_num || '';
         const routeName = data.route_name || '';
         const start = data.inbound_destination || '';
@@ -469,14 +466,12 @@ async function initRoutePage() {
         if (start) titleString += ` - ${start}`;
         if (end) titleString += ` - ${end}`;
 
-        // Set Headers: "{route_num} {route_name} - {inbound} - {outbound}"
         titleHeader.innerText = titleString;
         subHeader.innerText = `Operated by ${opName}`;
 
-        // Fetch Timetable from the dynamic array hunter / cache
         const timetableHtml = await fetchAndRenderTimetable(routeId);
 
-        // Render purely the Timetable Card (Meta Data Table entirely removed)
+        // Renders ONLY the Timetable Card (The raw attributes table is completely removed)
         const html = `
             <div class="card" style="padding: 0; overflow: hidden;">
                 <div style="padding: 25px 35px; background-color: #f8fafc; border-bottom: 2px solid #edf2f7;">

@@ -333,48 +333,42 @@ function showOperatorError() {
 
 
 /* ==========================================
-   ROUTE DETAIL PAGE LOGIC (REDESIGNED)
+   ROUTE DETAIL PAGE LOGIC 
    ========================================== */
 
-// Indestructible Timetable Array Hunter
 async function fetchAndRenderTimetable(routeId) {
     try {
         let records = [];
-        
-        // Priority list of API endpoints to try
-        const urlsToTry = [
-            `https://www.mybustimes.cc/api/get_timetables/?route_id=${routeId}`,
-            `https://www.mybustimes.cc/api/get_timetables/?route=${routeId}`,
-            `https://www.mybustimes.cc/api/get_timetables/${routeId}/`
-        ];
 
-        for (const url of urlsToTry) {
-            try {
-                const res = await fetch(url);
-                if (res.ok) {
-                    const data = await res.json();
-                    
-                    // Arrays can be hidden anywhere. Let's hunt it down.
-                    if (Array.isArray(data)) {
-                        records = data;
-                    } else if (data.results && Array.isArray(data.results)) {
-                        records = data.results;
-                    } else if (data.data && Array.isArray(data.data)) {
-                        records = data.data;
-                    } else {
-                        // Deep search: look for any array inside the main object
-                        for (const key in data) {
-                            if (Array.isArray(data[key])) {
-                                records = data[key];
-                                break;
-                            }
-                        }
+        // 1. ALWAYS check the static Python-generated cache first
+        await ensureGlobalRouteCacheLoaded();
+        if (SWIFT_ROUTE_CACHE[routeId] && Array.isArray(SWIFT_ROUTE_CACHE[routeId].timetable) && SWIFT_ROUTE_CACHE[routeId].timetable.length > 0) {
+            records = SWIFT_ROUTE_CACHE[routeId].timetable;
+        }
+
+        // 2. If the cache is empty, attempt a dynamic browser fetch
+        if (records.length === 0) {
+            const urlsToTry = [
+                `https://www.mybustimes.cc/api/get_timetables/?route_id=${routeId}`,
+                `https://www.mybustimes.cc/api/get_timetables/?route=${routeId}`,
+                `https://www.mybustimes.cc/api/get_timetables/${routeId}/`
+            ];
+
+            for (const url of urlsToTry) {
+                try {
+                    const res = await fetch(url);
+                    if (res.ok) {
+                        const data = await res.json();
+                        // Array hunter
+                        if (Array.isArray(data)) records = data;
+                        else if (data.results && Array.isArray(data.results)) records = data.results;
+                        else if (data.data && Array.isArray(data.data)) records = data.data;
+                        
+                        if (records.length > 0) break; 
                     }
-                    // If we successfully found an array of records, stop trying URLs
-                    if (records.length > 0) break; 
+                } catch (e) {
+                    console.warn(`Dynamic fetch failed (likely CORS) on ${url}`);
                 }
-            } catch (e) {
-                console.warn(`Fallback triggered: Failed fetch on ${url}`);
             }
         }
 
@@ -388,7 +382,12 @@ async function fetchAndRenderTimetable(routeId) {
         }
 
         // Generic Table Builder - Extracts headers dynamically
-        const headers = Object.keys(records[0]).filter(k => typeof records[0][k] !== 'object' && !Array.isArray(records[0][k]));
+        let headers = Object.keys(records[0]).filter(k => typeof records[0][k] !== 'object' && !Array.isArray(records[0][k]));
+        
+        // Safety net: if all keys were weirdly formatted, just grab all keys
+        if (headers.length === 0) {
+            headers = Object.keys(records[0]);
+        }
         
         let tableHtml = `<div style="overflow-x: auto; border-radius: var(--radius-soft); border: 1px solid #edf2f7;"><table class="route-data-table" style="margin: 0; width: 100%; text-align: center; white-space: nowrap;"><thead><tr>`;
         
@@ -402,6 +401,9 @@ async function fetchAndRenderTimetable(routeId) {
             tableHtml += `<tr>`;
             headers.forEach(h => {
                 let val = row[h];
+                if (typeof val === 'object' && val !== null) {
+                    val = JSON.stringify(val); // Safety to prevent rendering [object Object]
+                }
                 tableHtml += `<td style="padding: 12px; border-bottom: 1px solid #edf2f7;">${val !== null && val !== undefined && val !== '' ? val : '-'}</td>`;
             });
             tableHtml += `</tr>`;
@@ -441,8 +443,19 @@ async function initRoutePage() {
         if (!res.ok) throw new Error("Could not fetch route");
         const data = await res.json();
 
-        // Much safer Operator Name extraction
-        const opName = data.operator_name || data.operator || 'Unknown Operator';
+        function extractOperatorName(obj) {
+            if (obj === null || typeof obj !== 'object') return null;
+            for (const [key, value] of Object.entries(obj)) {
+                if (key === 'operator_name') return value;
+                if (typeof value === 'object') {
+                    const nestedResult = extractOperatorName(value);
+                    if (nestedResult) return nestedResult;
+                }
+            }
+            return null;
+        }
+
+        const opName = extractOperatorName(data) || data.operator || 'Unknown Operator';
         applyBrandingEngine(opName); 
 
         // Safely construct the exact format requested
@@ -460,7 +473,7 @@ async function initRoutePage() {
         titleHeader.innerText = titleString;
         subHeader.innerText = `Operated by ${opName}`;
 
-        // Fetch Timetable from the new dynamic array hunter
+        // Fetch Timetable from the dynamic array hunter / cache
         const timetableHtml = await fetchAndRenderTimetable(routeId);
 
         // Render purely the Timetable Card (Meta Data Table entirely removed)

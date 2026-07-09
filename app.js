@@ -155,59 +155,36 @@ async function fetchStandardRoutes(operatorCode, operatorName) {
 
 async function fetchExpressRoutes() {
     const container = document.getElementById('routes-container');
-    container.innerHTML = '<p>Sweeping entire network for Express routes (#C31B6B)... This may take a moment.</p>';
+    container.innerHTML = '<p>Loading targeted Swift Express network lines...</p>';
     
     try {
-        // 1. Search "Swift Connecting"
-        let opsUrl = 'https://www.mybustimes.cc/api/operator/?operator_name__icontains=Swift%20Connecting';
-        let allOps = [];
-        while (opsUrl) {
-            const res = await fetch(opsUrl);
-            const data = await res.json();
-            allOps = allOps.concat(data.results || []);
-            opsUrl = data.next;
-        }
-
-        // 2. Gather all the "operator_code"s
-        const operatorCodes = allOps.map(op => op.operator_code).filter(code => code);
-
-        // 3. Search all of the collected codes one by one
+        // Direct integration of target API parameter configuration
+        let expressUrl = 'https://www.mybustimes.cc/api/operator/route/?id=&route_name__icontains=Swift+Express&route_num__icontains=&operator_code=&has_stops=unknown&stops_have_cords=unknown';
         let expressRoutes = [];
-        for (const code of operatorCodes) {
-            try {
-                const routeRes = await fetch(`https://www.mybustimes.cc/api/operator/route/?operator_code=${code}&limit=200`);
-                const routeData = await routeRes.json();
-                const routes = routeData.results || [];
-                
-                // 4. Search the routes for the hex colour "#C31B6B"
-                const matched = routes.filter(r => {
-                    if (!r.route_colour) return false;
-                    // Standardize the check to avoid case or hashtag mismatch issues
-                    const hex = r.route_colour.replace('#', '').toUpperCase();
-                    return hex === 'C31B6B';
-                });
-                
-                // 5. Gather matching routes
-                expressRoutes = expressRoutes.concat(matched);
-            } catch (e) {
-                console.warn(`Failed to sweep routes for code: ${code}`, e);
-            }
+
+        // Handle structural API pagination changes automatically
+        while (expressUrl) {
+            const res = await fetch(expressUrl);
+            if (!res.ok) throw new Error("Target pipeline integration error.");
+            const data = await res.json();
+            expressRoutes = expressRoutes.concat(data.results || []);
+            expressUrl = data.next;
         }
 
-        // Remove exact duplicates just in case multiple operators share a route
+        // Deduplicate output collections accurately via unique identifier fields
         const uniqueRoutesMap = new Map();
         expressRoutes.forEach(r => {
             if (r.route_num) {
+                // Keep the record containing the unique route structure configuration
                 uniqueRoutesMap.set(r.route_num, r);
             }
         });
         const finalRoutes = Array.from(uniqueRoutesMap.values());
 
-        // 6. Display all routes
         renderRouteList(finalRoutes, container);
     } catch (e) {
-        console.error("Express Sweep Error:", e);
-        container.innerHTML = `<p class="error-box">Failed to sweep express routes.</p>`;
+        console.error("Express Target Fetch Error:", e);
+        container.innerHTML = `<p class="error-box">Failed to fetch specified dynamic express records.</p>`;
     }
 }
 
@@ -232,10 +209,18 @@ function renderRouteList(routes, container) {
         const end = r.outbound_destination || 'Unknown Destination';
         const borderCol = r.route_colour ? (r.route_colour.startsWith('#') ? r.route_colour : `#${r.route_colour}`) : 'var(--primary)';
         
+        // Generate clickable link block conditionally if operator metadata exists
+        let operatorLinkHtml = '';
+        if (r.operator_name) {
+            const encodedOp = encodeURIComponent(r.operator_name.trim());
+            operatorLinkHtml = `<a href="?op=${encodedOp}" class="route-pill-operator">Division: ${r.operator_name}</a>`;
+        }
+        
         html += `
             <div class="route-pill" style="border-left-color: ${borderCol}">
                 <strong>${routeNum}${routeName}</strong>
                 <span class="route-pill-dest">${start} &rarr; ${end}</span>
+                ${operatorLinkHtml}
             </div>
         `;
     });

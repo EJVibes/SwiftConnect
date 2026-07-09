@@ -11,6 +11,51 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /* ==========================================
+   GLOBAL ROUTE CACHE ENGINE
+   Prevents API spamming by remembering routes
+   ========================================== */
+const SWIFT_ROUTE_CACHE = {};
+
+async function enrichVehiclesWithRouteData(vehicles) {
+    const missingRouteIds = new Set();
+
+    // 1. Scan all vehicles for route URLs and extract the ID
+    vehicles.forEach(record => {
+        if (record.service && record.service.url) {
+            // Regex to find the number at the end of the /route/XXXXXX/ string
+            const match = record.service.url.match(/\/route\/(\d+)\/?/);
+            if (match && match[1]) {
+                record._extractedRouteId = match[1];
+                
+                // If we don't have this route saved in memory, flag it to be downloaded
+                if (!SWIFT_ROUTE_CACHE[match[1]]) {
+                    missingRouteIds.add(match[1]);
+                }
+            }
+        }
+    });
+
+    // 2. Download missing routes concurrently
+    const fetchPromises = Array.from(missingRouteIds).map(async (routeId) => {
+        try {
+            // Includes trailing slash to prevent Django redirect errors
+            const res = await fetch(`https://www.mybustimes.cc/api/operator/route/${routeId}/`);
+            if (res.ok) {
+                SWIFT_ROUTE_CACHE[routeId] = await res.json();
+            }
+        } catch (e) {
+            console.warn(`Failed to fetch route cache for ID: ${routeId}`, e);
+        }
+    });
+
+    // Wait for all missing routes to download before proceeding
+    if (fetchPromises.length > 0) {
+        await Promise.all(fetchPromises);
+    }
+}
+
+
+/* ==========================================
    OPERATOR SUBPAGE LOGIC
    ========================================== */
 async function initOperatorPage() {
@@ -267,52 +312,65 @@ async function initLiveFleetPage() {
             
             if (trackingRecords.length === 0) {
                 container.innerHTML = '<p class="error-box">No vehicles currently active in this sector.</p>';
-            } else {
-                let html = '<div class="data-grid fleet-grid">';
-                
-                trackingRecords.forEach(record => {
-                    const vehObj = record.vehicle || {};
-                    let fleetNum = 'N/A';
-                    let reg = 'UNKNOWN REG';
-
-                    if (vehObj.name) {
-                        const nameParts = vehObj.name.split('-');
-                        if (nameParts.length >= 2) {
-                            fleetNum = nameParts[0].trim();
-                            reg = nameParts.slice(1).join('-').trim(); 
-                        } else {
-                            fleetNum = vehObj.name.trim();
-                        }
-                    }
-                    
-                    const route = record.route || 'Not in service';
-                    const dest = record.destination || 'Depot';
-                    const operator = vehObj.operator_name || record.operator_name || record.operator || 'Swift Connect';
-                    
-                    let rawFeatures = vehObj.features || record.features || '';
-                    let featuresList = 'None specified';
-                    if (Array.isArray(rawFeatures)) rawFeatures = rawFeatures.join(', ');
-                    if (typeof rawFeatures === 'string' && rawFeatures.trim() !== '') {
-                        featuresList = rawFeatures.replace(/<br\s*\/?>/gi, ', ');
-                    }
-
-                    html += `
-                        <div class="card fleet-card">
-                            <p style="margin-bottom: 4px; font-size: 1.05rem;"><strong>Route:</strong> ${route}</p>
-                            <p style="margin-bottom: 12px; font-size: 0.95rem;"><strong>To:</strong> ${dest}</p>
-                            
-                            <h3 style="color: var(--primary); margin-bottom: 6px; font-size: 1.3rem;">${fleetNum}</h3>
-                            <p style="display: inline-block; background-color: #FFFF00; color: black; border: 1px solid #ccc; padding: 4px 10px; border-radius: 6px; font-weight: 800; font-family: monospace; font-size: 0.9rem; margin-bottom: 10px;">${reg}</p>
-                            
-                            <p style="margin-bottom: 5px; font-size: 0.85rem; color: var(--secondary);"><strong>Features:</strong> ${featuresList}</p>
-                            <hr style="margin:15px 0 10px 0; border:0; border-top:1px solid #edf2f7;">
-                            <p style="margin:0; font-size:0.9rem; color:var(--secondary); font-weight: bold;">${operator}</p>
-                        </div>
-                    `;
-                });
-                html += '</div>';
-                container.innerHTML = html;
+                return;
             }
+
+            // Map Route IDs against cache before rendering
+            await enrichVehiclesWithRouteData(trackingRecords);
+
+            let html = '<div class="data-grid fleet-grid">';
+            
+            trackingRecords.forEach(record => {
+                const vehObj = record.vehicle || {};
+                let fleetNum = 'N/A';
+                let reg = 'UNKNOWN REG';
+
+                if (vehObj.name) {
+                    const nameParts = vehObj.name.split('-');
+                    if (nameParts.length >= 2) {
+                        fleetNum = nameParts[0].trim();
+                        reg = nameParts.slice(1).join('-').trim(); 
+                    } else {
+                        fleetNum = vehObj.name.trim();
+                    }
+                }
+                
+                // Formulate Route Display using our Cache System
+                let routeDisplay = record.route || 'Not in service';
+                if (record._extractedRouteId && SWIFT_ROUTE_CACHE[record._extractedRouteId]) {
+                    const rData = SWIFT_ROUTE_CACHE[record._extractedRouteId];
+                    const rNum = rData.route_num || '';
+                    const rName = rData.route_name ? ` (${rData.route_name})` : '';
+                    if (rNum || rName) routeDisplay = `${rNum}${rName}`.trim();
+                }
+
+                const dest = record.destination || 'Depot';
+                const operator = vehObj.operator_name || record.operator_name || record.operator || 'Swift Connect';
+                
+                let rawFeatures = vehObj.features || record.features || '';
+                let featuresList = 'None specified';
+                if (Array.isArray(rawFeatures)) rawFeatures = rawFeatures.join(', ');
+                if (typeof rawFeatures === 'string' && rawFeatures.trim() !== '') {
+                    featuresList = rawFeatures.replace(/<br\s*\/?>/gi, ', ');
+                }
+
+                html += `
+                    <div class="card fleet-card">
+                        <p style="margin-bottom: 4px; font-size: 1.05rem;"><strong>Route:</strong> ${routeDisplay}</p>
+                        <p style="margin-bottom: 12px; font-size: 0.95rem;"><strong>To:</strong> ${dest}</p>
+                        
+                        <h3 style="color: var(--primary); margin-bottom: 6px; font-size: 1.3rem;">${fleetNum}</h3>
+                        <p style="display: inline-block; background-color: #FFFF00; color: black; border: 1px solid #ccc; padding: 4px 10px; border-radius: 6px; font-weight: 800; font-family: monospace; font-size: 0.9rem; margin-bottom: 10px;">${reg}</p>
+                        
+                        <p style="margin-bottom: 5px; font-size: 0.85rem; color: var(--secondary);"><strong>Features:</strong> ${featuresList}</p>
+                        <hr style="margin:15px 0 10px 0; border:0; border-top:1px solid #edf2f7;">
+                        <p style="margin:0; font-size:0.9rem; color:var(--secondary); font-weight: bold;">${operator}</p>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+            
         } catch (error) {
             console.error("Live Fleet Error:", error);
             container.innerHTML = '<p class="error-box">Error connecting to the live tracking satellite.</p>';
@@ -321,7 +379,6 @@ async function initLiveFleetPage() {
         }
     }
 
-    // Initial load, then update every 60 seconds
     await loadFleetGrid();
     setInterval(loadFleetGrid, 60000);
 }
@@ -341,16 +398,14 @@ async function initNetworkMap() {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    // Layer Group to hold our custom bus icons
     const markersLayer = L.layerGroup().addTo(map);
-    const activeMarkers = {}; // Stores fleet markers by ID so we can update them without reloading
+    const activeMarkers = {}; 
     
     const apiUrl = "https://www.mybustimes.cc/api/group/Swift%20Connect%20Group/vehicles/?ymax=56.96749375372495&ymin=22.98020869942421&xmax=26.253456525775164&xmin=-46.11789196263385&limit=5000";
 
-    // Reusable function to generate the SVG bus icon dynamically based on color and heading
     function getBusIcon(hexColor, heading) {
         return L.divIcon({
-            className: '', // Passing empty string removes default leaflet box styling
+            className: '', 
             html: `
                 <div style="transform: rotate(${heading}deg); transform-origin: center; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 200" width="24" height="48" style="filter: drop-shadow(0px 3px 3px rgba(0,0,0,0.4));">
@@ -375,6 +430,9 @@ async function initNetworkMap() {
             const data = await response.json();
             const vehicles = data.results || data;
 
+            // Map Route IDs against cache before rendering
+            await enrichVehiclesWithRouteData(vehicles);
+
             const currentVehicleIds = new Set();
             const boundsData = [];
 
@@ -385,7 +443,6 @@ async function initNetworkMap() {
                 if (lat && lng) {
                     const vehObj = record.vehicle || {};
                     
-                    // Fleet ID & Registration extraction
                     let fleetNum = 'N/A';
                     let reg = 'UNKNOWN REG';
                     if (vehObj.name) {
@@ -398,24 +455,28 @@ async function initNetworkMap() {
                         }
                     }
                     
-                    // Prevent rendering completely broken records
                     if (fleetNum === 'N/A') return;
                     currentVehicleIds.add(fleetNum);
 
-                    // Scrape Heading and Color
                     const heading = record.heading || vehObj.heading || 0;
                     let rawColour = vehObj.colour || record.colour || '2292ef';
                     
-                    // Ensure valid hex code format
                     let iconColor = rawColour;
                     if (!iconColor.startsWith('#') && /^[0-9A-F]{3,6}$/i.test(iconColor)) {
                         iconColor = '#' + iconColor;
                     } else if (!iconColor.startsWith('#')) {
-                        iconColor = '#2292ef'; // Fallback if API passes weird text
+                        iconColor = '#2292ef'; 
                     }
 
-                    // Scrape Route & Metadata
-                    const route = record.route || 'Not in service';
+                    // Formulate Route Display using our Cache System
+                    let routeDisplay = record.route || 'Not in service';
+                    if (record._extractedRouteId && SWIFT_ROUTE_CACHE[record._extractedRouteId]) {
+                        const rData = SWIFT_ROUTE_CACHE[record._extractedRouteId];
+                        const rNum = rData.route_num || '';
+                        const rName = rData.route_name ? ` (${rData.route_name})` : '';
+                        if (rNum || rName) routeDisplay = `${rNum}${rName}`.trim();
+                    }
+
                     const dest = record.destination || 'Depot';
                     const operator = vehObj.operator_name || record.operator_name || record.operator || 'Swift Connect';
                     
@@ -431,7 +492,7 @@ async function initNetworkMap() {
 
                     const popupHtml = `
                         <div style="font-family: inherit; color: #0b1922; min-width: 220px;">
-                            <p style="margin: 0 0 5px 0; font-size: 1.05rem;"><strong>Route:</strong> ${route}</p>
+                            <p style="margin: 0 0 5px 0; font-size: 1.05rem;"><strong>Route:</strong> ${routeDisplay}</p>
                             <p style="margin: 0 0 12px 0; font-size: 0.95rem;"><strong>To:</strong> ${dest}</p>
                             
                             <h3 style="margin: 0 0 6px 0; color: #2292ef; font-size: 1.2rem;">${fleetNum}</h3>
@@ -444,12 +505,10 @@ async function initNetworkMap() {
                         </div>
                     `;
 
-                    // Update existing marker or create a new one
                     if (activeMarkers[fleetNum]) {
                         const existingMarker = activeMarkers[fleetNum];
                         existingMarker.setLatLng([lat, lng]);
                         existingMarker.setIcon(busIcon);
-                        // Updating content allows users to keep the popup open while the bus moves
                         existingMarker.getPopup().setContent(popupHtml); 
                     } else {
                         const newMarker = L.marker([lat, lng], { icon: busIcon }).addTo(markersLayer);
@@ -459,7 +518,6 @@ async function initNetworkMap() {
                 }
             });
 
-            // Cleanup routine: Remove buses that are no longer tracking in the API response
             for (const activeFleetId in activeMarkers) {
                 if (!currentVehicleIds.has(activeFleetId)) {
                     markersLayer.removeLayer(activeMarkers[activeFleetId]);
@@ -467,7 +525,6 @@ async function initNetworkMap() {
                 }
             }
 
-            // Only auto-frame the camera on the very first load to avoid annoying the user while they pan around
             if (isInitialLoad && boundsData.length > 0) {
                 map.fitBounds(boundsData, { padding: [30, 30] });
             }
@@ -480,7 +537,6 @@ async function initNetworkMap() {
         }
     }
 
-    // Trigger initial load and set the 60 second recurring heartbeat
     await loadMapData(true);
     setInterval(() => loadMapData(false), 60000);
 }

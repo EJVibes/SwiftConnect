@@ -23,25 +23,25 @@
 
 /* Theme Variant Overrides */
 body[data-theme="swift-express"] {
-    --primary: #c31b6b;   /* Australian Robin Pink */
-    --secondary: #4b5164; /* Nuthatch Grey */
-    --dark: #0b1321;      /* Crow Deep Dark */
+    --primary: #c31b6b;   
+    --secondary: #4b5164; 
+    --dark: #0b1321;      
 }
 
 body[data-theme="wrekin"] {
-    --primary: #f46300;   /* Chaffinch Orange */
-    --secondary: #4a5d6c; /* Wood Pigeon */
+    --primary: #f46300;   
+    --secondary: #4a5d6c; 
     --dark: #0b1922;
 }
 
 body[data-theme="swift-rail"] {
-    --primary: #5a3dba;   /* Custom Railway Purple */
+    --primary: #5a3dba;   
     --secondary: #333d47;
     --dark: #0d0a1a;
 }
 
 body[data-theme="swift-classic"] {
-    --primary: #0c47ea;   /* Heritage Dark Blue */
+    --primary: #0c47ea;   
     --secondary: #718096;
     --dark: #1a202c;
 }
@@ -76,7 +76,7 @@ body {
 }
 
 /* ==========================================
-   HEADER NAVIGATION
+   HEADER NAVIGATION & MOBILE BURGER MENU
    ========================================== */
 .site-header {
     background-color: var(--light);
@@ -115,6 +115,33 @@ body {
 
 .main-nav a:hover, .main-nav a.active {
     color: var(--primary);
+}
+
+/* Mobile Toggle Button (Hidden on Desktop) */
+.mobile-toggle {
+    display: none; 
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 22px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1001;
+}
+
+.mobile-toggle span {
+    width: 100%;
+    height: 3px;
+    background-color: var(--dark);
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+/* Burger color shifts when active, does NOT turn into an X */
+.mobile-toggle.is-active span {
+    background-color: var(--primary);
 }
 
 /* Alert Banner */
@@ -201,7 +228,7 @@ body {
 }
 
 /* ==========================================
-   GENERAL UI COMPONENTS (Inputs & Buttons)
+   GENERAL UI COMPONENTS
    ========================================== */
 .input-group {
     margin-bottom: 18px;
@@ -345,13 +372,13 @@ a.card:hover {
 
 #network-map {
     width: 100%;
-    height: 65vh; /* Scales to monitor size */
+    height: 65vh; 
     min-height: 500px;
     border-radius: var(--radius-card);
     border: 4px solid var(--primary);
     box-shadow: 0 10px 25px rgba(11, 25, 34, 0.08);
     background-color: #e2e8f0;
-    z-index: 1; /* Keeps the map tiles firmly below your sticky nav menu */
+    z-index: 1; 
 }
 
 /* ==========================================
@@ -413,7 +440,6 @@ a.card:hover {
     color: var(--primary);
 }
 
-/* Division Brand Highlights for the directory */
 .highlight-rail { border-top-color: #5a3dba; }
 .highlight-classic { border-top-color: #0c47ea; }
 .highlight-wrekin { border-top-color: #f46300; }
@@ -483,7 +509,6 @@ a.card:hover {
     word-break: break-word;
 }
 
-/* State messaging UI */
 .loading-spinner-box, .error-box {
     padding: 40px;
     text-align: center;
@@ -535,7 +560,6 @@ a.card:hover {
     line-height: 1.4;
 }
 
-/* Sub-Operator Navigation Metadata Links */
 .route-pill-operator {
     font-size: 0.8rem;
     color: var(--primary);
@@ -602,6 +626,44 @@ a.card:hover {
    RESPONSIVE DESIGN RULES
    ========================================== */
 @media (max-width: 992px) {
+    /* Reveals the burger toggle & positions it on the left */
+    .mobile-toggle {
+        display: flex; 
+    }
+    
+    /* Changes header layout so the Burger is strictly on the left, Logo is on the right */
+    .header-container {
+        flex-direction: row; 
+    }
+
+    /* Takes the navigation out of the normal header flow and makes it a slide-in sidebar */
+    .main-nav {
+        position: fixed;
+        top: 85px; 
+        left: -100%; /* Hidden off-screen to the left by default */
+        width: 300px;
+        max-width: 80vw;
+        height: calc(100vh - 85px);
+        background-color: var(--light);
+        box-shadow: 4px 0 15px rgba(11, 25, 34, 0.1);
+        transition: left 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        z-index: 999;
+    }
+    
+    /* Class activated by JavaScript to slide the menu into view */
+    .main-nav.is-open {
+        left: 0;
+    }
+
+    /* Stack links vertically inside the open menu */
+    .main-nav ul {
+        flex-direction: column;
+        padding: 40px 30px;
+        gap: 25px;
+        display: flex; 
+    }
+
+    /* Normal grid adjustments */
     .hero-content {
         flex-direction: column;
         text-align: center;
@@ -616,9 +678,6 @@ a.card:hover {
         flex-direction: column;
         align-items: flex-start;
         gap: 20px;
-    }
-    .main-nav ul {
-        display: none; 
     }
     .route-pill {
         flex: 1 1 100%;

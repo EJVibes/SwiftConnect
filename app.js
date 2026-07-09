@@ -10,7 +10,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (document.getElementById('network-map')) {
         initNetworkMap();
     }
-    // New hook to initialize the specific Route Details page
     if (window.location.pathname.includes('route.html')) {
         initRoutePage();
     }
@@ -51,6 +50,7 @@ async function ensureGlobalRouteCacheLoaded() {
         const res = await fetch(`./global_routes_cache.json?t=${new Date().getTime()}`);
         if (res.ok) {
             SWIFT_ROUTE_CACHE = await res.json();
+            console.log("Global static routes cache loaded successfully.");
         }
     } catch (e) {
         console.warn("Static global_routes_cache.json unavailable. Falling back to dynamic fetching.", e);
@@ -109,7 +109,7 @@ function applyBrandingEngine(operatorName) {
         bodyDom.setAttribute('data-theme', 'wrekin');
         if (visualAccent) visualAccent.src = 'Wrekin Connect White Long.png';
     } else if (normalize.includes('railway') || normalize.includes('rail')) {
-        bodyDom.setAttribute('data-theme', 'swift-base'); // Reverted to default #2292EF
+        bodyDom.setAttribute('data-theme', 'swift-base'); 
         if (visualAccent) visualAccent.src = 'Swift Connect White Full.png';
     } else if (normalize.includes('preservation') || normalize.includes('classic')) {
         bodyDom.setAttribute('data-theme', 'swift-classic');
@@ -122,7 +122,7 @@ function applyBrandingEngine(operatorName) {
 
 
 /* ==========================================
-   OPERATOR SUBPAGE LOGIC (REDESIGNED)
+   OPERATOR SUBPAGE LOGIC
    ========================================== */
 async function initOperatorPage() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -203,7 +203,6 @@ function renderOperatorMetrics(dataRecord) {
         regionDisplay = "Not Provided by API";
     }
 
-    // Redesigned to separate meta stats from routes layout
     const html = `
         <div class="operator-meta-banner">
             <div class="meta-box">
@@ -334,8 +333,74 @@ function showOperatorError() {
 
 
 /* ==========================================
-   ROUTE DETAIL PAGE LOGIC (NEW)
+   ROUTE DETAIL PAGE LOGIC 
    ========================================== */
+
+// Helper function to build dynamic timetables from any API shape
+async function fetchAndRenderTimetable(routeId) {
+    try {
+        // Try the standard parameter first
+        let res = await fetch(`https://www.mybustimes.cc/api/get_timetables/?route=${routeId}`);
+        let data = await res.json();
+        let records = data.results || data;
+
+        // Fallback: If empty, try the route_id parameter
+        if (!Array.isArray(records) || records.length === 0) {
+            res = await fetch(`https://www.mybustimes.cc/api/get_timetables/?route_id=${routeId}`);
+            data = await res.json();
+            records = data.results || data;
+        }
+
+        // Fallback: If still empty, try direct URL structure
+        if (!Array.isArray(records) || records.length === 0) {
+            res = await fetch(`https://www.mybustimes.cc/api/get_timetables/${routeId}/`);
+            if(res.ok) {
+                data = await res.json();
+                records = data.results || data;
+            }
+        }
+
+        if (!Array.isArray(records) || records.length === 0) {
+            return `
+                <div class="timetable-placeholder">
+                    <h3 style="margin-bottom: 10px; color: var(--dark);">Timetable data currently unavailable.</h3>
+                    <p>The network API has not synchronized a timetable for this specific route.</p>
+                </div>
+            `;
+        }
+
+        // Generic Table Builder - Extracts headers automatically from the API object
+        const headers = Object.keys(records[0]).filter(k => typeof records[0][k] !== 'object');
+        
+        let tableHtml = `<div style="overflow-x: auto; border-radius: 8px; border: 1px solid #edf2f7;"><table class="route-data-table" style="margin: 0; width: 100%; text-align: center; white-space: nowrap;"><thead><tr>`;
+        
+        headers.forEach(h => {
+            const formattedKey = h.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            tableHtml += `<th style="text-align: center; background-color: var(--primary); color: white;">${formattedKey}</th>`;
+        });
+        tableHtml += `</tr></thead><tbody>`;
+        
+        records.forEach(row => {
+            tableHtml += `<tr>`;
+            headers.forEach(h => {
+                tableHtml += `<td>${row[h] !== null && row[h] !== '' ? row[h] : '-'}</td>`;
+            });
+            tableHtml += `</tr>`;
+        });
+        
+        tableHtml += `</tbody></table></div>`;
+        return tableHtml;
+
+    } catch (e) {
+        console.error("Timetable Fetch Error:", e);
+        return `
+            <div class="timetable-placeholder">
+                <p>Error connecting to timetable databanks.</p>
+            </div>
+        `;
+    }
+}
+
 async function initRoutePage() {
     const urlParams = new URLSearchParams(window.location.search);
     const routeId = urlParams.get('id');
@@ -357,25 +422,33 @@ async function initRoutePage() {
         if (!res.ok) throw new Error("Could not fetch route");
         const data = await res.json();
 
-        if (data.operator_name) {
-            applyBrandingEngine(data.operator_name);
+        // Recursively hunt down the operator name to fix the header text
+        function extractOperatorName(obj) {
+            if (obj === null || typeof obj !== 'object') return null;
+            for (const [key, value] of Object.entries(obj)) {
+                if (key === 'operator_name') return value;
+                if (typeof value === 'object') {
+                    const nestedResult = extractOperatorName(value);
+                    if (nestedResult) return nestedResult;
+                }
+            }
+            return null;
         }
+
+        const opName = extractOperatorName(data) || data.operator || 'Unknown Operator';
+        applyBrandingEngine(opName); 
 
         const routeNum = data.route_num || '?';
         const routeName = data.route_name ? ` - ${data.route_name}` : '';
-        const opName = data.operator_name || 'Unknown Operator';
-        const start = data.inbound_destination || 'Unknown Start';
-        const end = data.outbound_destination || 'Unknown Destination';
 
         // Set Headers
         titleHeader.innerText = `Route ${routeNum}${routeName}`;
         subHeader.innerText = `Operated by ${opName}`;
 
-        // Create Raw Attributes Table
+        // Create Raw Attributes Table (Excluding the messy Searchable Name)
         let attributesHtml = '';
         for (const [key, value] of Object.entries(data)) {
-            // Ignore messy nested objects in the simple table view
-            if (typeof value !== 'object' && key !== 'id') {
+            if (typeof value !== 'object' && key !== 'id' && key !== 'full_searchable_name') {
                 const formattedKey = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
                 attributesHtml += `
                     <tr>
@@ -386,29 +459,12 @@ async function initRoutePage() {
             }
         }
 
-        // Generate the Timetable structure gracefully
-        let timetableContent = `
-            <div class="timetable-placeholder">
-                <h3 style="margin-bottom: 10px; color: var(--dark);">Timetable databanks are synchronising.</h3>
-                <p>Detailed scheduling and stop-by-stop metrics for Route ${routeNum} are currently being configured by the network API.</p>
-            </div>
-        `;
-
-        if (data.timetable && Array.isArray(data.timetable) && data.timetable.length > 0) {
-            // Future-proofing: if the API starts passing timetable arrays directly here
-            timetableContent = `<p style="margin-top: 15px; color: #48bb78; font-weight: bold;">Timetable loaded successfully.</p>`;
-        } else if (data.stops && Array.isArray(data.stops) && data.stops.length > 0) {
-            // Alternate structure
-            timetableContent = `<p style="margin-top: 15px; color: #48bb78; font-weight: bold;">${data.stops.length} Stops loaded successfully.</p>`;
-        }
+        // Fetch Timetable from the new API
+        const timetableHtml = await fetchAndRenderTimetable(routeId);
 
         const html = `
             <div class="card" style="margin-bottom: 30px;">
-                <h2 style="color: var(--primary); margin-bottom: 5px;">Service Overview</h2>
-                <p style="font-size: 1.1rem; color: var(--dark); font-weight: 600;">${start} &harr; ${end}</p>
-                
-                <h3 style="margin-top: 25px; border-bottom: 2px solid #edf2f7; padding-bottom: 8px;">Network Registry Data</h3>
-                <table class="route-data-table">
+                <table class="route-data-table" style="margin-top: 0;">
                     <tbody>
                         ${attributesHtml}
                     </tbody>
@@ -416,8 +472,8 @@ async function initRoutePage() {
             </div>
 
             <div class="card">
-                <h2 style="color: var(--primary); margin-bottom: 5px;">Route Timetable</h2>
-                ${timetableContent}
+                <h2 style="color: var(--primary); margin-bottom: 15px;">Route Timetable</h2>
+                ${timetableHtml}
             </div>
         `;
 
@@ -617,7 +673,6 @@ async function initNetworkMap() {
                         iconColor = '#2292ef'; 
                     }
 
-                    // Hyperlink Setup
                     const vehUrl = vehObj.url ? `https://www.mybustimes.cc${vehObj.url}` : '#';
                     const routeUrl = record._extractedRouteId ? `route.html?id=${record._extractedRouteId}` : 'route.html';
 

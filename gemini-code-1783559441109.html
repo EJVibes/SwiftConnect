@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operator Details | Swift Connect</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body data-theme="swift-base">
+
+    <header class="site-header">
+        <div class="container header-container">
+            <div class="brand-logo">
+                <a href="index.html">
+                    <img id="operator-logo" src="swiftlogo_new.png" alt="Swift Connect Logo" style="height: 50px;">
+                </a>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#">Timetables</a></li>
+                    <li><a href="#">Fleet Info</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero-section operator-hero">
+        <div class="container">
+            <h1 id="operator-name">Loading Operator...</h1>
+            <p id="operator-code" style="opacity: 0.8; font-size: 1.2rem;"></p>
+        </div>
+    </section>
+
+    <section class="container quick-links" style="margin-top: 40px; margin-bottom: 60px;">
+        <div class="card" style="grid-column: span 3;">
+            <h3 style="color: var(--primary);">Operator Details</h3>
+            <div id="api-content">
+                <p>Fetching the latest data from the network...</p>
+            </div>
+        </div>
+    </section>
+
+    <script src="app.js"></script>
+</body>
+</html>

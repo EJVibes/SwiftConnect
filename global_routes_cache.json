@@ -1,0 +1,2886 @@
+{
+  "185985": {
+    "id": 185985,
+    "route_num": "WC7",
+    "route_name": "Wrekin Connect",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#122935",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Telford",
+    "outbound_destination": "Lawley",
+    "route_operators_data": [
+      {
+        "id": 14320,
+        "operator_name": "Wrekin Connect",
+        "operator_slug": "wrekin-connect",
+        "operator_code": "WRCO"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "WC7 Telford Lawley",
+    "route_colour_rgba": "rgba(18, 41, 53, 1)"
+  },
+  "166946": {
+    "id": 166946,
+    "route_num": "501",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "true",
+        "contactless": "true",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "South Croydon Station",
+    "outbound_destination": "Norwood Junction Station",
+    "route_operators_data": [
+      {
+        "id": 11591,
+        "operator_name": "Swift Connecting South London",
+        "operator_slug": "swift-connecting-south-london",
+        "operator_code": "SWCL"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "501 South Croydon Station Norwood Junction Station",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "183279": {
+    "id": 183279,
+    "route_num": "X807",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Birmingham",
+    "outbound_destination": "Liverpool",
+    "route_operators_data": [
+      {
+        "id": 10119,
+        "operator_name": "Swift Connecting West Midlands",
+        "operator_slug": "swift-connecting-west-midlands",
+        "operator_code": "SWWM"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "X807 Birmingham Liverpool",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "189289": {
+    "id": 189289,
+    "route_num": "UNX1",
+    "route_name": "UniXpress",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Derby",
+    "outbound_destination": "Lincoln",
+    "route_operators_data": [
+      {
+        "id": 12314,
+        "operator_name": "Swift Connecting East Midlands",
+        "operator_slug": "swift-connecting-east-midlands",
+        "operator_code": "SWCE"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "UNX1 Derby Lincoln",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "11930": {
+    "id": 11930,
+    "route_num": "59",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Wolverhampton",
+    "outbound_destination": "Wednesbury",
+    "route_operators_data": [
+      {
+        "id": 10119,
+        "operator_name": "Swift Connecting West Midlands",
+        "operator_slug": "swift-connecting-west-midlands",
+        "operator_code": "SWWM"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "59 Wolverhampton Wednesbury",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "203786": {
+    "id": 203786,
+    "route_num": "X38",
+    "route_name": "Swift Express",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#0b0d21",
+      "route_text_colour": "#bd1a6c"
+    },
+    "inbound_destination": "Alfreton",
+    "outbound_destination": "Burton On Trent",
+    "route_operators_data": [
+      {
+        "id": 12314,
+        "operator_name": "Swift Connecting East Midlands",
+        "operator_slug": "swift-connecting-east-midlands",
+        "operator_code": "SWCE"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "X38 Alfreton Burton On Trent",
+    "route_colour_rgba": "rgba(11, 13, 33, 1)"
+  },
+  "178226": {
+    "id": 178226,
+    "route_num": "MEDI",
+    "route_name": "medilink",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Phoenix Park P&R",
+    "outbound_destination": "Queens Drive P&R",
+    "route_operators_data": [
+      {
+        "id": 12314,
+        "operator_name": "Swift Connecting East Midlands",
+        "operator_slug": "swift-connecting-east-midlands",
+        "operator_code": "SWCE"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "MEDI Phoenix Park P&R Queens Drive P&R",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "145826": {
+    "id": 145826,
+    "route_num": "15",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#1a3b70",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Bridgend",
+    "outbound_destination": "St Brides Major",
+    "route_operators_data": [
+      {
+        "id": 9238,
+        "operator_name": "Swift Connecting Wales",
+        "operator_slug": "swift-connecting-wales",
+        "operator_code": "SWCW"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "15 Bridgend St Brides Major",
+    "route_colour_rgba": "rgba(26, 59, 112, 1)"
+  },
+  "166986": {
+    "id": 166986,
+    "route_num": "510",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "true",
+        "contactless": "true",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Beddington ASDA",
+    "outbound_destination": "Thornton Heath High Street",
+    "route_operators_data": [
+      {
+        "id": 11591,
+        "operator_name": "Swift Connecting South London",
+        "operator_slug": "swift-connecting-south-london",
+        "operator_code": "SWCL"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "510 Beddington ASDA Thornton Heath High Street",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "173928": {
+    "id": 173928,
+    "route_num": "11C",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#dc241f",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Lightmoor",
+    "outbound_destination": "Wellington",
+    "route_operators_data": [
+      {
+        "id": 978,
+        "operator_name": "Swift Connecting Shropshire",
+        "operator_slug": "swift-connecting-shropshire",
+        "operator_code": "SWSH"
+      }
+    ],
+    "linked_route": [
+      {
+        "id": 173925,
+        "route_num": "11B",
+        "route_name": ""
+      }
+    ],
+    "related_route": [
+      {
+        "id": 173925,
+        "route_num": "11B",
+        "route_name": "",
+        "inbound_destination": "Telford",
+        "outbound_destination": "Lightmoor",
+        "route_operators": [
+          {
+            "id": 978,
+            "operator_name": "Swift Connecting Shropshire",
+            "operator_slug": "swift-connecting-shropshire",
+            "operator_code": "SWSH"
+          }
+        ]
+      }
+    ],
+    "service_updates": [
+      {
+        "id": 2394,
+        "effected_route": [
+          {
+            "id": 91986,
+            "route_num": "100",
+            "inbound_destination": "Bus Station",
+            "outbound_destination": "Selbourne"
+          },
+          {
+            "id": 19712,
+            "route_num": "X2",
+            "inbound_destination": "Madeley",
+            "outbound_destination": "Telford College"
+          },
+          {
+            "id": 91965,
+            "route_num": "7",
+            "inbound_destination": "Wellington",
+            "outbound_destination": "Telford"
+          },
+          {
+            "id": 158679,
+            "route_num": "5C",
+            "inbound_destination": "Telford",
+            "outbound_destination": "Muxton - Donnington ASDA - Priorslee"
+          },
+          {
+            "id": 173925,
+            "route_num": "11B",
+            "inbound_destination": "Telford",
+            "outbound_destination": "Lightmoor"
+          },
+          {
+            "id": 173928,
+            "route_num": "11C",
+            "inbound_destination": "Lightmoor",
+            "outbound_destination": "Wellington"
+          },
+          {
+            "id": 19711,
+            "route_num": "X3",
+            "inbound_destination": "Madeley",
+            "outbound_destination": "Telford College"
+          }
+        ],
+        "start_date": "2026-06-08",
+        "end_date": "2026-06-08",
+        "update_title": "Timetable Updates",
+        "update_description": "From the 8th of June 2026, we will be altering timetables of all Travel Telford branded routes for better efficiency."
+      }
+    ],
+    "full_searchable_name": "11C Lightmoor Wellington",
+    "route_colour_rgba": "rgba(220, 36, 31, 1)"
+  },
+  "165045": {
+    "id": 165045,
+    "route_num": "",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "true",
+        "contactless": "true",
+        "school_service": "false"
+      },
+      "route_colour": "var(--background-color)",
+      "route_text_colour": "var(--text-color)"
+    },
+    "inbound_destination": "",
+    "outbound_destination": "",
+    "route_operators_data": [
+      {
+        "id": 978,
+        "operator_name": "Swift Connecting Shropshire",
+        "operator_slug": "swift-connecting-shropshire",
+        "operator_code": "SWSH"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "",
+    "route_colour_rgba": null
+  },
+  "203286": {
+    "id": 203286,
+    "route_num": "C1",
+    "route_name": "Croydon ConneXion",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#122935",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Croydon Town Circular",
+    "outbound_destination": "",
+    "route_operators_data": [
+      {
+        "id": 11591,
+        "operator_name": "Swift Connecting South London",
+        "operator_slug": "swift-connecting-south-london",
+        "operator_code": "SWCL"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "C1 Croydon Town Circular",
+    "route_colour_rgba": "rgba(18, 41, 53, 1)"
+  },
+  "235075": {
+    "id": 235075,
+    "route_num": "96",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "true",
+        "contactless": "true",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Llangollen",
+    "outbound_destination": "Oswestry",
+    "route_operators_data": [
+      {
+        "id": 978,
+        "operator_name": "Swift Connecting Shropshire",
+        "operator_slug": "swift-connecting-shropshire",
+        "operator_code": "SWSH"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "96 Llangollen Oswestry",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "113299": {
+    "id": 113299,
+    "route_num": "53B",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Halesowen",
+    "outbound_destination": "Merry Hill",
+    "route_operators_data": [
+      {
+        "id": 10119,
+        "operator_name": "Swift Connecting West Midlands",
+        "operator_slug": "swift-connecting-west-midlands",
+        "operator_code": "SWWM"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "53B Halesowen Merry Hill",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "167126": {
+    "id": 167126,
+    "route_num": "500",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "true",
+        "contactless": "true",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Waddon Marsh",
+    "outbound_destination": "Elmers End",
+    "route_operators_data": [
+      {
+        "id": 11591,
+        "operator_name": "Swift Connecting South London",
+        "operator_slug": "swift-connecting-south-london",
+        "operator_code": "SWCL"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "500 Waddon Marsh Elmers End",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "211941": {
+    "id": 211941,
+    "route_num": "36",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Alfreton",
+    "outbound_destination": "Retford",
+    "route_operators_data": [
+      {
+        "id": 12314,
+        "operator_name": "Swift Connecting East Midlands",
+        "operator_slug": "swift-connecting-east-midlands",
+        "operator_code": "SWCE"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "36 Alfreton Retford",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "219368": {
+    "id": 219368,
+    "route_num": "44",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Sheringham",
+    "outbound_destination": "Norwich",
+    "route_operators_data": [
+      {
+        "id": 14161,
+        "operator_name": "Swift Connecting East Anglia",
+        "operator_slug": "swift-connecting-east-anglia",
+        "operator_code": "SWEA"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "44 Sheringham Norwich",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "70959": {
+    "id": 70959,
+    "route_num": "31",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Newcastle-Under-Lyme",
+    "outbound_destination": "Uttoxeter",
+    "route_operators_data": [
+      {
+        "id": 10118,
+        "operator_name": "Swift Connecting Staffordshire",
+        "operator_slug": "swift-connecting-staffordshire",
+        "operator_code": "SWST"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "31 Newcastle-Under-Lyme Uttoxeter",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "11938": {
+    "id": 11938,
+    "route_num": "75",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "true",
+        "contactless": "true",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Ludlow",
+    "outbound_destination": "Bridgnorth",
+    "route_operators_data": [
+      {
+        "id": 978,
+        "operator_name": "Swift Connecting Shropshire",
+        "operator_slug": "swift-connecting-shropshire",
+        "operator_code": "SWSH"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "75 Ludlow Bridgnorth",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "168381": {
+    "id": 168381,
+    "route_num": "512",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Thornton Heath High Street",
+    "outbound_destination": "Norwood Junction Station",
+    "route_operators_data": [
+      {
+        "id": 11591,
+        "operator_name": "Swift Connecting South London",
+        "operator_slug": "swift-connecting-south-london",
+        "operator_code": "SWCL"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "512 Thornton Heath High Street Norwood Junction Station",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "174513": {
+    "id": 174513,
+    "route_num": "WC8",
+    "route_name": "Wrekin Connect",
+    "route_details": {
+      "details": {
+        "cash": "true",
+        "contactless": "true",
+        "school_service": "false"
+      },
+      "route_colour": "#122935",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Princess Royal Hospital",
+    "outbound_destination": "Telford",
+    "route_operators_data": [
+      {
+        "id": 14320,
+        "operator_name": "Wrekin Connect",
+        "operator_slug": "wrekin-connect",
+        "operator_code": "WRCO"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "WC8 Princess Royal Hospital Telford",
+    "route_colour_rgba": "rgba(18, 41, 53, 1)"
+  },
+  "91991": {
+    "id": 91991,
+    "route_num": "15",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Dorrington",
+    "outbound_destination": "Shrewsbury",
+    "route_operators_data": [
+      {
+        "id": 978,
+        "operator_name": "Swift Connecting Shropshire",
+        "operator_slug": "swift-connecting-shropshire",
+        "operator_code": "SWSH"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "15 Dorrington Shrewsbury",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "180117": {
+    "id": 180117,
+    "route_num": "60",
+    "route_name": "Purple Line ",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#54128e",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Cossall Industrial Park",
+    "outbound_destination": "Chesterfield",
+    "route_operators_data": [
+      {
+        "id": 12314,
+        "operator_name": "Swift Connecting East Midlands",
+        "operator_slug": "swift-connecting-east-midlands",
+        "operator_code": "SWCE"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "60 Cossall Industrial Park Chesterfield",
+    "route_colour_rgba": "rgba(84, 18, 142, 1)"
+  },
+  "201525": {
+    "id": 201525,
+    "route_num": "I",
+    "route_name": "Industrial Shuttle",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Wrexham Industrial Estate",
+    "outbound_destination": "",
+    "route_operators_data": [
+      {
+        "id": 9238,
+        "operator_name": "Swift Connecting Wales",
+        "operator_slug": "swift-connecting-wales",
+        "operator_code": "SWCW"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "I Wrexham Industrial Estate",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "216806": {
+    "id": 216806,
+    "route_num": "50",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "true",
+        "contactless": "true",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Wolverhampton",
+    "outbound_destination": "Birmingham",
+    "route_operators_data": [
+      {
+        "id": 10119,
+        "operator_name": "Swift Connecting West Midlands",
+        "operator_slug": "swift-connecting-west-midlands",
+        "operator_code": "SWWM"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "50 Wolverhampton Birmingham",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "180106": {
+    "id": 180106,
+    "route_num": "55",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "West Hallam",
+    "outbound_destination": "Newthorpe Common",
+    "route_operators_data": [
+      {
+        "id": 12314,
+        "operator_name": "Swift Connecting East Midlands",
+        "operator_slug": "swift-connecting-east-midlands",
+        "operator_code": "SWCE"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "55 West Hallam Newthorpe Common",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "145820": {
+    "id": 145820,
+    "route_num": "4",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Pontypridd",
+    "outbound_destination": "Talbot Green",
+    "route_operators_data": [
+      {
+        "id": 9238,
+        "operator_name": "Swift Connecting Wales",
+        "operator_slug": "swift-connecting-wales",
+        "operator_code": "SWCW"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "4 Pontypridd Talbot Green",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "145828": {
+    "id": 145828,
+    "route_num": "41",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#1a3b70",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Bridgend",
+    "outbound_destination": "Pant-yr-Awel",
+    "route_operators_data": [
+      {
+        "id": 9238,
+        "operator_name": "Swift Connecting Wales",
+        "operator_slug": "swift-connecting-wales",
+        "operator_code": "SWCW"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "41 Bridgend Pant-yr-Awel",
+    "route_colour_rgba": "rgba(26, 59, 112, 1)"
+  },
+  "11932": {
+    "id": 11932,
+    "route_num": "61",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Wombourne",
+    "outbound_destination": "Wednesfield",
+    "route_operators_data": [
+      {
+        "id": 10119,
+        "operator_name": "Swift Connecting West Midlands",
+        "operator_slug": "swift-connecting-west-midlands",
+        "operator_code": "SWWM"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "61 Wombourne Wednesfield",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "211631": {
+    "id": 211631,
+    "route_num": "X22",
+    "route_name": "Swift Express",
+    "route_details": {
+      "details": {
+        "cash": "true",
+        "contactless": "true",
+        "school_service": "false"
+      },
+      "route_colour": "#0b0d21",
+      "route_text_colour": "#bd1a6c"
+    },
+    "inbound_destination": "Wrexham",
+    "outbound_destination": "Shrewsbury",
+    "route_operators_data": [
+      {
+        "id": 9238,
+        "operator_name": "Swift Connecting Wales",
+        "operator_slug": "swift-connecting-wales",
+        "operator_code": "SWCW"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [
+      {
+        "id": 213734,
+        "route_num": "X23",
+        "route_name": "Swift Express",
+        "inbound_destination": "Cardiff Airport",
+        "outbound_destination": "Bridgend",
+        "route_operators": [
+          {
+            "id": 9238,
+            "operator_name": "Swift Connecting Wales",
+            "operator_slug": "swift-connecting-wales",
+            "operator_code": "SWCW"
+          }
+        ]
+      },
+      {
+        "id": 211566,
+        "route_num": "X21",
+        "route_name": "Swift Express",
+        "inbound_destination": "Wrexham",
+        "outbound_destination": "Stoke-on-Trent",
+        "route_operators": [
+          {
+            "id": 9238,
+            "operator_name": "Swift Connecting Wales",
+            "operator_slug": "swift-connecting-wales",
+            "operator_code": "SWCW"
+          }
+        ]
+      }
+    ],
+    "service_updates": [],
+    "full_searchable_name": "X22 Wrexham Shrewsbury",
+    "route_colour_rgba": "rgba(11, 13, 33, 1)"
+  },
+  "174822": {
+    "id": 174822,
+    "route_num": "68S",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Cossall Industrial Park",
+    "outbound_destination": "Alfreton Bus Station",
+    "route_operators_data": [
+      {
+        "id": 12314,
+        "operator_name": "Swift Connecting East Midlands",
+        "operator_slug": "swift-connecting-east-midlands",
+        "operator_code": "SWCE"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "68S Cossall Industrial Park Alfreton Bus Station",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "11937": {
+    "id": 11937,
+    "route_num": "19",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Shrewsbury",
+    "outbound_destination": "Stafford",
+    "route_operators_data": [
+      {
+        "id": 978,
+        "operator_name": "Swift Connecting Shropshire",
+        "operator_slug": "swift-connecting-shropshire",
+        "operator_code": "SWSH"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "19 Shrewsbury Stafford",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "167593": {
+    "id": 167593,
+    "route_num": "X37",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Cardiff",
+    "outbound_destination": "Nottingham",
+    "route_operators_data": [
+      {
+        "id": 9238,
+        "operator_name": "Swift Connecting Wales",
+        "operator_slug": "swift-connecting-wales",
+        "operator_code": "SWCW"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "X37 Cardiff Nottingham",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "175515": {
+    "id": 175515,
+    "route_num": "29",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Whitchurch",
+    "outbound_destination": "Wellington",
+    "route_operators_data": [
+      {
+        "id": 978,
+        "operator_name": "Swift Connecting Shropshire",
+        "operator_slug": "swift-connecting-shropshire",
+        "operator_code": "SWSH"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "29 Whitchurch Wellington",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "141659": {
+    "id": 141659,
+    "route_num": "16",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "true",
+        "contactless": "true",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Shrewsbury",
+    "outbound_destination": "Wem",
+    "route_operators_data": [
+      {
+        "id": 978,
+        "operator_name": "Swift Connecting Shropshire",
+        "operator_slug": "swift-connecting-shropshire",
+        "operator_code": "SWSH"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "16 Shrewsbury Wem",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "167739": {
+    "id": 167739,
+    "route_num": "502",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "East Croydon",
+    "outbound_destination": "Elmers End",
+    "route_operators_data": [
+      {
+        "id": 11591,
+        "operator_name": "Swift Connecting South London",
+        "operator_slug": "swift-connecting-south-london",
+        "operator_code": "SWCL"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "502 East Croydon Elmers End",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "228370": {
+    "id": 228370,
+    "route_num": "92",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "true",
+        "contactless": "true",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Gobowen",
+    "outbound_destination": "Oswestry",
+    "route_operators_data": [
+      {
+        "id": 978,
+        "operator_name": "Swift Connecting Shropshire",
+        "operator_slug": "swift-connecting-shropshire",
+        "operator_code": "SWSH"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "92 Gobowen Oswestry",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "201602": {
+    "id": 201602,
+    "route_num": "21",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Alfreton",
+    "outbound_destination": "Matlock",
+    "route_operators_data": [
+      {
+        "id": 12314,
+        "operator_name": "Swift Connecting East Midlands",
+        "operator_slug": "swift-connecting-east-midlands",
+        "operator_code": "SWCE"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "21 Alfreton Matlock",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "185829": {
+    "id": 185829,
+    "route_num": "41",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Cromer ",
+    "outbound_destination": "Wells-next-the-Sea",
+    "route_operators_data": [
+      {
+        "id": 14161,
+        "operator_name": "Swift Connecting East Anglia",
+        "operator_slug": "swift-connecting-east-anglia",
+        "operator_code": "SWEA"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "41 Cromer  Wells-next-the-Sea",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "211566": {
+    "id": 211566,
+    "route_num": "X21",
+    "route_name": "Swift Express",
+    "route_details": {
+      "details": {
+        "cash": "true",
+        "contactless": "true",
+        "school_service": "false"
+      },
+      "route_colour": "#0b0d21",
+      "route_text_colour": "#bd1a6c"
+    },
+    "inbound_destination": "Wrexham",
+    "outbound_destination": "Stoke-on-Trent",
+    "route_operators_data": [
+      {
+        "id": 9238,
+        "operator_name": "Swift Connecting Wales",
+        "operator_slug": "swift-connecting-wales",
+        "operator_code": "SWCW"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [
+      {
+        "id": 213734,
+        "route_num": "X23",
+        "route_name": "Swift Express",
+        "inbound_destination": "Cardiff Airport",
+        "outbound_destination": "Bridgend",
+        "route_operators": [
+          {
+            "id": 9238,
+            "operator_name": "Swift Connecting Wales",
+            "operator_slug": "swift-connecting-wales",
+            "operator_code": "SWCW"
+          }
+        ]
+      },
+      {
+        "id": 211631,
+        "route_num": "X22",
+        "route_name": "Swift Express",
+        "inbound_destination": "Wrexham",
+        "outbound_destination": "Shrewsbury",
+        "route_operators": [
+          {
+            "id": 9238,
+            "operator_name": "Swift Connecting Wales",
+            "operator_slug": "swift-connecting-wales",
+            "operator_code": "SWCW"
+          }
+        ]
+      }
+    ],
+    "service_updates": [],
+    "full_searchable_name": "X21 Wrexham Stoke-on-Trent",
+    "route_colour_rgba": "rgba(11, 13, 33, 1)"
+  },
+  "183974": {
+    "id": 183974,
+    "route_num": "56",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Cossall Industrial Park",
+    "outbound_destination": "Derby Bus Station",
+    "route_operators_data": [
+      {
+        "id": 12314,
+        "operator_name": "Swift Connecting East Midlands",
+        "operator_slug": "swift-connecting-east-midlands",
+        "operator_code": "SWCE"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "56 Cossall Industrial Park Derby Bus Station",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "199237": {
+    "id": 199237,
+    "route_num": "X50",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Rhyl",
+    "outbound_destination": "Wrexham",
+    "route_operators_data": [
+      {
+        "id": 9238,
+        "operator_name": "Swift Connecting Wales",
+        "operator_slug": "swift-connecting-wales",
+        "operator_code": "SWCW"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "X50 Rhyl Wrexham",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "11929": {
+    "id": 11929,
+    "route_num": "17",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Shrewsbury",
+    "outbound_destination": "Church Stretton",
+    "route_operators_data": [
+      {
+        "id": 978,
+        "operator_name": "Swift Connecting Shropshire",
+        "operator_slug": "swift-connecting-shropshire",
+        "operator_code": "SWSH"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "17 Shrewsbury Church Stretton",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "124": {
+    "id": 124,
+    "route_num": "30",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Hanley",
+    "outbound_destination": "Newcastle",
+    "route_operators_data": [
+      {
+        "id": 10118,
+        "operator_name": "Swift Connecting Staffordshire",
+        "operator_slug": "swift-connecting-staffordshire",
+        "operator_code": "SWST"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "30 Hanley Newcastle",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "186189": {
+    "id": 186189,
+    "route_num": "40",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Cromer ",
+    "outbound_destination": "Holt",
+    "route_operators_data": [
+      {
+        "id": 14161,
+        "operator_name": "Swift Connecting East Anglia",
+        "operator_slug": "swift-connecting-east-anglia",
+        "operator_code": "SWEA"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "40 Cromer  Holt",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "213734": {
+    "id": 213734,
+    "route_num": "X23",
+    "route_name": "Swift Express",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#0b0d21",
+      "route_text_colour": "#bd1a6c"
+    },
+    "inbound_destination": "Cardiff Airport",
+    "outbound_destination": "Bridgend",
+    "route_operators_data": [
+      {
+        "id": 9238,
+        "operator_name": "Swift Connecting Wales",
+        "operator_slug": "swift-connecting-wales",
+        "operator_code": "SWCW"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [
+      {
+        "id": 211631,
+        "route_num": "X22",
+        "route_name": "Swift Express",
+        "inbound_destination": "Wrexham",
+        "outbound_destination": "Shrewsbury",
+        "route_operators": [
+          {
+            "id": 9238,
+            "operator_name": "Swift Connecting Wales",
+            "operator_slug": "swift-connecting-wales",
+            "operator_code": "SWCW"
+          }
+        ]
+      },
+      {
+        "id": 211566,
+        "route_num": "X21",
+        "route_name": "Swift Express",
+        "inbound_destination": "Wrexham",
+        "outbound_destination": "Stoke-on-Trent",
+        "route_operators": [
+          {
+            "id": 9238,
+            "operator_name": "Swift Connecting Wales",
+            "operator_slug": "swift-connecting-wales",
+            "operator_code": "SWCW"
+          }
+        ]
+      }
+    ],
+    "service_updates": [],
+    "full_searchable_name": "X23 Cardiff Airport Bridgend",
+    "route_colour_rgba": "rgba(11, 13, 33, 1)"
+  },
+  "168373": {
+    "id": 168373,
+    "route_num": "503",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Norwood Junction Station",
+    "outbound_destination": "Elmers End",
+    "route_operators_data": [
+      {
+        "id": 11591,
+        "operator_name": "Swift Connecting South London",
+        "operator_slug": "swift-connecting-south-london",
+        "operator_code": "SWCL"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "503 Norwood Junction Station Elmers End",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "11934": {
+    "id": 11934,
+    "route_num": "52",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Stourbridge",
+    "outbound_destination": "Halesowen",
+    "route_operators_data": [
+      {
+        "id": 10119,
+        "operator_name": "Swift Connecting West Midlands",
+        "operator_slug": "swift-connecting-west-midlands",
+        "operator_code": "SWWM"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "52 Stourbridge Halesowen",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "183994": {
+    "id": 183994,
+    "route_num": "61",
+    "route_name": "Purple Line ",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#54128e",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Cossall Industrial Park",
+    "outbound_destination": "Leicester St Margaret's Bus Station",
+    "route_operators_data": [
+      {
+        "id": 12314,
+        "operator_name": "Swift Connecting East Midlands",
+        "operator_slug": "swift-connecting-east-midlands",
+        "operator_code": "SWCE"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "61 Cossall Industrial Park Leicester St Margaret's Bus Station",
+    "route_colour_rgba": "rgba(84, 18, 142, 1)"
+  },
+  "145822": {
+    "id": 145822,
+    "route_num": "1",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#1a3b70",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Cardiff",
+    "outbound_destination": "Porthcawl",
+    "route_operators_data": [
+      {
+        "id": 9238,
+        "operator_name": "Swift Connecting Wales",
+        "operator_slug": "swift-connecting-wales",
+        "operator_code": "SWCW"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [
+      {
+        "id": 2435,
+        "effected_route": [
+          {
+            "id": 145822,
+            "route_num": "1",
+            "inbound_destination": "Cardiff",
+            "outbound_destination": "Porthcawl"
+          },
+          {
+            "id": 145829,
+            "route_num": "53",
+            "inbound_destination": "Bridgend",
+            "outbound_destination": "Bridgend Designer Outlet"
+          },
+          {
+            "id": 145830,
+            "route_num": "PTC",
+            "inbound_destination": "Port Talbot Circular",
+            "outbound_destination": ""
+          }
+        ],
+        "start_date": "2026-06-15",
+        "end_date": "2026-06-15",
+        "update_title": "Timetable Alterations",
+        "update_description": "From 15/06/2026 There Will Be Timetable Alterations To The Affected Routes Below.\r\n\r\nThis Is Due To The Withdrawal From United Travel."
+      }
+    ],
+    "full_searchable_name": "1 Cardiff Porthcawl",
+    "route_colour_rgba": "rgba(26, 59, 112, 1)"
+  },
+  "166809": {
+    "id": 166809,
+    "route_num": "30",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Telford",
+    "outbound_destination": "Stoke-On-Trent",
+    "route_operators_data": [
+      {
+        "id": 978,
+        "operator_name": "Swift Connecting Shropshire",
+        "operator_slug": "swift-connecting-shropshire",
+        "operator_code": "SWSH"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "30 Telford Stoke-On-Trent",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "11945": {
+    "id": 11945,
+    "route_num": "54A",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Stourbridge",
+    "outbound_destination": "Wombourne",
+    "route_operators_data": [
+      {
+        "id": 10119,
+        "operator_name": "Swift Connecting West Midlands",
+        "operator_slug": "swift-connecting-west-midlands",
+        "operator_code": "SWWM"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "54A Stourbridge Wombourne",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "145832": {
+    "id": 145832,
+    "route_num": "BHS",
+    "route_name": "Bridgend Hospital Shuttle",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#1a3b70",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Bridgend Hospital Shuttle",
+    "outbound_destination": "",
+    "route_operators_data": [
+      {
+        "id": 9238,
+        "operator_name": "Swift Connecting Wales",
+        "operator_slug": "swift-connecting-wales",
+        "operator_code": "SWCW"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "BHS Bridgend Hospital Shuttle",
+    "route_colour_rgba": "rgba(26, 59, 112, 1)"
+  },
+  "211821": {
+    "id": 211821,
+    "route_num": "38A",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Alfreton",
+    "outbound_destination": "Burton",
+    "route_operators_data": [
+      {
+        "id": 12314,
+        "operator_name": "Swift Connecting East Midlands",
+        "operator_slug": "swift-connecting-east-midlands",
+        "operator_code": "SWCE"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "38A Alfreton Burton",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "203774": {
+    "id": 203774,
+    "route_num": "45",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "true",
+        "contactless": "true",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Great Yarmouth",
+    "outbound_destination": "Cromer",
+    "route_operators_data": [
+      {
+        "id": 14161,
+        "operator_name": "Swift Connecting East Anglia",
+        "operator_slug": "swift-connecting-east-anglia",
+        "operator_code": "SWEA"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "45 Great Yarmouth Cromer",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "109439": {
+    "id": 109439,
+    "route_num": "64",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Gornal Wood",
+    "outbound_destination": "Dudley",
+    "route_operators_data": [
+      {
+        "id": 10119,
+        "operator_name": "Swift Connecting West Midlands",
+        "operator_slug": "swift-connecting-west-midlands",
+        "operator_code": "SWWM"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "64 Gornal Wood Dudley",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "234352": {
+    "id": 234352,
+    "route_num": "1C",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "true",
+        "contactless": "true",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "South Paignton Circular",
+    "outbound_destination": "",
+    "route_operators_data": [
+      {
+        "id": 15794,
+        "operator_name": "Swift Connecting Westcountry",
+        "operator_slug": "swift-connecting-westcountry",
+        "operator_code": "SWWC"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "1C South Paignton Circular",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "174839": {
+    "id": 174839,
+    "route_num": "68J",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Cossall Industrial Park",
+    "outbound_destination": "Alfreton Bus Station",
+    "route_operators_data": [
+      {
+        "id": 12314,
+        "operator_name": "Swift Connecting East Midlands",
+        "operator_slug": "swift-connecting-east-midlands",
+        "operator_code": "SWCE"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "68J Cossall Industrial Park Alfreton Bus Station",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "40931": {
+    "id": 40931,
+    "route_num": "X1",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Newport",
+    "outbound_destination": "Market Drayton",
+    "route_operators_data": [
+      {
+        "id": 978,
+        "operator_name": "Swift Connecting Shropshire",
+        "operator_slug": "swift-connecting-shropshire",
+        "operator_code": "SWSH"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "X1 Newport Market Drayton",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "25729": {
+    "id": 25729,
+    "route_num": "LS1",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Shifnal Local Service",
+    "outbound_destination": "",
+    "route_operators_data": [
+      {
+        "id": 978,
+        "operator_name": "Swift Connecting Shropshire",
+        "operator_slug": "swift-connecting-shropshire",
+        "operator_code": "SWSH"
+      }
+    ],
+    "linked_route": [
+      {
+        "id": 35291,
+        "route_num": "LS2",
+        "route_name": ""
+      }
+    ],
+    "related_route": [
+      {
+        "id": 35291,
+        "route_num": "LS2",
+        "route_name": "",
+        "inbound_destination": "Telford",
+        "outbound_destination": "Shifnal",
+        "route_operators": [
+          {
+            "id": 978,
+            "operator_name": "Swift Connecting Shropshire",
+            "operator_slug": "swift-connecting-shropshire",
+            "operator_code": "SWSH"
+          }
+        ]
+      }
+    ],
+    "service_updates": [],
+    "full_searchable_name": "LS1 Shifnal Local Service",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "108832": {
+    "id": 108832,
+    "route_num": "80",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#2047ae",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Craven Arms",
+    "outbound_destination": "Ludlow",
+    "route_operators_data": [
+      {
+        "id": 978,
+        "operator_name": "Swift Connecting Shropshire",
+        "operator_slug": "swift-connecting-shropshire",
+        "operator_code": "SWSH"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "80 Craven Arms Ludlow",
+    "route_colour_rgba": "rgba(32, 71, 174, 1)"
+  },
+  "167925": {
+    "id": 167925,
+    "route_num": "511",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Croydon Bus Station",
+    "outbound_destination": "Croydon Hospital",
+    "route_operators_data": [
+      {
+        "id": 11591,
+        "operator_name": "Swift Connecting South London",
+        "operator_slug": "swift-connecting-south-london",
+        "operator_code": "SWCL"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "511 Croydon Bus Station Croydon Hospital",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "201519": {
+    "id": 201519,
+    "route_num": "20",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Alfreton",
+    "outbound_destination": "Sutton In Ashfield ",
+    "route_operators_data": [
+      {
+        "id": 12314,
+        "operator_name": "Swift Connecting East Midlands",
+        "operator_slug": "swift-connecting-east-midlands",
+        "operator_code": "SWCE"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "20 Alfreton Sutton In Ashfield",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "207104": {
+    "id": 207104,
+    "route_num": "37",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Alfreton",
+    "outbound_destination": "Buxton",
+    "route_operators_data": [
+      {
+        "id": 12314,
+        "operator_name": "Swift Connecting East Midlands",
+        "operator_slug": "swift-connecting-east-midlands",
+        "operator_code": "SWCE"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "37 Alfreton Buxton",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "197689": {
+    "id": 197689,
+    "route_num": "57",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Cossall Industrial Park",
+    "outbound_destination": "Derby Bus Station",
+    "route_operators_data": [
+      {
+        "id": 12314,
+        "operator_name": "Swift Connecting East Midlands",
+        "operator_slug": "swift-connecting-east-midlands",
+        "operator_code": "SWCE"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "57 Cossall Industrial Park Derby Bus Station",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "226917": {
+    "id": 226917,
+    "route_num": "X44",
+    "route_name": "Swift Express",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#0b1321",
+      "route_text_colour": "#c31b6b"
+    },
+    "inbound_destination": "Sheringham",
+    "outbound_destination": "Norwich",
+    "route_operators_data": [
+      {
+        "id": 14161,
+        "operator_name": "Swift Connecting East Anglia",
+        "operator_slug": "swift-connecting-east-anglia",
+        "operator_code": "SWEA"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "X44 Sheringham Norwich",
+    "route_colour_rgba": "rgba(11, 19, 33, 1)"
+  },
+  "234570": {
+    "id": 234570,
+    "route_num": "BT1",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "true",
+        "contactless": "true",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Brixham",
+    "outbound_destination": "Torquay",
+    "route_operators_data": [
+      {
+        "id": 15794,
+        "operator_name": "Swift Connecting Westcountry",
+        "operator_slug": "swift-connecting-westcountry",
+        "operator_code": "SWWC"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "BT1 Brixham Torquay",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "145825": {
+    "id": 145825,
+    "route_num": "10",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#1a3b70",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Bridgend",
+    "outbound_destination": "Maesteg",
+    "route_operators_data": [
+      {
+        "id": 9238,
+        "operator_name": "Swift Connecting Wales",
+        "operator_slug": "swift-connecting-wales",
+        "operator_code": "SWCW"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "10 Bridgend Maesteg",
+    "route_colour_rgba": "rgba(26, 59, 112, 1)"
+  },
+  "11924": {
+    "id": 11924,
+    "route_num": "CAMS",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Cosford Air Museum",
+    "outbound_destination": "",
+    "route_operators_data": [
+      {
+        "id": 978,
+        "operator_name": "Swift Connecting Shropshire",
+        "operator_slug": "swift-connecting-shropshire",
+        "operator_code": "SWSH"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "CAMS Cosford Air Museum",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "169148": {
+    "id": 169148,
+    "route_num": "SX7",
+    "route_name": "sixty-seven",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#27b300",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Nottingham, Broadmarsh Bus Station",
+    "outbound_destination": "Cossall Industrial Park",
+    "route_operators_data": [
+      {
+        "id": 12314,
+        "operator_name": "Swift Connecting East Midlands",
+        "operator_slug": "swift-connecting-east-midlands",
+        "operator_code": "SWCE"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "SX7 Nottingham, Broadmarsh Bus Station Cossall Industrial Park",
+    "route_colour_rgba": "rgba(39, 179, 0, 1)"
+  },
+  "203779": {
+    "id": 203779,
+    "route_num": "38",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Alfreton",
+    "outbound_destination": "Burton On Trent",
+    "route_operators_data": [
+      {
+        "id": 12314,
+        "operator_name": "Swift Connecting East Midlands",
+        "operator_slug": "swift-connecting-east-midlands",
+        "operator_code": "SWCE"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "38 Alfreton Burton On Trent",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "239355": {
+    "id": 239355,
+    "route_num": "SL",
+    "route_name": "SwiftLink",
+    "route_details": {
+      "details": {
+        "cash": "true",
+        "contactless": "true",
+        "school_service": "false"
+      },
+      "route_colour": "#1c938d",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Tenerife North–Ciudad de La Laguna Airport",
+    "outbound_destination": "Intercambiador Tenerife",
+    "route_operators_data": [
+      {
+        "id": 19243,
+        "operator_name": "Swift Connecting the Canaries",
+        "operator_slug": "canaria-connect",
+        "operator_code": "SCTN"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "SL Tenerife North–Ciudad de La Laguna Airport Intercambiador Tenerife",
+    "route_colour_rgba": "rgba(28, 147, 141, 1)"
+  },
+  "158926": {
+    "id": 158926,
+    "route_num": "65",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Kidderminster",
+    "outbound_destination": "Stourbridge",
+    "route_operators_data": [
+      {
+        "id": 10119,
+        "operator_name": "Swift Connecting West Midlands",
+        "operator_slug": "swift-connecting-west-midlands",
+        "operator_code": "SWWM"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "65 Kidderminster Stourbridge",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "171890": {
+    "id": 171890,
+    "route_num": "66",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Cossall Industrial Park",
+    "outbound_destination": "Ripley Market Place",
+    "route_operators_data": [
+      {
+        "id": 12314,
+        "operator_name": "Swift Connecting East Midlands",
+        "operator_slug": "swift-connecting-east-midlands",
+        "operator_code": "SWCE"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "66 Cossall Industrial Park Ripley Market Place",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "185644": {
+    "id": 185644,
+    "route_num": "WC6",
+    "route_name": "Wrekin Connect",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#122935",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Wellington Retail Park",
+    "outbound_destination": "Horsehay",
+    "route_operators_data": [
+      {
+        "id": 14320,
+        "operator_name": "Wrekin Connect",
+        "operator_slug": "wrekin-connect",
+        "operator_code": "WRCO"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "WC6 Wellington Retail Park Horsehay",
+    "route_colour_rgba": "rgba(18, 41, 53, 1)"
+  },
+  "49632": {
+    "id": 49632,
+    "route_num": "53A",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Stourbridge",
+    "outbound_destination": "Merry Hill",
+    "route_operators_data": [
+      {
+        "id": 10119,
+        "operator_name": "Swift Connecting West Midlands",
+        "operator_slug": "swift-connecting-west-midlands",
+        "operator_code": "SWWM"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "53A Stourbridge Merry Hill",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "36818": {
+    "id": 36818,
+    "route_num": "18",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Shrewsbury",
+    "outbound_destination": "Oswestry",
+    "route_operators_data": [
+      {
+        "id": 978,
+        "operator_name": "Swift Connecting Shropshire",
+        "operator_slug": "swift-connecting-shropshire",
+        "operator_code": "SWSH"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "18 Shrewsbury Oswestry",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "228511": {
+    "id": 228511,
+    "route_num": "43",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Cromer",
+    "outbound_destination": "Norwich",
+    "route_operators_data": [
+      {
+        "id": 14161,
+        "operator_name": "Swift Connecting East Anglia",
+        "operator_slug": "swift-connecting-east-anglia",
+        "operator_code": "SWEA"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "43 Cromer Norwich",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "175224": {
+    "id": 175224,
+    "route_num": "504",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Mitcham Common",
+    "outbound_destination": "Fairfield Halls",
+    "route_operators_data": [
+      {
+        "id": 11591,
+        "operator_name": "Swift Connecting South London",
+        "operator_slug": "swift-connecting-south-london",
+        "operator_code": "SWCL"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "504 Mitcham Common Fairfield Halls",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "177010": {
+    "id": 177010,
+    "route_num": "59",
+    "route_name": "Purple Line ",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#54128e",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Cossall Industrial Park",
+    "outbound_destination": "Newark Bus Station",
+    "route_operators_data": [
+      {
+        "id": 12314,
+        "operator_name": "Swift Connecting East Midlands",
+        "operator_slug": "swift-connecting-east-midlands",
+        "operator_code": "SWCE"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "59 Cossall Industrial Park Newark Bus Station",
+    "route_colour_rgba": "rgba(84, 18, 142, 1)"
+  },
+  "234567": {
+    "id": 234567,
+    "route_num": "P&R",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "true",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Brixham",
+    "outbound_destination": "",
+    "route_operators_data": [
+      {
+        "id": 15794,
+        "operator_name": "Swift Connecting Westcountry",
+        "operator_slug": "swift-connecting-westcountry",
+        "operator_code": "SWWC"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "P&R Brixham",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "233796": {
+    "id": 233796,
+    "route_num": "94",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "true",
+        "contactless": "true",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Welshpool",
+    "outbound_destination": "Oswestry",
+    "route_operators_data": [
+      {
+        "id": 978,
+        "operator_name": "Swift Connecting Shropshire",
+        "operator_slug": "swift-connecting-shropshire",
+        "operator_code": "SWSH"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "94 Welshpool Oswestry",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "189315": {
+    "id": 189315,
+    "route_num": "UNX2",
+    "route_name": "UniXpress",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Derby",
+    "outbound_destination": "Northampton",
+    "route_operators_data": [
+      {
+        "id": 12314,
+        "operator_name": "Swift Connecting East Midlands",
+        "operator_slug": "swift-connecting-east-midlands",
+        "operator_code": "SWCE"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "UNX2 Derby Northampton",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "49634": {
+    "id": 49634,
+    "route_num": "54B",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Stourbridge",
+    "outbound_destination": "Wombourne",
+    "route_operators_data": [
+      {
+        "id": 10119,
+        "operator_name": "Swift Connecting West Midlands",
+        "operator_slug": "swift-connecting-west-midlands",
+        "operator_code": "SWWM"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "54B Stourbridge Wombourne",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "145830": {
+    "id": 145830,
+    "route_num": "PTC",
+    "route_name": "Port Talbot Circular",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#1a3b70",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Port Talbot Circular",
+    "outbound_destination": "",
+    "route_operators_data": [
+      {
+        "id": 9238,
+        "operator_name": "Swift Connecting Wales",
+        "operator_slug": "swift-connecting-wales",
+        "operator_code": "SWCW"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [
+      {
+        "id": 2435,
+        "effected_route": [
+          {
+            "id": 145822,
+            "route_num": "1",
+            "inbound_destination": "Cardiff",
+            "outbound_destination": "Porthcawl"
+          },
+          {
+            "id": 145829,
+            "route_num": "53",
+            "inbound_destination": "Bridgend",
+            "outbound_destination": "Bridgend Designer Outlet"
+          },
+          {
+            "id": 145830,
+            "route_num": "PTC",
+            "inbound_destination": "Port Talbot Circular",
+            "outbound_destination": ""
+          }
+        ],
+        "start_date": "2026-06-15",
+        "end_date": "2026-06-15",
+        "update_title": "Timetable Alterations",
+        "update_description": "From 15/06/2026 There Will Be Timetable Alterations To The Affected Routes Below.\r\n\r\nThis Is Due To The Withdrawal From United Travel."
+      }
+    ],
+    "full_searchable_name": "PTC Port Talbot Circular",
+    "route_colour_rgba": "rgba(26, 59, 112, 1)"
+  },
+  "174938": {
+    "id": 174938,
+    "route_num": "20",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Rhyl",
+    "outbound_destination": "Llandudno",
+    "route_operators_data": [
+      {
+        "id": 9238,
+        "operator_name": "Swift Connecting Wales",
+        "operator_slug": "swift-connecting-wales",
+        "operator_code": "SWCW"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "20 Rhyl Llandudno",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "176986": {
+    "id": 176986,
+    "route_num": "IC1",
+    "route_name": "Ilkeston Circular",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Cossall Industrial Park",
+    "outbound_destination": "",
+    "route_operators_data": [
+      {
+        "id": 12314,
+        "operator_name": "Swift Connecting East Midlands",
+        "operator_slug": "swift-connecting-east-midlands",
+        "operator_code": "SWCE"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "IC1 Cossall Industrial Park",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "11936": {
+    "id": 11936,
+    "route_num": "55",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Wolverhampton",
+    "outbound_destination": "Cannock",
+    "route_operators_data": [
+      {
+        "id": 10119,
+        "operator_name": "Swift Connecting West Midlands",
+        "operator_slug": "swift-connecting-west-midlands",
+        "operator_code": "SWWM"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "55 Wolverhampton Cannock",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "186214": {
+    "id": 186214,
+    "route_num": "42",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Cromer ",
+    "outbound_destination": "North Walsham",
+    "route_operators_data": [
+      {
+        "id": 14161,
+        "operator_name": "Swift Connecting East Anglia",
+        "operator_slug": "swift-connecting-east-anglia",
+        "operator_code": "SWEA"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "42 Cromer  North Walsham",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "184756": {
+    "id": 184756,
+    "route_num": "9",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "true",
+        "contactless": "true",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Wellington",
+    "outbound_destination": "Edgmond",
+    "route_operators_data": [
+      {
+        "id": 978,
+        "operator_name": "Swift Connecting Shropshire",
+        "operator_slug": "swift-connecting-shropshire",
+        "operator_code": "SWSH"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "9 Wellington Edgmond",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  },
+  "203647": {
+    "id": 203647,
+    "route_num": "54",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#4a5d6c",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Cotmanhay",
+    "outbound_destination": "Beeston",
+    "route_operators_data": [
+      {
+        "id": 12314,
+        "operator_name": "Swift Connecting East Midlands",
+        "operator_slug": "swift-connecting-east-midlands",
+        "operator_code": "SWCE"
+      }
+    ],
+    "linked_route": [],
+    "related_route": [],
+    "service_updates": [],
+    "full_searchable_name": "54 Cotmanhay Beeston",
+    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+  }
+}

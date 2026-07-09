@@ -333,40 +333,51 @@ function showOperatorError() {
 
 
 /* ==========================================
-   ROUTE DETAIL PAGE LOGIC 
+   ROUTE DETAIL PAGE LOGIC (REDESIGNED)
    ========================================== */
 
-// Helper function to build dynamic timetables from any API shape
+// Indestructible Timetable Array Hunter
 async function fetchAndRenderTimetable(routeId) {
     try {
         let records = [];
+        
+        // Priority list of API endpoints to try
+        const urlsToTry = [
+            `https://www.mybustimes.cc/api/get_timetables/?route_id=${routeId}`,
+            `https://www.mybustimes.cc/api/get_timetables/?route=${routeId}`,
+            `https://www.mybustimes.cc/api/get_timetables/${routeId}/`
+        ];
 
-        // Attempt 1: Prioritize ?route_id= 
-        let res = await fetch(`https://www.mybustimes.cc/api/get_timetables/?route_id=${routeId}`);
-        if (res.ok) {
-            let data = await res.json();
-            records = Array.isArray(data) ? data : (data.results || []);
-        }
-
-        // Attempt 2: Fallback to ?route=
-        if (records.length === 0) {
-            res = await fetch(`https://www.mybustimes.cc/api/get_timetables/?route=${routeId}`);
-            if (res.ok) {
-                let data = await res.json();
-                records = Array.isArray(data) ? data : (data.results || []);
+        for (const url of urlsToTry) {
+            try {
+                const res = await fetch(url);
+                if (res.ok) {
+                    const data = await res.json();
+                    
+                    // Arrays can be hidden anywhere. Let's hunt it down.
+                    if (Array.isArray(data)) {
+                        records = data;
+                    } else if (data.results && Array.isArray(data.results)) {
+                        records = data.results;
+                    } else if (data.data && Array.isArray(data.data)) {
+                        records = data.data;
+                    } else {
+                        // Deep search: look for any array inside the main object
+                        for (const key in data) {
+                            if (Array.isArray(data[key])) {
+                                records = data[key];
+                                break;
+                            }
+                        }
+                    }
+                    // If we successfully found an array of records, stop trying URLs
+                    if (records.length > 0) break; 
+                }
+            } catch (e) {
+                console.warn(`Fallback triggered: Failed fetch on ${url}`);
             }
         }
 
-        // Attempt 3: Direct slug fallback
-        if (records.length === 0) {
-            res = await fetch(`https://www.mybustimes.cc/api/get_timetables/${routeId}/`);
-            if (res.ok) {
-                let data = await res.json();
-                records = Array.isArray(data) ? data : (data.results || []);
-            }
-        }
-
-        // If all attempts return nothing or error out
         if (records.length === 0) {
             return `
                 <div class="timetable-placeholder">
@@ -376,14 +387,14 @@ async function fetchAndRenderTimetable(routeId) {
             `;
         }
 
-        // Generic Table Builder - Extracts headers automatically from the API object
+        // Generic Table Builder - Extracts headers dynamically
         const headers = Object.keys(records[0]).filter(k => typeof records[0][k] !== 'object' && !Array.isArray(records[0][k]));
         
-        let tableHtml = `<div style="overflow-x: auto; border-radius: 8px; border: 1px solid #edf2f7;"><table class="route-data-table" style="margin: 0; width: 100%; text-align: center; white-space: nowrap;"><thead><tr>`;
+        let tableHtml = `<div style="overflow-x: auto; border-radius: var(--radius-soft); border: 1px solid #edf2f7;"><table class="route-data-table" style="margin: 0; width: 100%; text-align: center; white-space: nowrap;"><thead><tr>`;
         
         headers.forEach(h => {
             const formattedKey = h.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-            tableHtml += `<th style="text-align: center; background-color: var(--primary); color: white;">${formattedKey}</th>`;
+            tableHtml += `<th style="text-align: center; background-color: var(--primary); color: white; padding: 15px;">${formattedKey}</th>`;
         });
         tableHtml += `</tr></thead><tbody>`;
         
@@ -391,7 +402,7 @@ async function fetchAndRenderTimetable(routeId) {
             tableHtml += `<tr>`;
             headers.forEach(h => {
                 let val = row[h];
-                tableHtml += `<td>${val !== null && val !== undefined && val !== '' ? val : '-'}</td>`;
+                tableHtml += `<td style="padding: 12px; border-bottom: 1px solid #edf2f7;">${val !== null && val !== undefined && val !== '' ? val : '-'}</td>`;
             });
             tableHtml += `</tr>`;
         });
@@ -430,60 +441,37 @@ async function initRoutePage() {
         if (!res.ok) throw new Error("Could not fetch route");
         const data = await res.json();
 
-        function extractOperatorName(obj) {
-            if (obj === null || typeof obj !== 'object') return null;
-            for (const [key, value] of Object.entries(obj)) {
-                if (key === 'operator_name') return value;
-                if (typeof value === 'object') {
-                    const nestedResult = extractOperatorName(value);
-                    if (nestedResult) return nestedResult;
-                }
-            }
-            return null;
-        }
-
-        const opName = extractOperatorName(data) || data.operator || 'Unknown Operator';
+        // Much safer Operator Name extraction
+        const opName = data.operator_name || data.operator || 'Unknown Operator';
         applyBrandingEngine(opName); 
 
         // Safely construct the exact format requested
         const routeNum = data.route_num || '';
         const routeName = data.route_name || '';
+        const start = data.inbound_destination || '';
+        const end = data.outbound_destination || '';
+
         const combinedRoute = `${routeNum} ${routeName}`.trim();
-        
-        const start = data.inbound_destination || 'Unknown Start';
-        const end = data.outbound_destination || 'Unknown Destination';
+        let titleString = combinedRoute;
+        if (start) titleString += ` - ${start}`;
+        if (end) titleString += ` - ${end}`;
 
         // Set Headers: "{route_num} {route_name} - {inbound} - {outbound}"
-        titleHeader.innerText = `${combinedRoute} - ${start} - ${end}`;
+        titleHeader.innerText = titleString;
         subHeader.innerText = `Operated by ${opName}`;
 
-        let attributesHtml = '';
-        for (const [key, value] of Object.entries(data)) {
-            if (typeof value !== 'object' && key !== 'id' && key !== 'full_searchable_name') {
-                const formattedKey = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-                attributesHtml += `
-                    <tr>
-                        <th>${formattedKey}</th>
-                        <td>${value === null || value === '' ? 'N/A' : value}</td>
-                    </tr>
-                `;
-            }
-        }
-
+        // Fetch Timetable from the new dynamic array hunter
         const timetableHtml = await fetchAndRenderTimetable(routeId);
 
+        // Render purely the Timetable Card (Meta Data Table entirely removed)
         const html = `
-            <div class="card" style="margin-bottom: 30px;">
-                <table class="route-data-table" style="margin-top: 0;">
-                    <tbody>
-                        ${attributesHtml}
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="card">
-                <h2 style="color: var(--primary); margin-bottom: 15px;">Route Timetable</h2>
-                ${timetableHtml}
+            <div class="card" style="padding: 0; overflow: hidden;">
+                <div style="padding: 25px 35px; background-color: #f8fafc; border-bottom: 2px solid #edf2f7;">
+                    <h2 style="color: var(--primary); margin: 0;">Route Timetable</h2>
+                </div>
+                <div style="padding: 35px;">
+                    ${timetableHtml}
+                </div>
             </div>
         `;
 

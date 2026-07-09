@@ -5,6 +5,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (document.getElementById('live-fleet-container')) {
         initLiveFleetPage();
     }
+    if (document.getElementById('network-map')) {
+        initNetworkMap();
+    }
 });
 
 /* ==========================================
@@ -19,7 +22,6 @@ async function initOperatorPage() {
         return;
     }
 
-    // INTERCEPT: Swift Express is a cross-network brand, not a single operator.
     if (targetOperator.toLowerCase().includes('express')) {
         const expressProfile = {
             operator_name: "Swift Express",
@@ -32,7 +34,6 @@ async function initOperatorPage() {
         return; 
     }
 
-    // Standard lookup for normal regional divisions
     let unifiedDataset = [];
     let queryTarget = encodeURIComponent(targetOperator);
     let apiEndpointUrl = `https://www.mybustimes.cc/api/operator/?operator_name__icontains=${queryTarget}`;
@@ -75,7 +76,6 @@ function applyBrandingEngine(operatorName) {
     const globalLogo = document.getElementById('dynamic-logo');
     const visualAccent = document.getElementById('branding-accent');
 
-    // Default configuration
     bodyDom.setAttribute('data-theme', 'swift-base');
     if (globalLogo) globalLogo.src = 'Swift Connect Icon Black.png';
     if (visualAccent) visualAccent.src = 'Swift Connect Long White.png';
@@ -102,7 +102,6 @@ function renderOperatorMetrics(dataRecord) {
     document.getElementById('operator-title-name').innerText = dataRecord.operator_name || 'Unknown Operator';
     document.getElementById('operator-badge-code').innerText = `ID: ${dataRecord.operator_code || 'SWFT'}`;
 
-    // ULTIMATE EXTRACTION: A recursive function that deeply searches the entire JSON 
     function extractRegionName(obj) {
         if (obj === null || typeof obj !== 'object') return null;
         for (const [key, value] of Object.entries(obj)) {
@@ -277,7 +276,6 @@ async function initLiveFleetPage() {
 
                 if (record.vehicle && record.vehicle.name) {
                     const nameParts = record.vehicle.name.split('-');
-                    
                     if (nameParts.length >= 2) {
                         fleetNum = nameParts[0].trim();
                         reg = nameParts.slice(1).join('-').trim(); 
@@ -309,5 +307,85 @@ async function initLiveFleetPage() {
         container.innerHTML = '<p class="error-box">Error connecting to the live tracking satellite.</p>';
     } finally {
         loading.classList.add('hidden');
+    }
+}
+
+/* ==========================================
+   INTERACTIVE NETWORK MAP LOGIC
+   ========================================== */
+async function initNetworkMap() {
+    const mapContainer = document.getElementById('network-map');
+    if (!mapContainer) return;
+
+    // Initialize Leaflet Map - standard fallback coordinates (UK center)
+    const map = L.map('network-map').setView([52.5, -2.0], 6);
+
+    // Load OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    const apiUrl = "https://www.mybustimes.cc/api/group/Swift%20Connect%20Group/vehicles/?ymax=30.48007424755997&ymin=26.45160913140478&xmax=-12.811894525114468&xmin=-18.483100793077682&limit=5000";
+
+    try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) throw new Error("Could not fetch map fleet data.");
+        const data = await response.json();
+        const vehicles = data.results || data;
+
+        const boundsData = [];
+
+        vehicles.forEach(record => {
+            // Flexible extraction for latitude and longitude (APIs use various naming conventions)
+            const lat = record.lat || record.latitude || record.y;
+            const lng = record.lon || record.lng || record.longitude || record.x;
+
+            if (lat && lng) {
+                let fleetNum = 'N/A';
+                let reg = 'UNKNOWN REG';
+
+                // Scrape names same as the fleet tracker
+                if (record.vehicle && record.vehicle.name) {
+                    const nameParts = record.vehicle.name.split('-');
+                    if (nameParts.length >= 2) {
+                        fleetNum = nameParts[0].trim();
+                        reg = nameParts.slice(1).join('-').trim();
+                    } else {
+                        fleetNum = record.vehicle.name.trim();
+                    }
+                }
+
+                const route = record.route || 'Not in service';
+                const dest = record.destination || 'Depot';
+                const operator = record.operator || 'Swift Connect';
+
+                // Plot the marker
+                const marker = L.marker([lat, lng]).addTo(map);
+                boundsData.push([lat, lng]);
+
+                // HTML content for when the bus pin is clicked
+                const popupHtml = `
+                    <div style="font-family: inherit; color: #0b1922; min-width: 200px;">
+                        <h3 style="margin: 0 0 5px 0; color: #2292ef; font-size: 1.1rem;">Vehicle ${fleetNum}</h3>
+                        <p style="margin: 0 0 8px 0; display: inline-block; background: #2292ef; color: white; padding: 2px 8px; border-radius: 4px; font-weight: bold; font-size: 0.8rem;">${reg}</p>
+                        <p style="margin: 5px 0; font-size: 0.95rem;"><strong>Route:</strong> ${route}</p>
+                        <p style="margin: 5px 0; font-size: 0.95rem;"><strong>To:</strong> ${dest}</p>
+                        <hr style="margin: 10px 0; border: 0; border-top: 1px solid #ccc;">
+                        <p style="margin: 0; font-size: 0.8rem; color: #4a5d6c;">${operator}</p>
+                    </div>
+                `;
+                marker.bindPopup(popupHtml);
+            }
+        });
+
+        // Automatically frame the camera to show all buses currently tracking
+        if (boundsData.length > 0) {
+            map.fitBounds(boundsData, { padding: [30, 30] });
+        }
+
+    } catch (error) {
+        console.error("Map rendering error:", error);
+        mapContainer.innerHTML = '<div style="padding: 40px; text-align: center; color: #e53e3e; font-weight: bold;">Could not connect to map rendering satellite.</div>';
     }
 }

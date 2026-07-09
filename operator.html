@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Operator Details | Swift Connect</title>
+    <title>Division Profile | Swift Connect</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body data-theme="swift-base">
@@ -12,34 +12,84 @@
         <div class="container header-container">
             <div class="brand-logo">
                 <a href="index.html">
-                    <img id="operator-logo" src="swiftlogo_new.png" alt="Swift Connect Logo" style="height: 50px;">
+                    <img id="dynamic-logo" src="frontswiftlogo_new.png" alt="Division Logo" class="nav-logo">
                 </a>
             </div>
             <nav class="main-nav">
                 <ul>
                     <li><a href="index.html">Home</a></li>
-                    <li><a href="#">Timetables</a></li>
-                    <li><a href="#">Fleet Info</a></li>
+                    <li><a href="index.html#network">All Divisions</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
-    <section class="hero-section operator-hero">
+    <section class="hero-section operator-banner">
         <div class="container">
-            <h1 id="operator-name">Loading Operator...</h1>
-            <p id="operator-code" style="opacity: 0.8; font-size: 1.2rem;"></p>
-        </div>
-    </section>
-
-    <section class="container quick-links" style="margin-top: 40px; margin-bottom: 60px;">
-        <div class="card" style="grid-column: span 3;">
-            <h3 style="color: var(--primary);">Operator Details</h3>
-            <div id="api-content">
-                <p>Fetching the latest data from the network...</p>
+            <div class="banner-flex">
+                <div>
+                    <span class="badge" id="operator-badge-code">Loading Code...</span>
+                    <h1 id="operator-title-name">Loading Division...</h1>
+                </div>
+                <div id="logo-branding-container">
+                    <img id="branding-accent" src="swift_front_new.png" alt="" class="branding-accent-img">
+                </div>
             </div>
         </div>
     </section>
+
+    <main class="container page-content">
+        <div class="card data-display-card">
+            <div class="card-header-bar">
+                <h2>Live Network Metrics</h2>
+                <span class="status-indicator-dot"></span>
+            </div>
+            <p class="intro-text">Below is the real-time operational registration data pulled directly from the transport management network database.</p>
+            
+            <div id="api-loading-state" class="loading-spinner-box">
+                <p>Querying the database network across all pages... Please wait.</p>
+            </div>
+
+            <div id="api-error-state" class="error-box hidden">
+                <p>Failed to load division details. The operating operator might not be registered in the external database yet.</p>
+                <a href="index.html" class="btn-secondary">Return to Network Home</a>
+            </div>
+
+            <div id="api-data-results" class="data-grid hidden">
+                </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <h4>Core Bus Divisions</h4>
+                <ul class="operator-list">
+                    <li><a href="operator.html?op=Swift Connecting the Canaries">Swift Connecting the Canaries</a></li>
+                    <li><a href="operator.html?op=Swift Connecting East Anglia">Swift Connecting East Anglia</a></li>
+                    <li><a href="operator.html?op=Swift Connecting East Midlands">Swift Connecting East Midlands</a></li>
+                    <li><a href="operator.html?op=Swift Connecting Shropshire">Swift Connecting Shropshire</a></li>
+                    <li><a href="operator.html?op=Swift Connecting South London">Swift Connecting South London</a></li>
+                    <li><a href="operator.html?op=Swift Connecting Staffordshire">Swift Connecting Staffordshire</a></li>
+                    <li><a href="operator.html?op=Swift Connecting Wales">Swift Connecting Wales</a></li>
+                    <li><a href="operator.html?op=Swift Connecting West Midlands">Swift Connecting West Midlands</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Specialist Operations</h4>
+                <ul class="operator-list">
+                    <li><a href="operator.html?op=Swift Connecting Railway">Swift Connecting Railway</a></li>
+                    <li><a href="operator.html?op=Swift Connect Preservation">Swift Connect Preservation</a></li>
+                    <li><a href="operator.html?op=Wrekin Connect">Wrekin Connect</a></li>
+                </ul>
+            </div>
+            <div class="footer-col brand-col">
+                <img src="swift_white.png" alt="Swift Group Icon" class="footer-logo">
+                <h3>Swift Connect Group</h3>
+                <p class="copyright">&copy; 2026 Swift Connect Ltd.</p>
+            </div>
+        </div>
+    </footer>
 
     <script src="app.js"></script>
 </body>

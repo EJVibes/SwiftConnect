@@ -24,7 +24,7 @@ async function initOperatorPage() {
         const expressProfile = {
             operator_name: "Swift Express",
             operator_code: "Multi-Operator",
-            region_name: "System Wide"
+            region_name: "Cross-Network"
         };
         applyBrandingEngine(expressProfile.operator_name);
         renderOperatorMetrics(expressProfile);
@@ -100,16 +100,18 @@ function applyBrandingEngine(operatorName) {
 }
 
 function renderOperatorMetrics(dataRecord) {
-    document.getElementById('operator-title-name').innerText = dataRecord.operator_name;
+    document.getElementById('operator-title-name').innerText = dataRecord.operator_name || 'Unknown Operator';
     document.getElementById('operator-badge-code').innerText = `ID: ${dataRecord.operator_code || 'SWFT'}`;
 
-    // Strictly pull region_name, targeting the API structure requested
-    let regionDisplay = 'System Wide';
-    if (dataRecord.region_name && dataRecord.region_name.trim() !== '') {
-        regionDisplay = dataRecord.region_name;
+    // Strictly pull region_name exactly as requested from the API payload
+    let regionDisplay = dataRecord.region_name;
+    
+    // Safety fallback only if the key is completely missing from the object
+    if (regionDisplay === undefined || regionDisplay === null) {
+        regionDisplay = dataRecord.region || 'Not Specified';
     }
 
-    // Swapped layout order: Routes on top, metadata boxes underneath
+    // Layout order: Routes on top, metadata boxes underneath
     const html = `
         <div class="data-item-row" style="grid-column: span 2; background: transparent; border: none; padding: 0; margin-bottom: 30px;">
             <div class="data-label" style="margin-bottom: 15px;">Registered Routes</div>
@@ -119,7 +121,7 @@ function renderOperatorMetrics(dataRecord) {
         </div>
         <div class="data-item-row">
             <div class="data-label">Operator Name</div>
-            <div class="data-value">${dataRecord.operator_name}</div>
+            <div class="data-value">${dataRecord.operator_name || 'N/A'}</div>
         </div>
         <div class="data-item-row">
             <div class="data-label">Operator Code</div>

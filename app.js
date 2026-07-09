@@ -24,7 +24,7 @@ async function initOperatorPage() {
         const expressProfile = {
             operator_name: "Swift Express",
             operator_code: "Multi-Operator",
-            region_name: "Cross-Network"
+            region_name: "Cross-Network" 
         };
         applyBrandingEngine(expressProfile.operator_name);
         renderOperatorMetrics(expressProfile);
@@ -100,18 +100,23 @@ function applyBrandingEngine(operatorName) {
 }
 
 function renderOperatorMetrics(dataRecord) {
-    // Debug helper to print the live API response to the browser console
+    // Debug helper: Prints the exact JSON from the API to your browser's F12 Console
     console.log("Division API Payload Received:", dataRecord);
 
     document.getElementById('operator-title-name').innerText = dataRecord.operator_name || 'Unknown Operator';
     document.getElementById('operator-badge-code').innerText = `ID: ${dataRecord.operator_code || 'SWFT'}`;
 
-    // STRICT EXTRACTION: Targeting exactly "region_name" with no confusing fallbacks
+    // STRICT EXTRACTION: Look exactly for 'region_name'. No hardcoded 'System Wide' fallbacks.
     let regionDisplay = dataRecord.region_name;
     
-    // Safety check: Only applies "System Wide" if the value is explicitly null, undefined, or empty
-    if (regionDisplay === null || regionDisplay === undefined || String(regionDisplay).trim() === '') {
-        regionDisplay = "System Wide";
+    // Check if the API nested it under region_detail just in case
+    if (regionDisplay === undefined && dataRecord.region_detail && dataRecord.region_detail.region_name) {
+        regionDisplay = dataRecord.region_detail.region_name;
+    }
+
+    // If it STILL isn't found, tell you explicitly so you know it's an API payload issue
+    if (regionDisplay === undefined || regionDisplay === null || String(regionDisplay).trim() === '') {
+        regionDisplay = "Not Provided by API";
     }
 
     // Layout order: Routes on top, metadata boxes underneath
@@ -195,7 +200,6 @@ async function fetchExpressRoutes() {
         const uniqueRoutesMap = new Map();
         expressRoutes.forEach(r => {
             if (r.route_num) {
-                // Keep the record containing the unique route structure configuration
                 uniqueRoutesMap.set(r.route_num, r);
             }
         });

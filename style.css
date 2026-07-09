@@ -499,14 +499,13 @@ a.card:hover {
     background-color: var(--light);
     border: 1px solid #e2e8f0;
     border-left: 6px solid var(--primary);
-    padding: 12px 18px;
+    padding: 14px 18px;
     border-radius: 8px;
     color: var(--dark);
     box-shadow: 0 2px 6px rgba(11,25,34,0.03);
     flex: 1 1 calc(50% - 12px); 
     min-width: 250px;
     
-    /* New Layout rules for the stacked destinations */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -523,6 +522,24 @@ a.card:hover {
     color: var(--secondary);
     font-weight: 500;
     line-height: 1.4;
+}
+
+/* Sub-Operator Navigation Metadata Links */
+.route-pill-operator {
+    font-size: 0.8rem;
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 700;
+    margin-top: 8px;
+    display: inline-block;
+    align-self: flex-start;
+    border-bottom: 1px dashed transparent;
+    transition: border-color 0.2s, opacity 0.2s;
+}
+
+.route-pill-operator:hover {
+    border-bottom-color: var(--primary);
+    opacity: 0.85;
 }
 
 /* ==========================================

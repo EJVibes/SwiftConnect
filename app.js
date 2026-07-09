@@ -276,18 +276,37 @@ async function initLiveFleetPage() {
         const response = await fetch(apiUrl);
         if (!response.ok) throw new Error("Could not fetch fleet data.");
         const data = await response.json();
-        const vehicles = data.results || data; 
         
-        if (vehicles.length === 0) {
+        // Handle depending on API structure (DRF pagination vs flat array)
+        const trackingRecords = data.results || data; 
+        
+        if (trackingRecords.length === 0) {
             container.innerHTML = '<p class="error-box">No vehicles currently active in this sector.</p>';
         } else {
             let html = '<div class="data-grid fleet-grid">';
-            vehicles.forEach(vehicle => {
-                const fleetNum = vehicle.fleet_number || 'N/A';
-                const reg = vehicle.registration || 'Unknown Reg';
-                const route = vehicle.route || 'Not in service';
-                const dest = vehicle.destination || 'Depot';
-                const operator = vehicle.operator || 'Swift Connect';
+            
+            trackingRecords.forEach(record => {
+                let fleetNum = 'N/A';
+                let reg = 'UNKNOWN REG';
+
+                // Target the nested 'vehicle.name' to split the Fleet ID and Registration
+                if (record.vehicle && record.vehicle.name) {
+                    const nameParts = record.vehicle.name.split('-');
+                    
+                    if (nameParts.length >= 2) {
+                        // Takes the left side of the dash for the Fleet ID
+                        fleetNum = nameParts[0].trim();
+                        // Re-joins the right side just in case the registration itself contains a dash
+                        reg = nameParts.slice(1).join('-').trim(); 
+                    } else {
+                        // Fallback if there is no dash in the name string
+                        fleetNum = record.vehicle.name.trim();
+                    }
+                }
+                
+                const route = record.route || 'Not in service';
+                const dest = record.destination || 'Depot';
+                const operator = record.operator || 'Swift Connect';
 
                 html += `
                     <div class="card fleet-card">
@@ -304,6 +323,7 @@ async function initLiveFleetPage() {
             container.innerHTML = html;
         }
     } catch (error) {
+        console.error("Live Fleet Error:", error);
         container.innerHTML = '<p class="error-box">Error connecting to the live tracking satellite.</p>';
     } finally {
         loading.classList.add('hidden');

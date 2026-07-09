@@ -20,7 +20,6 @@ async function initOperatorPage() {
     }
 
     // INTERCEPT: Swift Express is a cross-network brand, not a single operator.
-    // Skip the standard operator lookup and inject a custom profile.
     if (targetOperator.toLowerCase().includes('express')) {
         const expressProfile = {
             operator_name: "Swift Express",
@@ -104,13 +103,20 @@ function renderOperatorMetrics(dataRecord) {
     document.getElementById('operator-title-name').innerText = dataRecord.operator_name;
     document.getElementById('operator-badge-code').innerText = `ID: ${dataRecord.operator_code || 'SWFT'}`;
 
-    // Strictly pull region_name, fallback only if it's empty or undefined
+    // Strictly pull region_name, targeting the API structure requested
     let regionDisplay = 'System Wide';
     if (dataRecord.region_name && dataRecord.region_name.trim() !== '') {
         regionDisplay = dataRecord.region_name;
     }
 
+    // Swapped layout order: Routes on top, metadata boxes underneath
     const html = `
+        <div class="data-item-row" style="grid-column: span 2; background: transparent; border: none; padding: 0; margin-bottom: 30px;">
+            <div class="data-label" style="margin-bottom: 15px;">Registered Routes</div>
+            <div id="routes-container" class="routes-flex-box">
+                <p>Fetching routes from database...</p>
+            </div>
+        </div>
         <div class="data-item-row">
             <div class="data-label">Operator Name</div>
             <div class="data-value">${dataRecord.operator_name}</div>
@@ -122,12 +128,6 @@ function renderOperatorMetrics(dataRecord) {
         <div class="data-item-row" style="grid-column: span 2;">
             <div class="data-label">Operating Region</div>
             <div class="data-value">${regionDisplay}</div>
-        </div>
-        <div class="data-item-row" style="grid-column: span 2; background: transparent; border: none; padding: 0; margin-top: 15px;">
-            <div class="data-label">Registered Routes</div>
-            <div id="routes-container" class="routes-flex-box">
-                <p>Fetching routes from database...</p>
-            </div>
         </div>
     `;
 

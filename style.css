@@ -24,27 +24,18 @@
 /* Theme Variant Overrides */
 body[data-theme="swift-express"] {
     --primary: #c31b6b;   
-    --secondary: #4b5164; 
-    --dark: #0b1321;      
 }
 
 body[data-theme="wrekin"] {
-    --primary: #f46300;   
-    --secondary: #4a5d6c; 
-    --dark: #0b1922;
-}
-
-body[data-theme="swift-rail"] {
-    --primary: #5a3dba;   
-    --secondary: #333d47;
-    --dark: #0d0a1a;
+    --primary: #4a5d6c;   
 }
 
 body[data-theme="swift-classic"] {
     --primary: #0c47ea;   
-    --secondary: #718096;
-    --dark: #1a202c;
 }
+
+/* Everything else defaults to #2292EF implicitly */
+
 
 /* ==========================================
    GLOBAL RESET & BASICS
@@ -438,13 +429,59 @@ a.card:hover {
     color: var(--primary);
 }
 
-.highlight-rail { border-top-color: #5a3dba; }
 .highlight-classic { border-top-color: #0c47ea; }
-.highlight-wrekin { border-top-color: #f46300; }
+.highlight-wrekin { border-top-color: #4a5d6c; }
 .highlight-express { border-top-color: #c31b6b; }
 
+
 /* ==========================================
-   DATA DISPLAYS (Operator Info Page)
+   NEW OPERATOR METRICS DISPLAY BANNER
+   ========================================== */
+.operator-meta-banner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    background-color: #f8fafc;
+    padding: 20px;
+    border-radius: var(--radius-soft);
+    margin-bottom: 35px;
+    border: 1px solid #e2e8f0;
+    border-left: 6px solid var(--secondary);
+}
+
+.meta-box {
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+}
+
+.meta-label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--secondary);
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+}
+
+.meta-value {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--dark);
+}
+
+.routes-section-title {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: var(--dark);
+    border-bottom: 2px solid #edf2f7;
+    padding-bottom: 10px;
+}
+
+
+/* ==========================================
+   DATA DISPLAYS (Shared Elements)
    ========================================== */
 .page-content {
     margin-top: 40px;
@@ -472,41 +509,6 @@ a.card:hover {
     display: inline-block;
 }
 
-.intro-text {
-    font-size: 1.1rem;
-    color: var(--secondary);
-    margin-bottom: 30px;
-}
-
-.data-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-}
-
-.data-item-row {
-    background-color: #f8fafc;
-    padding: 16px 20px;
-    border-radius: 8px;
-    border-left: 4px solid var(--secondary);
-}
-
-.data-label {
-    font-size: 0.85rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    color: var(--secondary);
-    letter-spacing: 0.5px;
-}
-
-.data-value {
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin-top: 4px;
-    color: var(--dark);
-    word-break: break-word;
-}
-
 .loading-spinner-box, .error-box {
     padding: 40px;
     text-align: center;
@@ -519,6 +521,7 @@ a.card:hover {
     color: #e53e3e;
 }
 
+
 /* ==========================================
    ROUTE LISTINGS ON OPERATOR PAGE
    ========================================== */
@@ -526,7 +529,6 @@ a.card:hover {
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
-    margin-top: 10px;
 }
 
 .route-pill {
@@ -584,6 +586,49 @@ a.card:hover {
     transform: translateY(-3px);
     box-shadow: 0 6px 15px rgba(11,25,34,0.08);
 }
+
+
+/* ==========================================
+   ROUTE DETAIL PAGE COMPONENTS
+   ========================================== */
+.route-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background-color: var(--light);
+    border-radius: var(--radius-soft);
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+}
+
+.route-data-table th, .route-data-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #edf2f7;
+}
+
+.route-data-table th {
+    background-color: #f8fafc;
+    font-weight: 700;
+    color: var(--secondary);
+    width: 30%;
+}
+
+.route-data-table td {
+    font-weight: 600;
+    color: var(--dark);
+}
+
+.timetable-placeholder {
+    background-color: #f8fafc;
+    border: 2px dashed #cbd5e0;
+    padding: 40px;
+    text-align: center;
+    border-radius: var(--radius-soft);
+    color: var(--secondary);
+    margin-top: 20px;
+}
+
 
 /* ==========================================
    FOOTER PATTERNS

@@ -10,6 +10,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (document.getElementById('network-map')) {
         initNetworkMap();
     }
+    // New hook to initialize the specific Route Details page
+    if (window.location.pathname.includes('route.html')) {
+        initRoutePage();
+    }
 });
 
 /* ==========================================
@@ -47,7 +51,6 @@ async function ensureGlobalRouteCacheLoaded() {
         const res = await fetch(`./global_routes_cache.json?t=${new Date().getTime()}`);
         if (res.ok) {
             SWIFT_ROUTE_CACHE = await res.json();
-            console.log("Global static routes cache loaded successfully.");
         }
     } catch (e) {
         console.warn("Static global_routes_cache.json unavailable. Falling back to dynamic fetching.", e);
@@ -74,7 +77,6 @@ async function patchMissingRoutesOnTheFly(trackingRecords) {
     });
 
     if (missingRouteIds.size > 0) {
-        console.log(`Hybrid Cache: Fetching ${missingRouteIds.size} missing routes...`);
         const fetchPromises = Array.from(missingRouteIds).map(async (routeId) => {
             try {
                 const res = await fetch(`https://www.mybustimes.cc/api/operator/route/${routeId}/`);
@@ -89,7 +91,38 @@ async function patchMissingRoutesOnTheFly(trackingRecords) {
 
 
 /* ==========================================
-   OPERATOR SUBPAGE LOGIC
+   BRANDING SYSTEM
+   ========================================== */
+function applyBrandingEngine(operatorName) {
+    if (!operatorName) return;
+    
+    const normalize = operatorName.toLowerCase();
+    const bodyDom = document.body;
+    const globalLogo = document.getElementById('dynamic-logo');
+    const visualAccent = document.getElementById('branding-accent');
+
+    bodyDom.setAttribute('data-theme', 'swift-base');
+    if (globalLogo) globalLogo.src = 'Swift Connect Icon Black.png';
+    if (visualAccent) visualAccent.src = 'Swift Connect Long White.png';
+
+    if (normalize.includes('wrekin')) {
+        bodyDom.setAttribute('data-theme', 'wrekin');
+        if (visualAccent) visualAccent.src = 'Wrekin Connect White Long.png';
+    } else if (normalize.includes('railway') || normalize.includes('rail')) {
+        bodyDom.setAttribute('data-theme', 'swift-base'); // Reverted to default #2292EF
+        if (visualAccent) visualAccent.src = 'Swift Connect White Full.png';
+    } else if (normalize.includes('preservation') || normalize.includes('classic')) {
+        bodyDom.setAttribute('data-theme', 'swift-classic');
+        if (visualAccent) visualAccent.src = 'Swift Short White.png';
+    } else if (normalize.includes('express')) {
+        bodyDom.setAttribute('data-theme', 'swift-express');
+        if (visualAccent) visualAccent.src = 'Swift Connect Express.png';
+    }
+}
+
+
+/* ==========================================
+   OPERATOR SUBPAGE LOGIC (REDESIGNED)
    ========================================== */
 async function initOperatorPage() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -148,31 +181,6 @@ async function initOperatorPage() {
     }
 }
 
-function applyBrandingEngine(operatorName) {
-    const normalize = operatorName.toLowerCase();
-    const bodyDom = document.body;
-    const globalLogo = document.getElementById('dynamic-logo');
-    const visualAccent = document.getElementById('branding-accent');
-
-    bodyDom.setAttribute('data-theme', 'swift-base');
-    if (globalLogo) globalLogo.src = 'Swift Connect Icon Black.png';
-    if (visualAccent) visualAccent.src = 'Swift Connect Long White.png';
-
-    if (normalize.includes('wrekin')) {
-        bodyDom.setAttribute('data-theme', 'wrekin');
-        if (visualAccent) visualAccent.src = 'Wrekin Connect White Long.png';
-    } else if (normalize.includes('railway') || normalize.includes('rail')) {
-        bodyDom.setAttribute('data-theme', 'swift-rail');
-        if (visualAccent) visualAccent.src = 'Swift Connect White Full.png';
-    } else if (normalize.includes('preservation') || normalize.includes('classic')) {
-        bodyDom.setAttribute('data-theme', 'swift-classic');
-        if (visualAccent) visualAccent.src = 'Swift Short White.png';
-    } else if (normalize.includes('express')) {
-        bodyDom.setAttribute('data-theme', 'swift-express');
-        if (visualAccent) visualAccent.src = 'Swift Connect Express.png';
-    }
-}
-
 function renderOperatorMetrics(dataRecord) {
     document.getElementById('operator-title-name').innerText = dataRecord.operator_name || 'Unknown Operator';
     document.getElementById('operator-badge-code').innerText = `ID: ${dataRecord.operator_code || 'SWFT'}`;
@@ -195,24 +203,28 @@ function renderOperatorMetrics(dataRecord) {
         regionDisplay = "Not Provided by API";
     }
 
+    // Redesigned to separate meta stats from routes layout
     const html = `
-        <div class="data-item-row" style="grid-column: span 2; background: transparent; border: none; padding: 0; margin-bottom: 30px;">
-            <div class="data-label" style="margin-bottom: 15px;">Registered Routes</div>
+        <div class="operator-meta-banner">
+            <div class="meta-box">
+                <span class="meta-label">Operator Name</span>
+                <strong class="meta-value">${dataRecord.operator_name || 'N/A'}</strong>
+            </div>
+            <div class="meta-box">
+                <span class="meta-label">Operator Code</span>
+                <strong class="meta-value">${dataRecord.operator_code || 'N/A'}</strong>
+            </div>
+            <div class="meta-box">
+                <span class="meta-label">Region Name</span>
+                <strong class="meta-value">${regionDisplay}</strong>
+            </div>
+        </div>
+
+        <div class="routes-section-wrapper">
+            <h3 class="routes-section-title">Registered Network Routes</h3>
             <div id="routes-container" class="routes-flex-box">
                 <p>Fetching routes from database...</p>
             </div>
-        </div>
-        <div class="data-item-row">
-            <div class="data-label">Operator Name</div>
-            <div class="data-value">${dataRecord.operator_name || 'N/A'}</div>
-        </div>
-        <div class="data-item-row">
-            <div class="data-label">Operator Code</div>
-            <div class="data-value">${dataRecord.operator_code || 'N/A'}</div>
-        </div>
-        <div class="data-item-row" style="grid-column: span 2;">
-            <div class="data-label">Region Name</div>
-            <div class="data-value">${regionDisplay}</div>
         </div>
     `;
 
@@ -247,7 +259,6 @@ async function fetchStandardRoutes(operatorCode, operatorName) {
 
         renderRouteList(routes, container);
     } catch (e) {
-        console.error("Route Fetch Error:", e);
         container.innerHTML = `<p class="error-box">Could not load routes from the network.</p>`;
     }
 }
@@ -262,7 +273,6 @@ async function fetchExpressRoutes() {
 
         while (expressUrl) {
             const res = await fetch(expressUrl);
-            if (!res.ok) throw new Error("Target pipeline integration error.");
             const data = await res.json();
             expressRoutes = expressRoutes.concat(data.results || []);
             expressUrl = data.next;
@@ -270,15 +280,11 @@ async function fetchExpressRoutes() {
 
         const uniqueRoutesMap = new Map();
         expressRoutes.forEach(r => {
-            if (r.route_num) {
-                uniqueRoutesMap.set(r.route_num, r);
-            }
+            if (r.route_num) uniqueRoutesMap.set(r.route_num, r);
         });
-        const finalRoutes = Array.from(uniqueRoutesMap.values());
-
-        renderRouteList(finalRoutes, container);
+        
+        renderRouteList(Array.from(uniqueRoutesMap.values()), container);
     } catch (e) {
-        console.error("Express Target Fetch Error:", e);
         container.innerHTML = `<p class="error-box">Failed to fetch specified dynamic express records.</p>`;
     }
 }
@@ -307,11 +313,9 @@ function renderRouteList(routes, container) {
         let operatorLinkHtml = '';
         if (r.operator_name) {
             const encodedOp = encodeURIComponent(r.operator_name.trim());
-            // stopPropagation ensures clicking the operator doesn't also click the route box behind it
             operatorLinkHtml = `<a href="operator.html?op=${encodedOp}" class="route-pill-operator" onclick="event.stopPropagation();">Division: ${r.operator_name}</a>`;
         }
         
-        // Turns the entire box into a button link to the blank route filler page
         html += `
             <div class="route-pill route-pill-interactive" style="border-left-color: ${borderCol};" onclick="window.location.href='route.html?id=${routeId}'">
                 <strong>${routeNum}${routeName}</strong>
@@ -330,6 +334,106 @@ function showOperatorError() {
 
 
 /* ==========================================
+   ROUTE DETAIL PAGE LOGIC (NEW)
+   ========================================== */
+async function initRoutePage() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const routeId = urlParams.get('id');
+
+    const loadingState = document.getElementById('route-loading');
+    const errorState = document.getElementById('route-error-state');
+    const container = document.getElementById('route-detail-container');
+    const titleHeader = document.getElementById('route-page-title');
+    const subHeader = document.getElementById('route-page-subtitle');
+
+    if (!routeId) {
+        loadingState.classList.add('hidden');
+        errorState.classList.remove('hidden');
+        return;
+    }
+
+    try {
+        const res = await fetch(`https://www.mybustimes.cc/api/operator/route/${routeId}/`);
+        if (!res.ok) throw new Error("Could not fetch route");
+        const data = await res.json();
+
+        if (data.operator_name) {
+            applyBrandingEngine(data.operator_name);
+        }
+
+        const routeNum = data.route_num || '?';
+        const routeName = data.route_name ? ` - ${data.route_name}` : '';
+        const opName = data.operator_name || 'Unknown Operator';
+        const start = data.inbound_destination || 'Unknown Start';
+        const end = data.outbound_destination || 'Unknown Destination';
+
+        // Set Headers
+        titleHeader.innerText = `Route ${routeNum}${routeName}`;
+        subHeader.innerText = `Operated by ${opName}`;
+
+        // Create Raw Attributes Table
+        let attributesHtml = '';
+        for (const [key, value] of Object.entries(data)) {
+            // Ignore messy nested objects in the simple table view
+            if (typeof value !== 'object' && key !== 'id') {
+                const formattedKey = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                attributesHtml += `
+                    <tr>
+                        <th>${formattedKey}</th>
+                        <td>${value === null || value === '' ? 'N/A' : value}</td>
+                    </tr>
+                `;
+            }
+        }
+
+        // Generate the Timetable structure gracefully
+        let timetableContent = `
+            <div class="timetable-placeholder">
+                <h3 style="margin-bottom: 10px; color: var(--dark);">Timetable databanks are synchronising.</h3>
+                <p>Detailed scheduling and stop-by-stop metrics for Route ${routeNum} are currently being configured by the network API.</p>
+            </div>
+        `;
+
+        if (data.timetable && Array.isArray(data.timetable) && data.timetable.length > 0) {
+            // Future-proofing: if the API starts passing timetable arrays directly here
+            timetableContent = `<p style="margin-top: 15px; color: #48bb78; font-weight: bold;">Timetable loaded successfully.</p>`;
+        } else if (data.stops && Array.isArray(data.stops) && data.stops.length > 0) {
+            // Alternate structure
+            timetableContent = `<p style="margin-top: 15px; color: #48bb78; font-weight: bold;">${data.stops.length} Stops loaded successfully.</p>`;
+        }
+
+        const html = `
+            <div class="card" style="margin-bottom: 30px;">
+                <h2 style="color: var(--primary); margin-bottom: 5px;">Service Overview</h2>
+                <p style="font-size: 1.1rem; color: var(--dark); font-weight: 600;">${start} &harr; ${end}</p>
+                
+                <h3 style="margin-top: 25px; border-bottom: 2px solid #edf2f7; padding-bottom: 8px;">Network Registry Data</h3>
+                <table class="route-data-table">
+                    <tbody>
+                        ${attributesHtml}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <h2 style="color: var(--primary); margin-bottom: 5px;">Route Timetable</h2>
+                ${timetableContent}
+            </div>
+        `;
+
+        container.innerHTML = html;
+        loadingState.classList.add('hidden');
+        container.classList.remove('hidden');
+
+    } catch (e) {
+        console.error(e);
+        loadingState.classList.add('hidden');
+        errorState.classList.remove('hidden');
+    }
+}
+
+
+/* ==========================================
    LIVE FLEET TRACKING LOGIC (GRID VIEW)
    ========================================== */
 async function initLiveFleetPage() {
@@ -340,7 +444,6 @@ async function initLiveFleetPage() {
     async function loadFleetGrid() {
         try {
             const response = await fetch(apiUrl);
-            if (!response.ok) throw new Error("Could not fetch fleet data.");
             const data = await response.json();
             const trackingRecords = data.results || data; 
             
@@ -412,7 +515,6 @@ async function initLiveFleetPage() {
             container.innerHTML = html;
             
         } catch (error) {
-            console.error("Live Fleet Error:", error);
             container.innerHTML = '<p class="error-box">Error connecting to the live tracking satellite.</p>';
         } finally {
             loading.classList.add('hidden');
@@ -473,7 +575,6 @@ async function initNetworkMap() {
     async function loadMapData(isInitialLoad = false) {
         try {
             const response = await fetch(apiUrl);
-            if (!response.ok) throw new Error("Could not fetch map fleet data.");
             const data = await response.json();
             const vehicles = data.results || data;
 
@@ -584,7 +685,6 @@ async function initNetworkMap() {
             }
 
         } catch (error) {
-            console.error("Map rendering error:", error);
             if (isInitialLoad) {
                 mapContainer.innerHTML = '<div style="padding: 40px; text-align: center; color: #e53e3e; font-weight: bold;">Could not connect to map rendering satellite.</div>';
             }

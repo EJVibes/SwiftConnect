@@ -1,0 +1,263 @@
+/* --- THEME VARIABLES (Base Swift Livery) --- */
+:root {
+    /* Mapped from image_5736ff.jpg "Swift" column */
+    --clr-bluebird: #2292ef;
+    --clr-wood-pigeon: #4a5d6c;
+    --clr-jackdaw: #0b1922;
+    --clr-herring-gull: #ffffff;
+    
+    /* Functional assignments */
+    --primary: var(--clr-bluebird);
+    --secondary: var(--clr-wood-pigeon);
+    --dark: var(--clr-jackdaw);
+    --light: var(--clr-herring-gull);
+    --bg-page: #f4f6f8;
+    
+    --radius-soft: 12px;
+    --radius-pill: 50px;
+}
+
+/* --- RESET & TYPOGRAPHY --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    background-color: var(--bg-page);
+    color: var(--dark);
+    line-height: 1.6;
+}
+
+a {
+    text-decoration: none;
+    color: var(--primary);
+}
+
+ul {
+    list-style: none;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* --- HEADER --- */
+.site-header {
+    background-color: var(--light);
+    box-shadow: 0 2px 10px rgba(11, 25, 34, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 80px;
+}
+
+.brand-logo h1 {
+    color: var(--primary);
+    font-size: 1.8rem;
+    font-weight: 800;
+}
+
+.brand-logo span {
+    color: var(--secondary);
+    font-size: 1.2rem;
+    font-weight: 400;
+    margin-left: 5px;
+}
+
+.main-nav ul {
+    display: flex;
+    gap: 25px;
+}
+
+.main-nav a {
+    color: var(--dark);
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+.main-nav a:hover {
+    color: var(--primary);
+}
+
+/* --- SERVICE ALERT --- */
+.service-alert {
+    background-color: var(--secondary);
+    color: var(--light);
+    text-align: center;
+    padding: 10px 0;
+    font-size: 0.95rem;
+}
+
+/* --- HERO & JOURNEY PLANNER --- */
+.hero-section {
+    background: linear-gradient(135deg, var(--dark) 0%, var(--secondary) 100%);
+    padding: 60px 0;
+    color: var(--light);
+}
+
+.hero-content {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+}
+
+.hero-text h2 {
+    font-size: 3rem;
+    margin-bottom: 15px;
+}
+
+.hero-text p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+.journey-planner {
+    background-color: var(--light);
+    color: var(--dark);
+    padding: 30px;
+    border-radius: var(--radius-soft);
+    flex: 0 0 400px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.journey-planner h2 {
+    margin-bottom: 20px;
+    color: var(--primary);
+}
+
+.input-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    font-weight: 600;
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+}
+
+.input-group input {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px; /* Slightly tighter radius for inputs */
+    font-size: 1rem;
+}
+
+.input-group input:focus {
+    outline: 2px solid var(--primary);
+    border-color: transparent;
+}
+
+/* --- BUTTONS --- */
+.btn-primary, .btn-secondary {
+    display: inline-block;
+    padding: 12px 24px;
+    border: none;
+    border-radius: var(--radius-soft);
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.2s ease;
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    color: var(--light);
+    width: 100%;
+    font-size: 1.1rem;
+    margin-top: 10px;
+}
+
+.btn-primary:hover {
+    background-color: #1a78c2; /* Darker shade of Bluebird */
+}
+
+.btn-secondary {
+    background-color: var(--secondary);
+    color: var(--light);
+    margin-top: 15px;
+}
+
+.btn-secondary:hover {
+    background-color: var(--dark);
+}
+
+/* --- QUICK LINKS CARDS --- */
+.quick-links {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-top: -30px; /* Pulls cards slightly over the hero section */
+    position: relative;
+    z-index: 10;
+    margin-bottom: 60px;
+}
+
+.card {
+    background-color: var(--light);
+    padding: 30px;
+    border-radius: var(--radius-soft);
+    box-shadow: 0 4px 15px rgba(11, 25, 34, 0.08);
+    border-top: 5px solid var(--primary);
+}
+
+.card h3 {
+    color: var(--dark);
+    margin-bottom: 10px;
+}
+
+/* --- FOOTER --- */
+.site-footer {
+    background-color: var(--dark);
+    color: var(--light);
+    padding: 60px 0 30px;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+}
+
+.footer-col h4 {
+    color: var(--secondary);
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.operator-list li {
+    margin-bottom: 10px;
+}
+
+.operator-list a {
+    color: var(--light);
+    opacity: 0.8;
+}
+
+.operator-list a:hover {
+    opacity: 1;
+    color: var(--primary);
+}
+
+.brand-col h2 {
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+.brand-col p {
+    opacity: 0.6;
+    font-size: 0.9rem;
+}

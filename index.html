@@ -18,9 +18,9 @@
             <nav class="main-nav">
                 <ul>
                     <li><a href="index.html" class="active">Home</a></li>
-                    <li><a href="#network">Our Divisions</a></li>
-                    <li><a href="#">Network Map</a></li>
-                    <li><a href="#">Contact</a></li>
+                    <li><a href="divisions.html">Our Divisions</a></li>
+                    <li><a href="map.html">Network Map</a></li>
+                    <li><a href="contact.html">Contact</a></li>
                 </ul>
             </nav>
         </div>
@@ -33,21 +33,7 @@
     </div>
 
     <section class="hero-section">
-        <div class="container hero-content">
-            <div class="journey-planner">
-                <h2>Plan Your Journey</h2>
-                <form onsubmit="event.preventDefault();">
-                    <div class="input-group">
-                        <label for="from">Leaving from</label>
-                        <input type="text" id="from" placeholder="Bus stop, station or postcode">
-                    </div>
-                    <div class="input-group">
-                        <label for="to">Going to</label>
-                        <input type="text" id="to" placeholder="Bus stop, station or postcode">
-                    </div>
-                    <button type="submit" class="btn-primary">Find Connected Routes</button>
-                </form>
-            </div>
+        <div class="container hero-content centered-hero">
             <div class="hero-text">
                 <h2>Connecting Communities.</h2>
                 <p>Explore regional timetables, track vehicle assets live, and buy tickets across our collective transit group.</p>
@@ -58,8 +44,8 @@
     <main class="container quick-links">
         <div class="card">
             <h3>Live Vehicle Fleet</h3>
-            <p>Monitor operations across the Canaries, Wales, and the Midlands via our real-time database dashboard.</p>
-            <a href="#" class="btn-secondary">Track Live Bus</a>
+            <p>Monitor operations across the network via our real-time API database dashboard.</p>
+            <a href="live.html" class="btn-secondary">Track Live Bus</a>
         </div>
         <div class="card">
             <h3>Preservation Group</h3>
@@ -73,7 +59,7 @@
         </div>
     </main>
 
-    <footer id="network" class="site-footer">
+    <footer class="site-footer">
         <div class="container footer-grid">
             <div class="footer-col">
                 <h4>Core Bus Divisions</h4>

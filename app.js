@@ -272,23 +272,37 @@ async function initLiveFleetPage() {
             let html = '<div class="data-grid fleet-grid">';
             
             trackingRecords.forEach(record => {
+                const vehObj = record.vehicle || {};
+                
                 let fleetNum = 'N/A';
                 let reg = 'UNKNOWN REG';
 
-                if (record.vehicle && record.vehicle.name) {
-                    const nameParts = record.vehicle.name.split('-');
+                if (vehObj.name) {
+                    const nameParts = vehObj.name.split('-');
                     if (nameParts.length >= 2) {
                         fleetNum = nameParts[0].trim();
                         reg = nameParts.slice(1).join('-').trim(); 
                     } else {
-                        fleetNum = record.vehicle.name.trim();
+                        fleetNum = vehObj.name.trim();
                     }
                 }
                 
                 const route = record.route || 'Not in service';
                 const dest = record.destination || 'Depot';
-                const operator = record.operator_name || record.operator || 'Swift Connect';
-                const featuresList = (Array.isArray(record.features) ? record.features.join(', ') : record.features) || 'None specified';
+                
+                // Deep extraction for Features and Operator Name
+                const operator = vehObj.operator_name || record.operator_name || record.operator || 'Swift Connect';
+                
+                let rawFeatures = vehObj.features || record.features || '';
+                let featuresList = 'None specified';
+                
+                if (Array.isArray(rawFeatures)) {
+                    rawFeatures = rawFeatures.join(', ');
+                }
+                if (typeof rawFeatures === 'string' && rawFeatures.trim() !== '') {
+                    // Replace all <br>, <br/>, <br > tags globally with a comma and space
+                    featuresList = rawFeatures.replace(/<br\s*\/?>/gi, ', ');
+                }
 
                 html += `
                     <div class="card fleet-card">
@@ -345,23 +359,36 @@ async function initNetworkMap() {
             const lng = record.lon || record.lng || record.longitude || record.x;
 
             if (lat && lng) {
+                const vehObj = record.vehicle || {};
+                
                 let fleetNum = 'N/A';
                 let reg = 'UNKNOWN REG';
 
-                if (record.vehicle && record.vehicle.name) {
-                    const nameParts = record.vehicle.name.split('-');
+                if (vehObj.name) {
+                    const nameParts = vehObj.name.split('-');
                     if (nameParts.length >= 2) {
                         fleetNum = nameParts[0].trim();
                         reg = nameParts.slice(1).join('-').trim();
                     } else {
-                        fleetNum = record.vehicle.name.trim();
+                        fleetNum = vehObj.name.trim();
                     }
                 }
 
                 const route = record.route || 'Not in service';
                 const dest = record.destination || 'Depot';
-                const operator = record.operator_name || record.operator || 'Swift Connect';
-                const featuresList = (Array.isArray(record.features) ? record.features.join(', ') : record.features) || 'None specified';
+                
+                // Deep extraction for Features and Operator Name
+                const operator = vehObj.operator_name || record.operator_name || record.operator || 'Swift Connect';
+                
+                let rawFeatures = vehObj.features || record.features || '';
+                let featuresList = 'None specified';
+                
+                if (Array.isArray(rawFeatures)) {
+                    rawFeatures = rawFeatures.join(', ');
+                }
+                if (typeof rawFeatures === 'string' && rawFeatures.trim() !== '') {
+                    featuresList = rawFeatures.replace(/<br\s*\/?>/gi, ', ');
+                }
 
                 const marker = L.marker([lat, lng]).addTo(map);
                 boundsData.push([lat, lng]);

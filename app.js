@@ -256,7 +256,9 @@ function showOperatorError() {
 async function initLiveFleetPage() {
     const container = document.getElementById('live-fleet-container');
     const loading = document.getElementById('fleet-loading');
-    const apiUrl = "https://www.mybustimes.cc/api/group/Swift%20Connect%20Group/vehicles/?ymax=30.48007424755997&ymin=26.45160913140478&xmax=-12.811894525114468&xmin=-18.483100793077682&limit=5000";
+    
+    // UPDATED API URL
+    const apiUrl = "https://www.mybustimes.cc/api/group/Swift%20Connect%20Group/vehicles/?ymax=56.96749375372495&ymin=22.98020869942421&xmax=26.253456525775164&xmin=-46.11789196263385&limit=5000";
 
     try {
         const response = await fetch(apiUrl);
@@ -317,16 +319,15 @@ async function initNetworkMap() {
     const mapContainer = document.getElementById('network-map');
     if (!mapContainer) return;
 
-    // Initialize Leaflet Map - standard fallback coordinates (UK center)
     const map = L.map('network-map').setView([52.5, -2.0], 6);
 
-    // Load OpenStreetMap tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    const apiUrl = "https://www.mybustimes.cc/api/group/Swift%20Connect%20Group/vehicles/?ymax=30.48007424755997&ymin=26.45160913140478&xmax=-12.811894525114468&xmin=-18.483100793077682&limit=5000";
+    // UPDATED API URL
+    const apiUrl = "https://www.mybustimes.cc/api/group/Swift%20Connect%20Group/vehicles/?ymax=56.96749375372495&ymin=22.98020869942421&xmax=26.253456525775164&xmin=-46.11789196263385&limit=5000";
 
     try {
         const response = await fetch(apiUrl);
@@ -337,7 +338,6 @@ async function initNetworkMap() {
         const boundsData = [];
 
         vehicles.forEach(record => {
-            // Flexible extraction for latitude and longitude (APIs use various naming conventions)
             const lat = record.lat || record.latitude || record.y;
             const lng = record.lon || record.lng || record.longitude || record.x;
 
@@ -345,7 +345,6 @@ async function initNetworkMap() {
                 let fleetNum = 'N/A';
                 let reg = 'UNKNOWN REG';
 
-                // Scrape names same as the fleet tracker
                 if (record.vehicle && record.vehicle.name) {
                     const nameParts = record.vehicle.name.split('-');
                     if (nameParts.length >= 2) {
@@ -360,11 +359,9 @@ async function initNetworkMap() {
                 const dest = record.destination || 'Depot';
                 const operator = record.operator || 'Swift Connect';
 
-                // Plot the marker
                 const marker = L.marker([lat, lng]).addTo(map);
                 boundsData.push([lat, lng]);
 
-                // HTML content for when the bus pin is clicked
                 const popupHtml = `
                     <div style="font-family: inherit; color: #0b1922; min-width: 200px;">
                         <h3 style="margin: 0 0 5px 0; color: #2292ef; font-size: 1.1rem;">Vehicle ${fleetNum}</h3>
@@ -379,7 +376,6 @@ async function initNetworkMap() {
             }
         });
 
-        // Automatically frame the camera to show all buses currently tracking
         if (boundsData.length > 0) {
             map.fitBounds(boundsData, { padding: [30, 30] });
         }

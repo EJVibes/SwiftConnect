@@ -100,21 +100,18 @@ function applyBrandingEngine(operatorName) {
 }
 
 function renderOperatorMetrics(dataRecord) {
+    // Debug helper to print the live API response to the browser console
+    console.log("Division API Payload Received:", dataRecord);
+
     document.getElementById('operator-title-name').innerText = dataRecord.operator_name || 'Unknown Operator';
     document.getElementById('operator-badge-code').innerText = `ID: ${dataRecord.operator_code || 'SWFT'}`;
 
-    // Strictly pull the region name text, avoiding raw nested IDs
-    let regionDisplay = 'System Wide';
+    // STRICT EXTRACTION: Targeting exactly "region_name" with no confusing fallbacks
+    let regionDisplay = dataRecord.region_name;
     
-    if (dataRecord.region_detail && dataRecord.region_detail.region_name) {
-        // Pulls text if nested inside a region_detail object
-        regionDisplay = dataRecord.region_detail.region_name;
-    } else if (dataRecord.region_detail && dataRecord.region_detail.name) {
-        // Fallback for an alternative nested naming convention
-        regionDisplay = dataRecord.region_detail.name;
-    } else if (dataRecord.region_name) {
-        // Pulls text if located safely at the root level
-        regionDisplay = dataRecord.region_name;
+    // Safety check: Only applies "System Wide" if the value is explicitly null, undefined, or empty
+    if (regionDisplay === null || regionDisplay === undefined || String(regionDisplay).trim() === '') {
+        regionDisplay = "System Wide";
     }
 
     // Layout order: Routes on top, metadata boxes underneath

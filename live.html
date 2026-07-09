@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Fleet Tracking | Swift Connect</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body data-theme="swift-base">
+    <header class="site-header">
+        <div class="container header-container">
+            <div class="brand-logo">
+                <a href="index.html">
+                    <img src="frontswiftlogo_new.png" alt="Swift Logo" class="nav-logo">
+                </a>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="divisions.html">Our Divisions</a></li>
+                    <li><a href="map.html">Network Map</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="simple-page-header">
+        <div class="container">
+            <h1>Live Fleet Tracking</h1>
+            <p>Real-time vehicle positioning data across the network.</p>
+        </div>
+    </div>
+
+    <main class="container simple-page-content">
+        <div id="fleet-loading" class="loading-spinner-box">
+            <p>Pinging vehicle locators... Please wait.</p>
+        </div>
+        <div id="live-fleet-container">
+            </div>
+    </main>
+    <script src="app.js"></script>
+</body>
+</html>

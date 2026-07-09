@@ -11,46 +11,36 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /* ==========================================
-   GLOBAL ROUTE CACHE ENGINE
-   Prevents API spamming by remembering routes
+   GLOBAL ROUTE CACHE ENGINE (STATIC FILE EDITION)
+   Loads pre-compiled static ledger compiled by server actions
    ========================================== */
-const SWIFT_ROUTE_CACHE = {};
+let SWIFT_ROUTE_CACHE = {};
+let IS_CACHE_INITIALIZED = false;
 
-async function enrichVehiclesWithRouteData(vehicles) {
-    const missingRouteIds = new Set();
-
-    // 1. Scan all vehicles for route URLs and extract the ID
-    vehicles.forEach(record => {
-        if (record.service && record.service.url) {
-            // Regex to find the number at the end of the /route/XXXXXX/ string
-            const match = record.service.url.match(/\/route\/(\d+)\/?/);
-            if (match && match[1]) {
-                record._extractedRouteId = match[1];
-                
-                // If we don't have this route saved in memory, flag it to be downloaded
-                if (!SWIFT_ROUTE_CACHE[match[1]]) {
-                    missingRouteIds.add(match[1]);
-                }
-            }
+async function ensureGlobalRouteCacheLoaded() {
+    if (IS_CACHE_INITIALIZED) return;
+    
+    try {
+        // Appends a cache-busting timestamp query to guarantee fresh file pulls on reload
+        const res = await fetch(`./global_routes_cache.json?t=${new Date().getTime()}`);
+        if (res.ok) {
+            SWIFT_ROUTE_CACHE = await res.json();
+            console.log("Global static routes cache loaded successfully.");
         }
-    });
+    } catch (e) {
+        console.warn("Static global_routes_cache.json unavailable or missing on host root. Falling back.", e);
+    } finally {
+        IS_CACHE_INITIALIZED = true;
+    }
+}
 
-    // 2. Download missing routes concurrently
-    const fetchPromises = Array.from(missingRouteIds).map(async (routeId) => {
-        try {
-            // Includes trailing slash to prevent Django redirect errors
-            const res = await fetch(`https://www.mybustimes.cc/api/operator/route/${routeId}/`);
-            if (res.ok) {
-                SWIFT_ROUTE_CACHE[routeId] = await res.json();
-            }
-        } catch (e) {
-            console.warn(`Failed to fetch route cache for ID: ${routeId}`, e);
+// Intercepts and parses runtime route data directly out of static memory
+function injectLocalRouteData(record) {
+    if (record.service && record.service.url) {
+        const match = record.service.url.match(/\/route\/(\d+)\/?/);
+        if (match && match[1]) {
+            record._extractedRouteId = match[1];
         }
-    });
-
-    // Wait for all missing routes to download before proceeding
-    if (fetchPromises.length > 0) {
-        await Promise.all(fetchPromises);
     }
 }
 
@@ -295,6 +285,7 @@ function showOperatorError() {
     document.getElementById('api-error-state').classList.remove('hidden');
 }
 
+
 /* ==========================================
    LIVE FLEET TRACKING LOGIC (GRID VIEW)
    ========================================== */
@@ -315,12 +306,13 @@ async function initLiveFleetPage() {
                 return;
             }
 
-            // Map Route IDs against cache before rendering
-            await enrichVehiclesWithRouteData(trackingRecords);
+            await ensureGlobalRouteCacheLoaded();
 
             let html = '<div class="data-grid fleet-grid">';
             
             trackingRecords.forEach(record => {
+                injectLocalRouteData(record);
+                
                 const vehObj = record.vehicle || {};
                 let fleetNum = 'N/A';
                 let reg = 'UNKNOWN REG';
@@ -335,7 +327,6 @@ async function initLiveFleetPage() {
                     }
                 }
                 
-                // Formulate Route Display using our Cache System
                 let routeDisplay = record.route || 'Not in service';
                 if (record._extractedRouteId && SWIFT_ROUTE_CACHE[record._extractedRouteId]) {
                     const rData = SWIFT_ROUTE_CACHE[record._extractedRouteId];
@@ -430,8 +421,7 @@ async function initNetworkMap() {
             const data = await response.json();
             const vehicles = data.results || data;
 
-            // Map Route IDs against cache before rendering
-            await enrichVehiclesWithRouteData(vehicles);
+            await ensureGlobalRouteCacheLoaded();
 
             const currentVehicleIds = new Set();
             const boundsData = [];
@@ -441,6 +431,7 @@ async function initNetworkMap() {
                 const lng = record.lon || record.lng || record.longitude || record.x;
 
                 if (lat && lng) {
+                    injectLocalRouteData(record);
                     const vehObj = record.vehicle || {};
                     
                     let fleetNum = 'N/A';
@@ -468,7 +459,6 @@ async function initNetworkMap() {
                         iconColor = '#2292ef'; 
                     }
 
-                    // Formulate Route Display using our Cache System
                     let routeDisplay = record.route || 'Not in service';
                     if (record._extractedRouteId && SWIFT_ROUTE_CACHE[record._extractedRouteId]) {
                         const rData = SWIFT_ROUTE_CACHE[record._extractedRouteId];

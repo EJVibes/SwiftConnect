@@ -12,13 +12,13 @@
         <div class="container header-container">
             <div class="brand-logo">
                 <a href="index.html">
-                    <img id="dynamic-logo" src="frontswiftlogo_new.png" alt="Division Logo" class="nav-logo">
+                    <img id="dynamic-logo" src="Swift Connect Icon Black.png" alt="Division Logo" class="nav-logo">
                 </a>
             </div>
             <nav class="main-nav">
                 <ul>
                     <li><a href="index.html">Home</a></li>
-                    <li><a href="index.html#network">All Divisions</a></li>
+                    <li><a href="divisions.html">All Divisions</a></li>
                 </ul>
             </nav>
         </div>
@@ -28,11 +28,11 @@
         <div class="container">
             <div class="banner-flex">
                 <div>
-                    <span class="badge" id="operator-badge-code">Loading Code...</span>
-                    <h1 id="operator-title-name">Loading Division...</h1>
+                    <span class="badge" id="operator-badge-code">Loading...</span>
+                    <h1 id="operator-title-name">Querying Division...</h1>
                 </div>
                 <div id="logo-branding-container">
-                    <img id="branding-accent" src="swift_front_new.png" alt="" class="branding-accent-img">
+                    <img id="branding-accent" src="Swift Connect Long White.png" alt="" class="branding-accent-img">
                 </div>
             </div>
         </div>
@@ -44,14 +44,14 @@
                 <h2>Live Network Metrics</h2>
                 <span class="status-indicator-dot"></span>
             </div>
-            <p class="intro-text">Below is the real-time operational registration data pulled directly from the transport management network database.</p>
+            <p class="intro-text">Real-time registration data and active routes operating under this division.</p>
             
             <div id="api-loading-state" class="loading-spinner-box">
-                <p>Querying the database network across all pages... Please wait.</p>
+                <p>Querying the database network... Please wait.</p>
             </div>
 
             <div id="api-error-state" class="error-box hidden">
-                <p>Failed to load division details. The operating operator might not be registered in the external database yet.</p>
+                <p>Failed to load division details.</p>
                 <a href="index.html" class="btn-secondary">Return to Network Home</a>
             </div>
 
@@ -61,32 +61,11 @@
     </main>
 
     <footer class="site-footer">
-        <div class="container footer-grid">
-            <div class="footer-col">
-                <h4>Core Bus Divisions</h4>
-                <ul class="operator-list">
-                    <li><a href="operator.html?op=Swift Connecting the Canaries">Swift Connecting the Canaries</a></li>
-                    <li><a href="operator.html?op=Swift Connecting East Anglia">Swift Connecting East Anglia</a></li>
-                    <li><a href="operator.html?op=Swift Connecting East Midlands">Swift Connecting East Midlands</a></li>
-                    <li><a href="operator.html?op=Swift Connecting Shropshire">Swift Connecting Shropshire</a></li>
-                    <li><a href="operator.html?op=Swift Connecting South London">Swift Connecting South London</a></li>
-                    <li><a href="operator.html?op=Swift Connecting Staffordshire">Swift Connecting Staffordshire</a></li>
-                    <li><a href="operator.html?op=Swift Connecting Wales">Swift Connecting Wales</a></li>
-                    <li><a href="operator.html?op=Swift Connecting West Midlands">Swift Connecting West Midlands</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Specialist Operations</h4>
-                <ul class="operator-list">
-                    <li><a href="operator.html?op=Swift Connecting Railway">Swift Connecting Railway</a></li>
-                    <li><a href="operator.html?op=Swift Connect Preservation">Swift Connect Preservation</a></li>
-                    <li><a href="operator.html?op=Wrekin Connect">Wrekin Connect</a></li>
-                </ul>
-            </div>
-            <div class="footer-col brand-col">
-                <img src="swift_white.png" alt="Swift Group Icon" class="footer-logo">
+        <div class="container footer-grid" style="grid-template-columns: 1fr; text-align: center;">
+            <div class="footer-col brand-col" style="align-items: center;">
+                <img src="Swift Connect White Full.png" alt="Swift Group Icon" class="footer-logo">
                 <h3>Swift Connect Group</h3>
-                <p class="copyright">&copy; 2026 Swift Connect Ltd.</p>
+                <p class="copyright" style="margin-top: 20px;">&copy; 2026 Swift Connect Ltd. All rights reserved.</p>
             </div>
         </div>
     </footer>

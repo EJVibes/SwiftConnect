@@ -103,12 +103,18 @@ function renderOperatorMetrics(dataRecord) {
     document.getElementById('operator-title-name').innerText = dataRecord.operator_name || 'Unknown Operator';
     document.getElementById('operator-badge-code').innerText = `ID: ${dataRecord.operator_code || 'SWFT'}`;
 
-    // Strictly pull region_name exactly as requested from the API payload
-    let regionDisplay = dataRecord.region_name;
+    // Strictly pull the region name text, avoiding raw nested IDs
+    let regionDisplay = 'System Wide';
     
-    // Safety fallback only if the key is completely missing from the object
-    if (regionDisplay === undefined || regionDisplay === null) {
-        regionDisplay = dataRecord.region || 'Not Specified';
+    if (dataRecord.region_detail && dataRecord.region_detail.region_name) {
+        // Pulls text if nested inside a region_detail object
+        regionDisplay = dataRecord.region_detail.region_name;
+    } else if (dataRecord.region_detail && dataRecord.region_detail.name) {
+        // Fallback for an alternative nested naming convention
+        regionDisplay = dataRecord.region_detail.name;
+    } else if (dataRecord.region_name) {
+        // Pulls text if located safely at the root level
+        regionDisplay = dataRecord.region_name;
     }
 
     // Layout order: Routes on top, metadata boxes underneath

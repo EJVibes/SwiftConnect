@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | Swift Connect</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body data-theme="swift-base">
+    <header class="site-header">
+        <div class="container header-container">
+            <div class="brand-logo">
+                <a href="index.html">
+                    <img src="frontswiftlogo_new.png" alt="Swift Logo" class="nav-logo">
+                </a>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="divisions.html">Our Divisions</a></li>
+                    <li><a href="map.html">Network Map</a></li>
+                    <li><a href="contact.html" class="active">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="simple-page-header">
+        <div class="container">
+            <h1>Contact Us</h1>
+        </div>
+    </div>
+
+    <main class="container simple-page-content" style="max-width: 600px; margin: 0 auto;">
+        <div class="card">
+            <h2>Get in Touch</h2>
+            <form style="margin-top: 20px;" onsubmit="event.preventDefault(); alert('Message Sent!');">
+                <div class="input-group">
+                    <label>Name</label>
+                    <input type="text" required>
+                </div>
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" required>
+                </div>
+                <div class="input-group">
+                    <label>Message</label>
+                    <textarea style="width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 8px;" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="btn-primary">Send Message</button>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

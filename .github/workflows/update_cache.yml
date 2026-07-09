@@ -1,0 +1,44 @@
+name: Update Global Transit Route Cache
+
+on:
+  schedule:
+    # Runs every 30 minutes past the hour
+    - cron: '*/30 * * * *'
+  workflow_dispatch: # Allows you to trigger this manually from the GitHub Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  refresh-cache:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-python-version: '3.x'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Execute Cache Builder
+        run: python update_cache.py
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          
+          # Only stage changes if the json file was created or edited
+          if git status --porcelain | grep -q "global_routes_cache.json"; then
+            git add global_routes_cache.json
+            git commit -m "Automated update to global routes static cache"
+            git push
+          else
+            echo "No changes found in routes cache file. Skipping commit."
+          fi

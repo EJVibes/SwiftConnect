@@ -106,16 +106,24 @@ function renderOperatorMetrics(dataRecord) {
     document.getElementById('operator-title-name').innerText = dataRecord.operator_name || 'Unknown Operator';
     document.getElementById('operator-badge-code').innerText = `ID: ${dataRecord.operator_code || 'SWFT'}`;
 
-    // STRICT EXTRACTION: Look exactly for 'region_name'. No hardcoded 'System Wide' fallbacks.
-    let regionDisplay = dataRecord.region_name;
-    
-    // Check if the API nested it under region_detail just in case
-    if (regionDisplay === undefined && dataRecord.region_detail && dataRecord.region_detail.region_name) {
-        regionDisplay = dataRecord.region_detail.region_name;
+    // ULTIMATE EXTRACTION: A recursive function that deeply searches the entire JSON 
+    // object for the "region_name" key, regardless of how far down it is nested.
+    function extractRegionName(obj) {
+        if (obj === null || typeof obj !== 'object') return null;
+        for (const [key, value] of Object.entries(obj)) {
+            if (key === 'region_name') return value;
+            if (typeof value === 'object') {
+                const nestedResult = extractRegionName(value);
+                if (nestedResult) return nestedResult;
+            }
+        }
+        return null;
     }
 
-    // If it STILL isn't found, tell you explicitly so you know it's an API payload issue
-    if (regionDisplay === undefined || regionDisplay === null || String(regionDisplay).trim() === '') {
+    let regionDisplay = extractRegionName(dataRecord);
+
+    // If the deep search STILL returns nothing, the string is empty in the database
+    if (regionDisplay === null || regionDisplay === undefined || String(regionDisplay).trim() === '') {
         regionDisplay = "Not Provided by API";
     }
 
@@ -136,7 +144,7 @@ function renderOperatorMetrics(dataRecord) {
             <div class="data-value">${dataRecord.operator_code || 'N/A'}</div>
         </div>
         <div class="data-item-row" style="grid-column: span 2;">
-            <div class="data-label">Operating Region</div>
+            <div class="data-label">Region Name</div>
             <div class="data-value">${regionDisplay}</div>
         </div>
     `;

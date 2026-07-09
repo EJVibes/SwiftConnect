@@ -12,13 +12,15 @@
         <div class="container header-container">
             <div class="brand-logo">
                 <a href="index.html">
-                    <img id="dynamic-logo" src="Swift Connect Icon Black.png" alt="Division Logo" class="nav-logo">
+                    <img id="dynamic-logo" src="Swift Connect Icon Black.png" alt="Swift Connect Logo" class="nav-logo">
                 </a>
             </div>
             <nav class="main-nav">
                 <ul>
                     <li><a href="index.html">Home</a></li>
-                    <li><a href="divisions.html">All Divisions</a></li>
+                    <li><a href="divisions.html">Our Divisions</a></li>
+                    <li><a href="map.html">Network Map</a></li>
+                    <li><a href="contact.html">Contact</a></li>
                 </ul>
             </nav>
         </div>
@@ -44,7 +46,6 @@
                 <h2>Live Network Metrics</h2>
                 <span class="status-indicator-dot"></span>
             </div>
-            <p class="intro-text">Real-time registration data and active routes operating under this division.</p>
             
             <div id="api-loading-state" class="loading-spinner-box">
                 <p>Querying the database network... Please wait.</p>
@@ -52,7 +53,7 @@
 
             <div id="api-error-state" class="error-box hidden">
                 <p>Failed to load division details.</p>
-                <a href="index.html" class="btn-secondary">Return to Network Home</a>
+                <a href="divisions.html" class="btn-secondary">Return to Divisions Directory</a>
             </div>
 
             <div id="api-data-results" class="data-grid hidden">

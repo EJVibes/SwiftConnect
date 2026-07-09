@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Network Map | Swift Connect</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
     <link rel="stylesheet" href="style.css">
 </head>
 <body data-theme="swift-base">
@@ -28,15 +31,13 @@
 
     <div class="simple-page-header">
         <div class="container">
-            <h1>Network Map</h1>
+            <h1>Live Network Map</h1>
+            <p>Interactive satellite tracking of our active fleet.</p>
         </div>
     </div>
 
-    <main class="container simple-page-content" style="text-align: center;">
-        <div class="card" style="display: inline-block; padding: 60px;">
-            <h2 style="color: var(--secondary)">Map Rendering Engine Offline</h2>
-            <p>Our interactive network map is currently being updated. Please check back soon.</p>
-        </div>
+    <main class="container simple-page-content">
+        <div id="network-map"></div>
     </main>
 
     <footer class="site-footer">
@@ -49,5 +50,7 @@
         </div>
     </footer>
 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>

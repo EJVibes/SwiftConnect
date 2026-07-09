@@ -19,6 +19,21 @@ async function initOperatorPage() {
         return;
     }
 
+    // INTERCEPT: Swift Express is a cross-network brand, not a single operator.
+    // Skip the standard operator lookup and inject a custom profile.
+    if (targetOperator.toLowerCase().includes('express')) {
+        const expressProfile = {
+            operator_name: "Swift Express",
+            operator_code: "Multi-Operator",
+            region_name: "System Wide"
+        };
+        applyBrandingEngine(expressProfile.operator_name);
+        renderOperatorMetrics(expressProfile);
+        triggerRouteFetch(null, expressProfile.operator_name);
+        return; 
+    }
+
+    // Standard lookup for normal regional divisions
     let unifiedDataset = [];
     let queryTarget = encodeURIComponent(targetOperator);
     let apiEndpointUrl = `https://www.mybustimes.cc/api/operator/?operator_name__icontains=${queryTarget}`;

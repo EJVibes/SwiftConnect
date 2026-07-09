@@ -2,9 +2,11 @@ import os
 import re
 import json
 import requests
+from bs4 import BeautifulSoup
 
 VEHICLES_API_URL = "https://www.mybustimes.cc/api/group/Swift%20Connect%20Group/vehicles/?ymax=56.96749375372495&ymin=22.98020869942421&xmax=26.253456525775164&xmin=-46.11789196263385&limit=5000"
 CACHE_FILE_NAME = "global_routes_cache.json"
+BASE_URL = "https://www.mybustimes.cc"
 
 def load_existing_cache():
     if os.path.exists(CACHE_FILE_NAME):
@@ -12,65 +14,130 @@ def load_existing_cache():
             with open(CACHE_FILE_NAME, "r", encoding="utf-8") as f:
                 return json.load(f)
         except Exception as e:
-            print(f"Warning: Could not read existing cache file ({e}). Starting fresh.")
+            print(f"Starting fresh cache ledger: {e}")
     return {}
 
-def save_cache(cache_data):
+def scrape_html_timetable(route_url):
+    """
+    Visits the web page layout for the route, finds the timetable HTML structure,
+    and parses it into a clean data array, bypassing frontend CORS limitations.
+    """
     try:
-        with open(CACHE_FILE_NAME, "w", encoding="utf-8") as f:
-            json.dump(cache_data, f, indent=2, ensure_ascii=False)
-        print(f"Successfully saved {len(cache_data)} routes to {CACHE_FILE_NAME}")
+        full_url = f"{BASE_URL}{route_url}" if route_url.startswith("/") else route_url
+        response = requests.get(full_url, timeout=15)
+        if response.status_code != 200:
+            return None
+            
+        soup = BeautifulSoup(response.text, 'html.parser')
+        
+        # Target the main data table on the page
+        table = soup.find('table')
+        if not table:
+            return None
+            
+        headers = []
+        thead = table.find('thead')
+        if thead:
+            headers = [th.get_text(strip=True) for th in thead.find_all('th')]
+            
+        rows = []
+        tbody = table.find('tbody') or table
+        for tr in tbody.find_all('tr'):
+            cells = tr.find_all(['td', 'th'])
+            # Clean up text inside cells, replacing web linebreaks with commas
+            row_data = []
+            for cell in cells:
+                text = cell.get_text(separator=", ", strip=True)
+                row_data.append(text)
+                
+            if row_data:
+                # If thead was missing, treat the first row as the header schema
+                if not headers:
+                    headers = row_data
+                    continue
+                
+                # Zip into a clean key-value object map
+                row_dict = {}
+                for i, val in enumerate(row_data):
+                    if i < len(headers):
+                        key = headers[i].lower().replace(" ", "_")
+                        row_dict[key] = val
+                rows.append(row_dict)
+                
+        return rows
     except Exception as e:
-        print(f"Error saving cache file: {e}")
+        print(f"Failed parsing HTML structure at {route_url}: {e}")
+        return None
 
 def main():
-    print("Starting global route cache sync...")
+    print("Initiating global automated route & timetable synchronization loop...")
     route_cache = load_existing_cache()
     
-    # 1. Fetch live tracking fleet records
+    # 1. Fetch the live network fleet coordinates to discover active services
     try:
         response = requests.get(VEHICLES_API_URL, timeout=15)
         response.raise_for_status()
         data = response.json()
         vehicles = data.get("results", data) if isinstance(data, dict) else data
     except Exception as e:
-        print(f"Critical Error: Failed to fetch active vehicles data: {e}")
+        print(f"Network error: Could not fetch active tracking fleet: {e}")
         return
 
-    # 2. Extract active route IDs using regex mapping
-    active_route_ids = set()
+    # 2. Extract every unique active route URL running across all distinct divisions
+    discovered_routes = {}
     for record in vehicles:
         service = record.get("service") or {}
         url_path = service.get("url") or ""
         
         match = re.search(r"/route/(\d+)/?", url_path)
         if match:
-            active_route_ids.add(match.group(1))
+            route_id = match[1]
+            discovered_routes[route_id] = url_path
 
-    print(f"Found {len(active_route_ids)} unique route IDs currently running on the network.")
+    print(f"Discovered {len(discovered_routes)} operational routes across tracking channels.")
 
-    # 3. Fetch missing details incrementally
-    updated = False
-    for route_id in active_route_ids:
-        if route_id in route_cache:
-            continue  # Already stored in server cache, skip API hit
+    # 3. Incrementally audit database and scrape missing assets
+    cache_modified = False
+    for route_id, route_url in discovered_routes.items():
+        # Check if route details OR the timetable array are missing from memory
+        if route_id in route_cache and "timetable" in route_cache[route_id]:
+            continue
             
-        print(f"New route detected! Fetching details for ID: {route_id}")
+        print(f"Syncing newly discovered route registry entry. ID: {route_id}")
         try:
-            route_res = requests.get(f"https://www.mybustimes.cc/api/operator/route/{route_id}/", timeout=10)
-            if route_res.status_code == 200:
-                route_cache[route_id] = route_res.json()
-                updated = True
+            # Gather core properties from database API
+            api_res = requests.get(f"https://www.mybustimes.cc/api/operator/route/{route_id}/", timeout=10)
+            if api_res.status_code == 200:
+                route_data = api_res.json()
+                
+                # Run the HTML parsing parser to convert webpage table graphics to code
+                print(f"Scraping timetable matrices from webpage template: {route_url}")
+                timetable_matrix = scrape_html_timetable(route_url)
+                
+                if timetable_matrix:
+                    route_data["timetable"] = timetable_matrix
+                    print(f"Successfully processed {len(timetable_matrix)} scheduling rows.")
+                else:
+                    route_data["timetable"] = []
+                    print("Timetable format empty or unaligned on target canvas.")
+                    
+                route_cache[route_id] = route_data
+                cache_modified = True
             else:
-                print(f"Skipping route {route_id}: Received HTTP status {route_res.status_code}")
+                print(f"Skipping route {route_id}: HTTP API status {api_res.status_code}")
         except Exception as e:
-            print(f"Failed to fetch details for route ID {route_id}: {e}")
+            print(f"Failed processing synchronization step for route ID {route_id}: {e}")
 
-    # 4. Write back to disk if updates occurred
-    if updated or not os.path.exists(CACHE_FILE_NAME):
-        save_cache(route_cache)
+    # 4. Save compiled database back to root
+    if cache_modified or not os.path.exists(CACHE_FILE_NAME):
+        try:
+            with open(CACHE_FILE_NAME, "w", encoding="utf-8") as f:
+                json.dump(route_cache, f, indent=2, ensure_ascii=False)
+            print(f"Global sync complete. Static registry holds {len(route_cache)} entries.")
+        except Exception as e:
+            print(f"File writing block error: {e}")
     else:
-        print("Cache is already completely up to date. No writes required.")
+        print("All active network route assets perfectly mirror static cache records.")
 
 if __name__ == "__main__":
     main()

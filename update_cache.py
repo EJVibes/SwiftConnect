@@ -8,7 +8,6 @@ VEHICLES_API_URL = "https://www.mybustimes.cc/api/group/Swift%20Connect%20Group/
 CACHE_FILE_NAME = "global_routes_cache.json"
 BASE_URL = "https://www.mybustimes.cc"
 
-# Disguise ONLY used for HTML scraping, NOT for API calls
 SCRAPE_HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
@@ -27,7 +26,6 @@ def load_existing_cache():
 def scrape_html_timetable(route_url):
     try:
         full_url = f"{BASE_URL}{route_url}" if route_url.startswith("/") else route_url
-        # We use the disguise here to bypass the HTML page bouncers
         response = requests.get(full_url, headers=SCRAPE_HEADERS, timeout=15)
         
         if response.status_code != 200:
@@ -44,7 +42,18 @@ def scrape_html_timetable(route_url):
         all_rows = []
         print(f"  -> Found {len(tables)} tables on the page. Extracting data...")
         
-        for table in tables:
+        for index, table in enumerate(tables):
+            trs = table.find_all('tr')
+            print(f"  -> [DEBUG] Table {index + 1} has {len(trs)} <tr> rows.")
+            
+            # --- DIAGNOSTIC TRIGGER ---
+            # If the table has 1 or 0 rows, print the raw HTML so we can see what's going on
+            if len(trs) <= 1:
+                print(f"  -> [CRITICAL] Table {index + 1} is empty or irregular. Raw HTML snippet:")
+                print("--------------------------------------------------")
+                print(str(table)[:800]) # Prints the first 800 characters of the table HTML
+                print("--------------------------------------------------")
+            
             headers = []
             thead = table.find('thead')
             if thead:
@@ -56,10 +65,8 @@ def scrape_html_timetable(route_url):
                 row_data = []
                 for cell in cells:
                     text = cell.get_text(separator=", ", strip=True)
-                    
                     if re.search(r'(\d{2}:\d{2}),\s*(\d{2}:\d{2})', text):
                         text = re.sub(r'(\d{2}:\d{2}),\s*(\d{2}:\d{2})', r'\1 arr<br>\2 dep', text)
-                        
                     row_data.append(text)
                     
                 if row_data:
@@ -84,11 +91,8 @@ def main():
     route_cache = load_existing_cache()
     
     try:
-        # NO DISGUISE HERE: The API prefers to be talked to normally
         response = requests.get(VEHICLES_API_URL, timeout=15)
         response.raise_for_status()
-        
-        # Safety net to catch non-JSON responses gracefully
         try:
             data = response.json()
         except ValueError:
@@ -119,7 +123,6 @@ def main():
             
         print(f"\nSyncing registry and timetable for Route ID: {route_id}")
         try:
-            # NO DISGUISE HERE either
             api_res = requests.get(f"https://www.mybustimes.cc/api/operator/route/{route_id}/", timeout=10)
             if api_res.status_code == 200:
                 try:

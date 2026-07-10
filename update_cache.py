@@ -8,8 +8,8 @@ VEHICLES_API_URL = "https://www.mybustimes.cc/api/group/Swift%20Connect%20Group/
 CACHE_FILE_NAME = "global_routes_cache.json"
 BASE_URL = "https://www.mybustimes.cc"
 
-# This "disguise" tricks the server into thinking we are a real human using Google Chrome
-HEADERS = {
+# Disguise ONLY used for HTML scraping, NOT for API calls
+SCRAPE_HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
     "Accept-Language": "en-US,en;q=0.5"
@@ -27,10 +27,11 @@ def load_existing_cache():
 def scrape_html_timetable(route_url):
     try:
         full_url = f"{BASE_URL}{route_url}" if route_url.startswith("/") else route_url
-        response = requests.get(full_url, headers=HEADERS, timeout=15)
+        # We use the disguise here to bypass the HTML page bouncers
+        response = requests.get(full_url, headers=SCRAPE_HEADERS, timeout=15)
         
         if response.status_code != 200:
-            print(f"  -> Server blocked the request! HTTP Status: {response.status_code}")
+            print(f"  -> Server blocked the HTML request! HTTP Status: {response.status_code}")
             return []
             
         soup = BeautifulSoup(response.text, 'html.parser')
@@ -56,7 +57,6 @@ def scrape_html_timetable(route_url):
                 for cell in cells:
                     text = cell.get_text(separator=", ", strip=True)
                     
-                    # Formats XX:XX, XX:XX into Arr/Dep
                     if re.search(r'(\d{2}:\d{2}),\s*(\d{2}:\d{2})', text):
                         text = re.sub(r'(\d{2}:\d{2}),\s*(\d{2}:\d{2})', r'\1 arr<br>\2 dep', text)
                         
@@ -84,9 +84,17 @@ def main():
     route_cache = load_existing_cache()
     
     try:
-        response = requests.get(VEHICLES_API_URL, headers=HEADERS, timeout=15)
+        # NO DISGUISE HERE: The API prefers to be talked to normally
+        response = requests.get(VEHICLES_API_URL, timeout=15)
         response.raise_for_status()
-        data = response.json()
+        
+        # Safety net to catch non-JSON responses gracefully
+        try:
+            data = response.json()
+        except ValueError:
+            print(f"CRITICAL ERROR: API returned HTML instead of JSON. Server output preview:\n{response.text[:300]}")
+            return
+            
         vehicles = data.get("results", data) if isinstance(data, dict) else data
     except Exception as e:
         print(f"Network error: Could not fetch active tracking fleet: {e}")
@@ -106,15 +114,19 @@ def main():
 
     cache_modified = False
     for route_id, route_url in discovered_routes.items():
-        # Force a re-scrape if the timetable is empty
         if route_id in route_cache and "timetable" in route_cache[route_id] and len(route_cache[route_id]["timetable"]) > 0:
             continue
             
         print(f"\nSyncing registry and timetable for Route ID: {route_id}")
         try:
-            api_res = requests.get(f"https://www.mybustimes.cc/api/operator/route/{route_id}/", headers=HEADERS, timeout=10)
+            # NO DISGUISE HERE either
+            api_res = requests.get(f"https://www.mybustimes.cc/api/operator/route/{route_id}/", timeout=10)
             if api_res.status_code == 200:
-                route_data = api_res.json()
+                try:
+                    route_data = api_res.json()
+                except ValueError:
+                    print(f"  -> API returned invalid JSON for route {route_id}. Skipping.")
+                    continue
                 
                 timetable_matrix = scrape_html_timetable(route_url)
                 route_data["timetable"] = timetable_matrix

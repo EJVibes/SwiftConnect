@@ -288,7 +288,6 @@ async function fetchExpressRoutes() {
 }
 
 function renderRouteList(routes, container) {
-    // FILTERS OUT ROUTES WITH '?' OR MARKED AS HIDDEN
     let filteredRoutes = routes.filter(r => {
         const num = (r.route_num || '').toString().trim();
         const name = (r.route_name || '').toString().toLowerCase();
@@ -346,40 +345,52 @@ function showOperatorError() {
    ROUTE DETAIL PAGE LOGIC 
    ========================================== */
 
+function buildTableHtml(records) {
+    if (!records || records.length === 0) return '';
+    
+    let headersSet = new Set();
+    records.forEach(row => {
+        Object.keys(row).forEach(k => {
+            if (typeof row[k] !== 'object' && !Array.isArray(row[k])) headersSet.add(k);
+        });
+    });
+    
+    let headers = Array.from(headersSet);
+    if (headers.length === 0) headers = Object.keys(records[0]);
+    
+    let tableHtml = `<div style="overflow-x: auto; border-radius: var(--radius-soft); border: 1px solid #edf2f7; margin-bottom: 30px;">
+                        <table class="route-data-table" style="margin: 0; width: 100%; text-align: center; white-space: nowrap;">
+                            <thead><tr>`;
+    
+    headers.forEach(h => {
+        const formattedKey = h.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        tableHtml += `<th style="text-align: center; background-color: var(--primary); color: white; padding: 15px;">${formattedKey}</th>`;
+    });
+    tableHtml += `</tr></thead><tbody>`;
+    
+    records.forEach(row => {
+        tableHtml += `<tr>`;
+        headers.forEach(h => {
+            let val = row[h];
+            if (typeof val === 'object' && val !== null) {
+                val = JSON.stringify(val); 
+            }
+            tableHtml += `<td style="padding: 12px; border-bottom: 1px solid #edf2f7;">${val !== null && val !== undefined && val !== '' ? val : '-'}</td>`;
+        });
+        tableHtml += `</tr>`;
+    });
+    
+    tableHtml += `</tbody></table></div>`;
+    return tableHtml;
+}
+
 async function fetchAndRenderTimetable(routeId) {
     try {
         let records = [];
 
-        // ALWAYS check the static Python-generated cache first to bypass CORS completely
         await ensureGlobalRouteCacheLoaded();
         if (SWIFT_ROUTE_CACHE[routeId] && Array.isArray(SWIFT_ROUTE_CACHE[routeId].timetable) && SWIFT_ROUTE_CACHE[routeId].timetable.length > 0) {
             records = SWIFT_ROUTE_CACHE[routeId].timetable;
-        }
-
-        // If the cache is empty, attempt a secure dynamic fetch through an API proxy
-        if (records.length === 0) {
-            const urlsToTry = [
-                `https://www.mybustimes.cc/api/get_timetables/?route_id=${routeId}`,
-                `https://www.mybustimes.cc/api/get_timetables/?route=${routeId}`
-            ];
-
-            for (const url of urlsToTry) {
-                try {
-                    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
-                    const res = await fetch(proxyUrl);
-                    if (res.ok) {
-                        const data = await res.json();
-                        
-                        if (Array.isArray(data)) records = data;
-                        else if (data.results && Array.isArray(data.results)) records = data.results;
-                        else if (data.data && Array.isArray(data.data)) records = data.data;
-                        
-                        if (records.length > 0) break; 
-                    }
-                } catch (e) {
-                    console.warn(`Proxy fetch failed for ${url}`);
-                }
-            }
         }
 
         if (records.length === 0) {
@@ -391,45 +402,26 @@ async function fetchAndRenderTimetable(routeId) {
             `;
         }
 
-        // Generic Table Builder - Extracts headers dynamically across ALL tables in case inbound/outbound columns differ
-        let headersSet = new Set();
-        records.forEach(row => {
-            Object.keys(row).forEach(k => {
-                if (typeof row[k] !== 'object' && !Array.isArray(row[k])) headersSet.add(k);
+        // Check if the Python scraper successfully broke the tables down by direction
+        const isMultiDirection = records.length > 0 && records[0].direction !== undefined && records[0].data !== undefined;
+
+        if (isMultiDirection) {
+            let fullHtml = '';
+            records.forEach(dir => {
+                fullHtml += `<h3 style="margin: 0 0 15px 0; color: var(--dark); font-size: 1.3rem;">${dir.direction}</h3>`;
+                fullHtml += buildTableHtml(dir.data);
             });
-        });
-        
-        let headers = Array.from(headersSet);
-        if (headers.length === 0) headers = Object.keys(records[0]);
-        
-        let tableHtml = `<div style="overflow-x: auto; border-radius: var(--radius-soft); border: 1px solid #edf2f7;"><table class="route-data-table" style="margin: 0; width: 100%; text-align: center; white-space: nowrap;"><thead><tr>`;
-        
-        headers.forEach(h => {
-            const formattedKey = h.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-            tableHtml += `<th style="text-align: center; background-color: var(--primary); color: white; padding: 15px;">${formattedKey}</th>`;
-        });
-        tableHtml += `</tr></thead><tbody>`;
-        
-        records.forEach(row => {
-            tableHtml += `<tr>`;
-            headers.forEach(h => {
-                let val = row[h];
-                if (typeof val === 'object' && val !== null) {
-                    val = JSON.stringify(val); 
-                }
-                tableHtml += `<td style="padding: 12px; border-bottom: 1px solid #edf2f7;">${val !== null && val !== undefined && val !== '' ? val : '-'}</td>`;
-            });
-            tableHtml += `</tr>`;
-        });
-        
-        tableHtml += `</tbody></table></div>`;
-        return tableHtml;
+            return fullHtml;
+        } else {
+            // Fallback for single flat arrays
+            return buildTableHtml(records);
+        }
 
     } catch (e) {
         console.error("Timetable Fetch Error:", e);
         return `
             <div class="timetable-placeholder">
-                <p>Error connecting to timetable databanks.</p>
+                <p>Error rendering timetable databanks.</p>
             </div>
         `;
     }
@@ -456,7 +448,6 @@ async function initRoutePage() {
         if (!res.ok) throw new Error("Could not fetch route");
         const data = await res.json();
 
-        // Safety Filter: If someone directly accesses a hidden route URL, kick them back out
         const num = (data.route_num || '').toString().trim();
         const name = (data.route_name || '').toString().toLowerCase();
         if (num === '?' || data.hidden === true || data.is_hidden === true || name.includes('hidden')) {
@@ -478,7 +469,6 @@ async function initRoutePage() {
         const opName = extractOperatorName(data) || data.operator || 'Unknown Operator';
         applyBrandingEngine(opName); 
 
-        // Constructs exact requested format: {route_num} {route_name} - {inbound} - {outbound}
         const routeNum = data.route_num || '';
         const routeName = data.route_name || '';
         const start = data.inbound_destination || '';
@@ -494,7 +484,6 @@ async function initRoutePage() {
 
         const timetableHtml = await fetchAndRenderTimetable(routeId);
 
-        // Renders ONLY the Timetable Card (The raw attributes table is completely removed)
         const html = `
             <div class="card" style="padding: 0; overflow: hidden;">
                 <div style="padding: 25px 35px; background-color: #f8fafc; border-bottom: 2px solid #edf2f7;">

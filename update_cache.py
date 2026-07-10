@@ -29,56 +29,53 @@ def scrape_html_timetable(route_url):
         response = requests.get(full_url, headers=SCRAPE_HEADERS, timeout=15)
         
         if response.status_code != 200:
-            print(f"  -> Server blocked the HTML request! HTTP Status: {response.status_code}")
             return []
             
         soup = BeautifulSoup(response.text, 'html.parser')
-        
         tables = soup.find_all('table')
         if not tables:
-            print(f"  -> Page loaded, but no <table> elements were found in the HTML.")
             return []
             
         all_rows = []
-        print(f"  -> Found {len(tables)} tables on the page. Extracting data...")
         
-        for index, table in enumerate(tables):
-            trs = table.find_all('tr')
-            print(f"  -> [DEBUG] Table {index + 1} has {len(trs)} <tr> rows.")
+        for table in tables:
+            rows = table.find_all('tr')
+            if not rows: continue
             
-            # --- DIAGNOSTIC TRIGGER ---
-            # If the table has 1 or 0 rows, print the raw HTML so we can see what's going on
-            if len(trs) <= 1:
-                print(f"  -> [CRITICAL] Table {index + 1} is empty or irregular. Raw HTML snippet:")
-                print("--------------------------------------------------")
-                print(str(table)[:800]) # Prints the first 800 characters of the table HTML
-                print("--------------------------------------------------")
-            
+            # Determine Headers Dynamically
             headers = []
             thead = table.find('thead')
             if thead:
                 headers = [th.get_text(strip=True) for th in thead.find_all('th')]
-                
-            tbody = table.find('tbody') or table
-            for tr in tbody.find_all('tr'):
+            else:
+                # No thead found. Check if the first row is all th elements
+                first_row_cells = rows[0].find_all(['th', 'td'])
+                if all(cell.name == 'th' for cell in first_row_cells):
+                    headers = [cell.get_text(strip=True) for cell in first_row_cells]
+                    rows = rows[1:] # Remove the header row from data parsing
+                else:
+                    # This is an INVERTED table (Rows = Stops, Columns = Buses)
+                    headers = ["Stop Name"] + [f"Bus {i}" for i in range(1, len(first_row_cells))]
+
+            # Parse Data Rows
+            for tr in rows:
                 cells = tr.find_all(['td', 'th'])
+                if not cells: continue
+                
                 row_data = []
                 for cell in cells:
                     text = cell.get_text(separator=", ", strip=True)
+                    # Formats XX:XX, XX:XX into Arr/Dep
                     if re.search(r'(\d{2}:\d{2}),\s*(\d{2}:\d{2})', text):
                         text = re.sub(r'(\d{2}:\d{2}),\s*(\d{2}:\d{2})', r'\1 arr<br>\2 dep', text)
                     row_data.append(text)
                     
                 if row_data:
-                    if not headers:
-                        headers = row_data
-                        continue
-                    
                     row_dict = {}
                     for i, val in enumerate(row_data):
-                        if i < len(headers):
-                            key = headers[i].lower().replace(" ", "_")
-                            row_dict[key] = val
+                        # Ensure we don't index out of bounds if rows are uneven
+                        key = headers[i].lower().replace(" ", "_") if i < len(headers) else f"col_{i}"
+                        row_dict[key] = val
                     all_rows.append(row_dict)
                     
         return all_rows
@@ -93,12 +90,7 @@ def main():
     try:
         response = requests.get(VEHICLES_API_URL, timeout=15)
         response.raise_for_status()
-        try:
-            data = response.json()
-        except ValueError:
-            print(f"CRITICAL ERROR: API returned HTML instead of JSON. Server output preview:\n{response.text[:300]}")
-            return
-            
+        data = response.json()
         vehicles = data.get("results", data) if isinstance(data, dict) else data
     except Exception as e:
         print(f"Network error: Could not fetch active tracking fleet: {e}")
@@ -125,11 +117,20 @@ def main():
         try:
             api_res = requests.get(f"https://www.mybustimes.cc/api/operator/route/{route_id}/", timeout=10)
             if api_res.status_code == 200:
-                try:
-                    route_data = api_res.json()
-                except ValueError:
-                    print(f"  -> API returned invalid JSON for route {route_id}. Skipping.")
+                route_data = api_res.json()
+                
+                # --- NEW HIDDEN ROUTE FIREWALL ---
+                route_num = str(route_data.get("route_num", "")).strip()
+                route_name = str(route_data.get("route_name", "")).strip().lower()
+                is_hidden = route_data.get("hidden") or route_data.get("is_hidden") or "hidden" in route_name
+                
+                if route_num == "?" or is_hidden:
+                    print(f"  -> Skipping HTML scrape. Route is hidden or unassigned (Num: '{route_num}').")
+                    route_data["timetable"] = []
+                    route_cache[route_id] = route_data
+                    cache_modified = True
                     continue
+                # ---------------------------------
                 
                 timetable_matrix = scrape_html_timetable(route_url)
                 route_data["timetable"] = timetable_matrix

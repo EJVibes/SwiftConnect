@@ -61284,7 +61284,49 @@
     ],
     "service_updates": [],
     "full_searchable_name": "LS1 Shifnal Local Service",
-    "route_colour_rgba": "rgba(74, 93, 108, 1)"
+    "route_colour_rgba": "rgba(74, 93, 108, 1)",
+    "timetable": [
+      {
+        "service": "Telford Bus Station (Stand L)",
+        "ls2": "20:08"
+      },
+      {
+        "service": "Telford, opp Matheson House",
+        "ls2": "20:09"
+      },
+      {
+        "service": "Telford Central (adj)",
+        "ls2": "20:11"
+      },
+      {
+        "service": "Stafford Park Opposite Skoda Garage (SE Bound)",
+        "ls2": "20:14"
+      },
+      {
+        "service": "Stafford Park, adj Magna Foods",
+        "ls2": "20:15"
+      },
+      {
+        "service": "Stafford Park, opp Business Development Centre",
+        "ls2": "20:16"
+      },
+      {
+        "service": "Stafford Park, opp Kwik Fit",
+        "ls2": "20:16"
+      },
+      {
+        "service": "Stafford Park, before Naird Roundabout",
+        "ls2": "20:17"
+      },
+      {
+        "service": "Shifnal, adjacent to St Mary's Church",
+        "ls2": "20:20"
+      },
+      {
+        "service": "Shifnal, opposite Jaspers Bar",
+        "ls2": "20:20"
+      }
+    ]
   },
   "108832": {
     "id": 108832,
@@ -105235,7 +105277,783 @@
       }
     ],
     "full_searchable_name": "5C Telford Muxton - Donnington ASDA - Priorslee",
-    "route_colour_rgba": "rgba(220, 36, 31, 1)"
+    "route_colour_rgba": "rgba(220, 36, 31, 1)",
+    "timetable": [
+      {
+        "telford_bus_station_(stand_h)": "Telford, opposite Matheson House",
+        "07:30": "07:31",
+        "08:30": "08:31",
+        "09:30": "09:31",
+        "10:30": "10:31",
+        "11:30": "11:31",
+        "12:30": "12:31",
+        "13:30": "13:31",
+        "14:30": "14:31",
+        "15:30": "15:31",
+        "16:30": "16:31",
+        "17:30": "17:31",
+        "18:30": "18:31",
+        "19:30": "19:31",
+        "20:30": "20:31",
+        "21:30": "21:31"
+      },
+      {
+        "telford_bus_station_(stand_h)": "Priorslee, opposite Fitness First",
+        "07:30": "07:32",
+        "08:30": "08:32",
+        "09:30": "09:32",
+        "10:30": "10:32",
+        "11:30": "11:32",
+        "12:30": "12:32",
+        "13:30": "13:32",
+        "14:30": "14:32",
+        "15:30": "15:32",
+        "16:30": "16:32",
+        "17:30": "17:32",
+        "18:30": "18:32",
+        "19:30": "19:32",
+        "20:30": "20:32",
+        "21:30": "21:32"
+      },
+      {
+        "telford_bus_station_(stand_h)": "Telford Priorslee Roundabout (Southbound)",
+        "07:30": "07:32",
+        "08:30": "08:32",
+        "09:30": "09:32",
+        "10:30": "10:32",
+        "11:30": "11:32",
+        "12:30": "12:32",
+        "13:30": "13:32",
+        "14:30": "14:32",
+        "15:30": "15:32",
+        "16:30": "16:32",
+        "17:30": "17:32",
+        "18:30": "18:32",
+        "19:30": "19:32",
+        "20:30": "20:32",
+        "21:30": "21:32"
+      },
+      {
+        "telford_bus_station_(stand_h)": "St Georges Limekiln Bank (Wbound)",
+        "07:30": "07:34",
+        "08:30": "08:34",
+        "09:30": "09:34",
+        "10:30": "10:34",
+        "11:30": "11:34",
+        "12:30": "12:34",
+        "13:30": "13:34",
+        "14:30": "14:34",
+        "15:30": "15:34",
+        "16:30": "16:34",
+        "17:30": "17:34",
+        "18:30": "18:34",
+        "19:30": "19:34",
+        "20:30": "20:34",
+        "21:30": "21:34"
+      },
+      {
+        "telford_bus_station_(stand_h)": "St Georges, opposite Cricket Club",
+        "07:30": "07:34",
+        "08:30": "08:34",
+        "09:30": "09:34",
+        "10:30": "10:34",
+        "11:30": "11:34",
+        "12:30": "12:34",
+        "13:30": "13:34",
+        "14:30": "14:34",
+        "15:30": "15:34",
+        "16:30": "16:34",
+        "17:30": "17:34",
+        "18:30": "18:34",
+        "19:30": "19:34",
+        "20:30": "20:34",
+        "21:30": "21:34"
+      },
+      {
+        "telford_bus_station_(stand_h)": "St Georges, opposite Post Office",
+        "07:30": "07:35",
+        "08:30": "08:35",
+        "09:30": "09:35",
+        "10:30": "10:35",
+        "11:30": "11:35",
+        "12:30": "12:35",
+        "13:30": "13:35",
+        "14:30": "14:35",
+        "15:30": "15:35",
+        "16:30": "16:35",
+        "17:30": "17:35",
+        "18:30": "18:35",
+        "19:30": "19:35",
+        "20:30": "20:35",
+        "21:30": "21:35"
+      },
+      {
+        "telford_bus_station_(stand_h)": "St Georges, adjacent to Rothwell Close",
+        "07:30": "07:35",
+        "08:30": "08:35",
+        "09:30": "09:35",
+        "10:30": "10:35",
+        "11:30": "11:35",
+        "12:30": "12:35",
+        "13:30": "13:35",
+        "14:30": "14:35",
+        "15:30": "15:35",
+        "16:30": "16:35",
+        "17:30": "17:35",
+        "18:30": "18:35",
+        "19:30": "19:35",
+        "20:30": "20:35",
+        "21:30": "21:35"
+      },
+      {
+        "telford_bus_station_(stand_h)": "St Georges, opposite Hill Street",
+        "07:30": "07:36",
+        "08:30": "08:36",
+        "09:30": "09:36",
+        "10:30": "10:36",
+        "11:30": "11:36",
+        "12:30": "12:36",
+        "13:30": "13:36",
+        "14:30": "14:36",
+        "15:30": "15:36",
+        "16:30": "16:36",
+        "17:30": "17:36",
+        "18:30": "18:36",
+        "19:30": "19:36",
+        "20:30": "20:36",
+        "21:30": "21:36"
+      },
+      {
+        "telford_bus_station_(stand_h)": "St Georges, opposite Albion Inn",
+        "07:30": "07:36",
+        "08:30": "08:36",
+        "09:30": "09:36",
+        "10:30": "10:36",
+        "11:30": "11:36",
+        "12:30": "12:36",
+        "13:30": "13:36",
+        "14:30": "14:36",
+        "15:30": "15:36",
+        "16:30": "16:36",
+        "17:30": "17:36",
+        "18:30": "18:36",
+        "19:30": "19:36",
+        "20:30": "20:36",
+        "21:30": "21:36"
+      },
+      {
+        "telford_bus_station_(stand_h)": "St Georges, opposite Willows Road",
+        "07:30": "07:37",
+        "08:30": "08:37",
+        "09:30": "09:37",
+        "10:30": "10:37",
+        "11:30": "11:37",
+        "12:30": "12:37",
+        "13:30": "13:37",
+        "14:30": "14:37",
+        "15:30": "15:37",
+        "16:30": "16:37",
+        "17:30": "17:37",
+        "18:30": "18:37",
+        "19:30": "19:37",
+        "20:30": "20:37",
+        "21:30": "21:37"
+      },
+      {
+        "telford_bus_station_(stand_h)": "Oakengates Bus Station (Stand A)",
+        "07:30": "07:38, 07:39",
+        "08:30": "08:38, 08:39",
+        "09:30": "09:38, 09:39",
+        "10:30": "10:38, 10:39",
+        "11:30": "11:38, 11:39",
+        "12:30": "12:38, 12:39",
+        "13:30": "13:38, 13:39",
+        "14:30": "14:38, 14:39",
+        "15:30": "15:38, 15:39",
+        "16:30": "16:38, 16:39",
+        "17:30": "17:38, 17:39",
+        "18:30": "18:38, 18:39",
+        "19:30": "19:38, 19:39",
+        "20:30": "20:38, 20:39",
+        "21:30": "21:38, 21:39"
+      },
+      {
+        "telford_bus_station_(stand_h)": "Oakengates Belle Vue Bridge (northbound)",
+        "07:30": "07:40",
+        "08:30": "08:40",
+        "09:30": "09:40",
+        "10:30": "10:40",
+        "11:30": "11:40",
+        "12:30": "12:40",
+        "13:30": "13:40",
+        "14:30": "14:40",
+        "15:30": "15:40",
+        "16:30": "16:40",
+        "17:30": "17:40",
+        "18:30": "18:40",
+        "19:30": "19:40",
+        "20:30": "20:40",
+        "21:30": "21:40"
+      },
+      {
+        "telford_bus_station_(stand_h)": "Oakengates, opposite Urban Road",
+        "07:30": "07:42",
+        "08:30": "08:42",
+        "09:30": "09:42",
+        "10:30": "10:42",
+        "11:30": "11:42",
+        "12:30": "12:42",
+        "13:30": "13:42",
+        "14:30": "14:42",
+        "15:30": "15:42",
+        "16:30": "16:42",
+        "17:30": "17:42",
+        "18:30": "18:42",
+        "19:30": "19:42",
+        "20:30": "20:42",
+        "21:30": "21:42"
+      },
+      {
+        "telford_bus_station_(stand_h)": "Oakengates, adjacent to Hollyhurst Road",
+        "07:30": "07:43",
+        "08:30": "08:43",
+        "09:30": "09:43",
+        "10:30": "10:43",
+        "11:30": "11:43",
+        "12:30": "12:43",
+        "13:30": "13:43",
+        "14:30": "14:43",
+        "15:30": "15:43",
+        "16:30": "16:43",
+        "17:30": "17:43",
+        "18:30": "18:43",
+        "19:30": "19:43",
+        "20:30": "20:43",
+        "21:30": "21:43"
+      },
+      {
+        "telford_bus_station_(stand_h)": "Trench, opposite Methodist Church",
+        "07:30": "07:46",
+        "08:30": "08:46",
+        "09:30": "09:46",
+        "10:30": "10:46",
+        "11:30": "11:46",
+        "12:30": "12:46",
+        "13:30": "13:46",
+        "14:30": "14:46",
+        "15:30": "15:46",
+        "16:30": "16:46",
+        "17:30": "17:46",
+        "18:30": "18:46",
+        "19:30": "19:46",
+        "20:30": "20:46",
+        "21:30": "21:46"
+      },
+      {
+        "telford_bus_station_(stand_h)": "Trench, adjacent to Charles Street",
+        "07:30": "07:46",
+        "08:30": "08:46",
+        "09:30": "09:46",
+        "10:30": "10:46",
+        "11:30": "11:46",
+        "12:30": "12:46",
+        "13:30": "13:46",
+        "14:30": "14:46",
+        "15:30": "15:46",
+        "16:30": "16:46",
+        "17:30": "17:46",
+        "18:30": "18:46",
+        "19:30": "19:46",
+        "20:30": "20:46",
+        "21:30": "21:46"
+      },
+      {
+        "telford_bus_station_(stand_h)": "Donnington, adjacent to Cordingley Way",
+        "07:30": "07:47",
+        "08:30": "08:47",
+        "09:30": "09:47",
+        "10:30": "10:47",
+        "11:30": "11:47",
+        "12:30": "12:47",
+        "13:30": "13:47",
+        "14:30": "14:47",
+        "15:30": "15:47",
+        "16:30": "16:47",
+        "17:30": "17:47",
+        "18:30": "18:47",
+        "19:30": "19:47",
+        "20:30": "20:47",
+        "21:30": "21:47"
+      },
+      {
+        "telford_bus_station_(stand_h)": "Donnington, adjacent to East Avenue",
+        "07:30": "07:47",
+        "08:30": "08:47",
+        "09:30": "09:47",
+        "10:30": "10:47",
+        "11:30": "11:47",
+        "12:30": "12:47",
+        "13:30": "13:47",
+        "14:30": "14:47",
+        "15:30": "15:47",
+        "16:30": "16:47",
+        "17:30": "17:47",
+        "18:30": "18:47",
+        "19:30": "19:47",
+        "20:30": "20:47",
+        "21:30": "21:47"
+      },
+      {
+        "telford_bus_station_(stand_h)": "Donnington, opposite Ambulance Station",
+        "07:30": "07:48",
+        "08:30": "08:48",
+        "09:30": "09:48",
+        "10:30": "10:48",
+        "11:30": "11:48",
+        "12:30": "12:48",
+        "13:30": "13:48",
+        "14:30": "14:48",
+        "15:30": "15:48",
+        "16:30": "16:48",
+        "17:30": "17:48",
+        "18:30": "18:48",
+        "19:30": "19:48",
+        "20:30": "20:48",
+        "21:30": "21:48"
+      },
+      {
+        "telford_bus_station_(stand_h)": "Donnington, opposite Parade",
+        "07:30": "07:48, 07:49",
+        "08:30": "08:48, 08:49",
+        "09:30": "09:48, 09:49",
+        "10:30": "10:48, 10:49",
+        "11:30": "11:48, 11:49",
+        "12:30": "12:48, 12:49",
+        "13:30": "13:48, 13:49",
+        "14:30": "14:48, 14:49",
+        "15:30": "15:48, 15:49",
+        "16:30": "16:48, 16:49",
+        "17:30": "17:48, 17:49",
+        "18:30": "18:48, 18:49",
+        "19:30": "19:48, 19:49",
+        "20:30": "20:48, 20:49",
+        "21:30": "21:48, 21:49"
+      },
+      {
+        "telford_bus_station_(stand_h)": "Donnington, before Orchard Place",
+        "07:30": "07:50",
+        "08:30": "08:50",
+        "09:30": "09:50",
+        "10:30": "10:50",
+        "11:30": "11:50",
+        "12:30": "12:50",
+        "13:30": "13:50",
+        "14:30": "14:50",
+        "15:30": "15:50",
+        "16:30": "16:50",
+        "17:30": "17:50",
+        "18:30": "18:50",
+        "19:30": "19:50",
+        "20:30": "20:50",
+        "21:30": "21:50"
+      },
+      {
+        "telford_bus_station_(stand_h)": "Donnington, adjacent to Aldi",
+        "07:30": "07:50",
+        "08:30": "08:50",
+        "09:30": "09:50",
+        "10:30": "10:50",
+        "11:30": "11:50",
+        "12:30": "12:50",
+        "13:30": "13:50",
+        "14:30": "14:50",
+        "15:30": "15:50",
+        "16:30": "16:50",
+        "17:30": "17:50",
+        "18:30": "18:50",
+        "19:30": "19:50",
+        "20:30": "20:50",
+        "21:30": "21:50"
+      },
+      {
+        "telford_bus_station_(stand_h)": "Donnington, adjacent to Little Theatre",
+        "07:30": "07:51",
+        "08:30": "08:51",
+        "09:30": "09:51",
+        "10:30": "10:51",
+        "11:30": "11:51",
+        "12:30": "12:51",
+        "13:30": "13:51",
+        "14:30": "14:51",
+        "15:30": "15:51",
+        "16:30": "16:51",
+        "17:30": "17:51",
+        "18:30": "18:51",
+        "19:30": "19:51",
+        "20:30": "20:51",
+        "21:30": "21:51"
+      },
+      {
+        "telford_bus_station_(stand_h)": "Muxton, on Donnington Wood Way",
+        "07:30": "07:52",
+        "08:30": "08:52",
+        "09:30": "09:52",
+        "10:30": "10:52",
+        "11:30": "11:52",
+        "12:30": "12:52",
+        "13:30": "13:52",
+        "14:30": "14:52",
+        "15:30": "15:52",
+        "16:30": "16:52",
+        "17:30": "17:52",
+        "18:30": "18:52",
+        "19:30": "19:52",
+        "20:30": "20:52",
+        "21:30": "21:52"
+      },
+      {
+        "telford_bus_station_(stand_h)": "Muxton, adjacent to Birchwood Close",
+        "07:30": "07:53",
+        "08:30": "08:53",
+        "09:30": "09:53",
+        "10:30": "10:53",
+        "11:30": "11:53",
+        "12:30": "12:53",
+        "13:30": "13:53",
+        "14:30": "14:53",
+        "15:30": "15:53",
+        "16:30": "16:53",
+        "17:30": "17:53",
+        "18:30": "18:53",
+        "19:30": "19:53",
+        "20:30": "20:53",
+        "21:30": "21:53"
+      },
+      {
+        "telford_bus_station_(stand_h)": "Muxton, adjacent to Ravensdale Drive",
+        "07:30": "07:53",
+        "08:30": "08:53",
+        "09:30": "09:53",
+        "10:30": "10:53",
+        "11:30": "11:53",
+        "12:30": "12:53",
+        "13:30": "13:53",
+        "14:30": "14:53",
+        "15:30": "15:53",
+        "16:30": "16:53",
+        "17:30": "17:53",
+        "18:30": "18:53",
+        "19:30": "19:53",
+        "20:30": "20:53",
+        "21:30": "21:53"
+      },
+      {
+        "telford_bus_station_(stand_h)": "Muxton, adjacent to The Spinney",
+        "07:30": "07:54",
+        "08:30": "08:54",
+        "09:30": "09:54",
+        "10:30": "10:54",
+        "11:30": "11:54",
+        "12:30": "12:54",
+        "13:30": "13:54",
+        "14:30": "14:54",
+        "15:30": "15:54",
+        "16:30": "16:54",
+        "17:30": "17:54",
+        "18:30": "18:54",
+        "19:30": "19:54",
+        "20:30": "20:54",
+        "21:30": "21:54"
+      },
+      {
+        "telford_bus_station_(stand_h)": "Muxton, opposite Doctors Surgery",
+        "07:30": "07:54",
+        "08:30": "08:54",
+        "09:30": "09:54",
+        "10:30": "10:54",
+        "11:30": "11:54",
+        "12:30": "12:54",
+        "13:30": "13:54",
+        "14:30": "14:54",
+        "15:30": "15:54",
+        "16:30": "16:54",
+        "17:30": "17:54",
+        "18:30": "18:54",
+        "19:30": "19:54",
+        "20:30": "20:54",
+        "21:30": "21:54"
+      },
+      {
+        "telford_bus_station_(stand_h)": "Muxton, before Fieldhouse Drive",
+        "07:30": "07:55",
+        "08:30": "08:55",
+        "09:30": "09:55",
+        "10:30": "10:55",
+        "11:30": "11:55",
+        "12:30": "12:55",
+        "13:30": "13:55",
+        "14:30": "14:55",
+        "15:30": "15:55",
+        "16:30": "16:55",
+        "17:30": "17:55",
+        "18:30": "18:55",
+        "19:30": "19:55",
+        "20:30": "20:55",
+        "21:30": "21:55"
+      },
+      {
+        "telford_bus_station_(stand_h)": "Muxton, adjacent to Arran Way",
+        "07:30": "07:55",
+        "08:30": "08:55",
+        "09:30": "09:55",
+        "10:30": "10:55",
+        "11:30": "11:55",
+        "12:30": "12:55",
+        "13:30": "13:55",
+        "14:30": "14:55",
+        "15:30": "15:55",
+        "16:30": "16:55",
+        "17:30": "17:55",
+        "18:30": "18:55",
+        "19:30": "19:55",
+        "20:30": "20:55",
+        "21:30": "21:55"
+      },
+      {
+        "telford_bus_station_(stand_h)": "Muxton, adjacent to Grampian Close",
+        "07:30": "07:56",
+        "08:30": "08:56",
+        "09:30": "09:56",
+        "10:30": "10:56",
+        "11:30": "11:56",
+        "12:30": "12:56",
+        "13:30": "13:56",
+        "14:30": "14:56",
+        "15:30": "15:56",
+        "16:30": "16:56",
+        "17:30": "17:56",
+        "18:30": "18:56",
+        "19:30": "19:56",
+        "20:30": "20:56",
+        "21:30": "21:56"
+      },
+      {
+        "telford_bus_station_(stand_h)": "Muxton, adjacent to Stanall Drive",
+        "07:30": "07:56",
+        "08:30": "08:56",
+        "09:30": "09:56",
+        "10:30": "10:56",
+        "11:30": "11:56",
+        "12:30": "12:56",
+        "13:30": "13:56",
+        "14:30": "14:56",
+        "15:30": "15:56",
+        "16:30": "16:56",
+        "17:30": "17:56",
+        "18:30": "18:56",
+        "19:30": "19:56",
+        "20:30": "20:56",
+        "21:30": "21:56"
+      },
+      {
+        "telford_bus_station_(stand_h)": "Muxton, adjacent to Meadow Road",
+        "07:30": "07:57",
+        "08:30": "08:57",
+        "09:30": "09:57",
+        "10:30": "10:57",
+        "11:30": "11:57",
+        "12:30": "12:57",
+        "13:30": "13:57",
+        "14:30": "14:57",
+        "15:30": "15:57",
+        "16:30": "16:57",
+        "17:30": "17:57",
+        "18:30": "18:57",
+        "19:30": "19:57",
+        "20:30": "20:57",
+        "21:30": "21:57"
+      },
+      {
+        "telford_bus_station_(stand_h)": "Muxton, opposite Bridge Way",
+        "07:30": "07:57",
+        "08:30": "08:57",
+        "09:30": "09:57",
+        "10:30": "10:57",
+        "11:30": "11:57",
+        "12:30": "12:57",
+        "13:30": "13:57",
+        "14:30": "14:57",
+        "15:30": "15:57",
+        "16:30": "16:57",
+        "17:30": "17:57",
+        "18:30": "18:57",
+        "19:30": "19:57",
+        "20:30": "20:57",
+        "21:30": "21:57"
+      },
+      {
+        "telford_bus_station_(stand_h)": "Muxton, opposite Shopping Centre",
+        "07:30": "07:58",
+        "08:30": "08:58",
+        "09:30": "09:58",
+        "10:30": "10:58",
+        "11:30": "11:58",
+        "12:30": "12:58",
+        "13:30": "13:58",
+        "14:30": "14:58",
+        "15:30": "15:58",
+        "16:30": "16:58",
+        "17:30": "17:58",
+        "18:30": "18:58",
+        "19:30": "19:58",
+        "20:30": "20:58",
+        "21:30": "21:58"
+      },
+      {
+        "telford_bus_station_(stand_h)": "Muxton, on Donnington Wood Way",
+        "07:30": "07:58",
+        "08:30": "08:58",
+        "09:30": "09:58",
+        "10:30": "10:58",
+        "11:30": "11:58",
+        "12:30": "12:58",
+        "13:30": "13:58",
+        "14:30": "14:58",
+        "15:30": "15:58",
+        "16:30": "16:58",
+        "17:30": "17:58",
+        "18:30": "18:58",
+        "19:30": "19:58",
+        "20:30": "20:58",
+        "21:30": "21:58"
+      },
+      {
+        "telford_bus_station_(stand_h)": "Donnington, opposite Ash Road",
+        "07:30": "07:59",
+        "08:30": "08:59",
+        "09:30": "09:59",
+        "10:30": "10:59",
+        "11:30": "11:59",
+        "12:30": "12:59",
+        "13:30": "13:59",
+        "14:30": "14:59",
+        "15:30": "15:59",
+        "16:30": "16:59",
+        "17:30": "17:59",
+        "18:30": "18:59",
+        "19:30": "19:59",
+        "20:30": "20:59",
+        "21:30": "21:59"
+      },
+      {
+        "telford_bus_station_(stand_h)": "Donnington, opposite Jubilee Avenue",
+        "07:30": "07:59",
+        "08:30": "08:59",
+        "09:30": "09:59",
+        "10:30": "10:59",
+        "11:30": "11:59",
+        "12:30": "12:59",
+        "13:30": "13:59",
+        "14:30": "14:59",
+        "15:30": "15:59",
+        "16:30": "16:59",
+        "17:30": "17:59",
+        "18:30": "18:59",
+        "19:30": "19:59",
+        "20:30": "20:59",
+        "21:30": "21:59"
+      },
+      {
+        "telford_bus_station_(stand_h)": "Donnington, adjacent to Bell Gate",
+        "07:30": "08:00",
+        "08:30": "09:00",
+        "09:30": "10:00",
+        "10:30": "11:00",
+        "11:30": "12:00",
+        "12:30": "13:00",
+        "13:30": "14:00",
+        "14:30": "15:00",
+        "15:30": "16:00",
+        "16:30": "17:00",
+        "17:30": "18:00",
+        "18:30": "19:00",
+        "19:30": "20:00",
+        "20:30": "21:00",
+        "21:30": "22:00"
+      },
+      {
+        "telford_bus_station_(stand_h)": "Donnington, adjacent to The Common",
+        "07:30": "08:01",
+        "08:30": "09:01",
+        "09:30": "10:01",
+        "10:30": "11:01",
+        "11:30": "12:01",
+        "12:30": "13:01",
+        "13:30": "14:01",
+        "14:30": "15:01",
+        "15:30": "16:01",
+        "16:30": "17:01",
+        "17:30": "18:01",
+        "18:30": "19:01",
+        "19:30": "20:01",
+        "20:30": "21:01",
+        "21:30": "22:01"
+      },
+      {
+        "telford_bus_station_(stand_h)": "Donnington, adjacent to St Matthews Road",
+        "07:30": "08:01",
+        "08:30": "09:01",
+        "09:30": "10:01",
+        "10:30": "11:01",
+        "11:30": "12:01",
+        "12:30": "13:01",
+        "13:30": "14:01",
+        "14:30": "15:01",
+        "15:30": "16:01",
+        "16:30": "17:01",
+        "17:30": "18:01",
+        "18:30": "19:01",
+        "19:30": "20:01",
+        "20:30": "21:01",
+        "21:30": "22:01"
+      },
+      {
+        "telford_bus_station_(stand_h)": "Donnington, opposite High Mount",
+        "07:30": "08:02",
+        "08:30": "09:02",
+        "09:30": "10:02",
+        "10:30": "11:02",
+        "11:30": "12:02",
+        "12:30": "13:02",
+        "13:30": "14:02",
+        "14:30": "15:02",
+        "15:30": "16:02",
+        "16:30": "17:02",
+        "17:30": "18:02",
+        "18:30": "19:02",
+        "19:30": "20:02",
+        "20:30": "21:02",
+        "21:30": "22:02"
+      },
+      {
+        "telford_bus_station_(stand_h)": "Donnington, adjacent to Asda",
+        "07:30": "08:03",
+        "08:30": "09:03",
+        "09:30": "10:03",
+        "10:30": "11:03",
+        "11:30": "12:03",
+        "12:30": "13:03",
+        "13:30": "14:03",
+        "14:30": "15:03",
+        "15:30": "16:03",
+        "16:30": "17:03",
+        "17:30": "18:03",
+        "18:30": "19:03",
+        "19:30": "20:03",
+        "20:30": "21:03",
+        "21:30": "22:03"
+      }
+    ]
   },
   "145829": {
     "id": 145829,
@@ -111580,6 +112398,745 @@
         "14:17": "14:40",
         "16:32": "16:55",
         "17:37": "18:00"
+      }
+    ]
+  },
+  "19712": {
+    "id": 19712,
+    "route_num": "X2",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#dc241f",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Madeley",
+    "outbound_destination": "Telford College",
+    "route_operators_data": [
+      {
+        "id": 978,
+        "operator_name": "Swift Connecting Shropshire",
+        "operator_slug": "swift-connecting-shropshire",
+        "operator_code": "SWSH"
+      }
+    ],
+    "linked_route": [
+      {
+        "id": 19711,
+        "route_num": "X3",
+        "route_name": ""
+      }
+    ],
+    "related_route": [],
+    "service_updates": [
+      {
+        "id": 2394,
+        "effected_route": [
+          {
+            "id": 91986,
+            "route_num": "100",
+            "inbound_destination": "Bus Station",
+            "outbound_destination": "Selbourne"
+          },
+          {
+            "id": 19712,
+            "route_num": "X2",
+            "inbound_destination": "Madeley",
+            "outbound_destination": "Telford College"
+          },
+          {
+            "id": 91965,
+            "route_num": "7",
+            "inbound_destination": "Wellington",
+            "outbound_destination": "Telford"
+          },
+          {
+            "id": 158679,
+            "route_num": "5C",
+            "inbound_destination": "Telford",
+            "outbound_destination": "Muxton - Donnington ASDA - Priorslee"
+          },
+          {
+            "id": 173925,
+            "route_num": "11B",
+            "inbound_destination": "Telford",
+            "outbound_destination": "Lightmoor"
+          },
+          {
+            "id": 173928,
+            "route_num": "11C",
+            "inbound_destination": "Lightmoor",
+            "outbound_destination": "Wellington"
+          },
+          {
+            "id": 19711,
+            "route_num": "X3",
+            "inbound_destination": "Madeley",
+            "outbound_destination": "Telford College"
+          }
+        ],
+        "start_date": "2026-06-08",
+        "end_date": "2026-06-08",
+        "update_title": "Timetable Updates",
+        "update_description": "From the 8th of June 2026, we will be altering timetables of all Travel Telford branded routes for better efficiency."
+      }
+    ],
+    "full_searchable_name": "X2 Madeley Telford College",
+    "route_colour_rgba": "rgba(220, 36, 31, 1)",
+    "timetable": [
+      {
+        "service": "Madeley Centre (Stand D)",
+        "x2": "08:25",
+        "x3": "08:15"
+      },
+      {
+        "service": "Madeley, before Maddocks",
+        "x2": "08:26",
+        "x3": ""
+      },
+      {
+        "service": "Madeley, adjacent to Cricket Ground",
+        "x2": "08:27",
+        "x3": ""
+      },
+      {
+        "service": "Madeley, before Lees Farm Roundabout",
+        "x2": "08:27",
+        "x3": ""
+      },
+      {
+        "service": "Woodside, after Lees Farm Roundabout",
+        "x2": "08:28",
+        "x3": ""
+      },
+      {
+        "service": "Woodside, adjacent to Abraham Darby School",
+        "x2": "08:28",
+        "x3": ""
+      },
+      {
+        "service": "Ironbridge, opposite Belmont Road",
+        "x2": "08:29",
+        "x3": ""
+      },
+      {
+        "service": "Ironbridge, opposite The Square",
+        "x2": "08:30",
+        "x3": ""
+      },
+      {
+        "service": "Ironbridge, opposite Dale End Car Park",
+        "x2": "08:31",
+        "x3": ""
+      },
+      {
+        "service": "Coalbrookdale, opposite Paradise",
+        "x2": "08:32",
+        "x3": ""
+      },
+      {
+        "service": "Coalbrookdale, opposite Post Office",
+        "x2": "08:33",
+        "x3": ""
+      },
+      {
+        "service": "Coalbrookdale, adjacent to Darby Road",
+        "x2": "08:34",
+        "x3": ""
+      },
+      {
+        "service": "Horsehay, opposite Croppings Park",
+        "x2": "08:36",
+        "x3": ""
+      },
+      {
+        "service": "Horsehay, adjacent to Lightmoor Square",
+        "x2": "08:37",
+        "x3": ""
+      },
+      {
+        "service": "Horsehay, adjacent to Woodlands Farm",
+        "x2": "08:37",
+        "x3": ""
+      },
+      {
+        "service": "Horsehay, opposite Myford House",
+        "x2": "08:38",
+        "x3": ""
+      },
+      {
+        "service": "Horsehay, adjacent to Foresters Arms",
+        "x2": "08:39",
+        "x3": ""
+      },
+      {
+        "service": "Horsehay, adjacent to Farm Lane",
+        "x2": "08:39",
+        "x3": ""
+      },
+      {
+        "service": "Dawley, opposite Pool Hill Road",
+        "x2": "08:40",
+        "x3": ""
+      },
+      {
+        "service": "Dawley Station Road (NE bound)",
+        "x2": "08:40",
+        "x3": ""
+      },
+      {
+        "service": "Dawley, adjacent to Heath Hill Industrial Estate",
+        "x2": "08:41",
+        "x3": ""
+      },
+      {
+        "service": "Dawley, opposite Old Office Road",
+        "x2": "08:41",
+        "x3": ""
+      },
+      {
+        "service": "Lawley, opposite Wall Close",
+        "x2": "08:42",
+        "x3": ""
+      },
+      {
+        "service": "Lawley, adjacent to Smallhill Road",
+        "x2": "08:42",
+        "x3": ""
+      },
+      {
+        "service": "Lawley, adjacent to Post Office",
+        "x2": "08:43",
+        "x3": ""
+      },
+      {
+        "service": "Lawley, adjacent to Glendale",
+        "x2": "08:43",
+        "x3": ""
+      },
+      {
+        "service": "Lawley, near Community Centre",
+        "x2": "08:44",
+        "x3": ""
+      },
+      {
+        "service": "Lawley, opposite Bartholomew Road",
+        "x2": "08:45",
+        "x3": ""
+      },
+      {
+        "service": "Madeley Centre (adj)",
+        "x2": "",
+        "x3": "08:16"
+      },
+      {
+        "service": "Madeley, adjacent to St Marys School",
+        "x2": "",
+        "x3": "08:17"
+      },
+      {
+        "service": "Madeley, adjacent to Miners Arms",
+        "x2": "",
+        "x3": "08:17"
+      },
+      {
+        "service": "Cuckoo Oak, opposite Fire Station",
+        "x2": "",
+        "x3": "08:18"
+      },
+      {
+        "service": "Cuckoo Oak, opposite Veterinary Surgery",
+        "x2": "",
+        "x3": "08:18"
+      },
+      {
+        "service": "Cuckoo Oak, opposite Severn Gorge Park",
+        "x2": "",
+        "x3": "08:19"
+      },
+      {
+        "service": "Brookside, opposite Brackenfield",
+        "x2": "",
+        "x3": "08:20"
+      },
+      {
+        "service": "Brookside, opposite Brindleyford",
+        "x2": "",
+        "x3": "08:20"
+      },
+      {
+        "service": "Aqueduct, opposite Ellis Peters Drive",
+        "x2": "",
+        "x3": "08:21"
+      },
+      {
+        "service": "Aqueduct, adjacent to Southall Corner",
+        "x2": "",
+        "x3": "08:22"
+      },
+      {
+        "service": "Dawley, opposite Finger Road Garage",
+        "x2": "",
+        "x3": "08:23"
+      },
+      {
+        "service": "Dawley Portley Corner (N bound)",
+        "x2": "",
+        "x3": "08:24"
+      },
+      {
+        "service": "Dawley, adjacent to High Street",
+        "x2": "",
+        "x3": "08:25"
+      },
+      {
+        "service": "Malins Lee, adjacent to Purbeckdale",
+        "x2": "",
+        "x3": "08:26"
+      },
+      {
+        "service": "Malins Lee, adjacent to St Leonards Church",
+        "x2": "",
+        "x3": "08:27"
+      },
+      {
+        "service": "Malins Lee, adjacent to Waggoner's Fold",
+        "x2": "",
+        "x3": "08:28"
+      },
+      {
+        "service": "Malins Lee, opposite Withywood Drive",
+        "x2": "",
+        "x3": "08:29"
+      },
+      {
+        "service": "Malins Lee, opposite Coachwell Close",
+        "x2": "",
+        "x3": "08:29"
+      },
+      {
+        "service": "Telford Bus Station (Stand A)",
+        "x2": "",
+        "x3": "08:31, 08:33"
+      },
+      {
+        "service": "Wellington, adjacent to Telford College",
+        "x2": "08:48",
+        "x3": "08:39"
+      }
+    ]
+  },
+  "173925": {
+    "id": 173925,
+    "route_num": "11B",
+    "route_name": "",
+    "route_details": {
+      "details": {
+        "cash": "false",
+        "contactless": "false",
+        "school_service": "false"
+      },
+      "route_colour": "#dc241f",
+      "route_text_colour": "#ffffff"
+    },
+    "inbound_destination": "Telford",
+    "outbound_destination": "Lightmoor",
+    "route_operators_data": [
+      {
+        "id": 978,
+        "operator_name": "Swift Connecting Shropshire",
+        "operator_slug": "swift-connecting-shropshire",
+        "operator_code": "SWSH"
+      }
+    ],
+    "linked_route": [
+      {
+        "id": 173928,
+        "route_num": "11C",
+        "route_name": ""
+      }
+    ],
+    "related_route": [
+      {
+        "id": 173928,
+        "route_num": "11C",
+        "route_name": "",
+        "inbound_destination": "Lightmoor",
+        "outbound_destination": "Wellington",
+        "route_operators": [
+          {
+            "id": 978,
+            "operator_name": "Swift Connecting Shropshire",
+            "operator_slug": "swift-connecting-shropshire",
+            "operator_code": "SWSH"
+          }
+        ]
+      }
+    ],
+    "service_updates": [
+      {
+        "id": 2394,
+        "effected_route": [
+          {
+            "id": 91986,
+            "route_num": "100",
+            "inbound_destination": "Bus Station",
+            "outbound_destination": "Selbourne"
+          },
+          {
+            "id": 19712,
+            "route_num": "X2",
+            "inbound_destination": "Madeley",
+            "outbound_destination": "Telford College"
+          },
+          {
+            "id": 91965,
+            "route_num": "7",
+            "inbound_destination": "Wellington",
+            "outbound_destination": "Telford"
+          },
+          {
+            "id": 158679,
+            "route_num": "5C",
+            "inbound_destination": "Telford",
+            "outbound_destination": "Muxton - Donnington ASDA - Priorslee"
+          },
+          {
+            "id": 173925,
+            "route_num": "11B",
+            "inbound_destination": "Telford",
+            "outbound_destination": "Lightmoor"
+          },
+          {
+            "id": 173928,
+            "route_num": "11C",
+            "inbound_destination": "Lightmoor",
+            "outbound_destination": "Wellington"
+          },
+          {
+            "id": 19711,
+            "route_num": "X3",
+            "inbound_destination": "Madeley",
+            "outbound_destination": "Telford College"
+          }
+        ],
+        "start_date": "2026-06-08",
+        "end_date": "2026-06-08",
+        "update_title": "Timetable Updates",
+        "update_description": "From the 8th of June 2026, we will be altering timetables of all Travel Telford branded routes for better efficiency."
+      }
+    ],
+    "full_searchable_name": "11B Telford Lightmoor",
+    "route_colour_rgba": "rgba(220, 36, 31, 1)",
+    "timetable": [
+      {
+        "service": "Telford Bus Station (Stand L)",
+        "11b": "17:30",
+        "11c": ""
+      },
+      {
+        "service": "Lawley, opposite The Grazing Cow",
+        "11b": "17:33",
+        "11c": ""
+      },
+      {
+        "service": "Lawley Academy (adj)",
+        "11b": "17:34",
+        "11c": ""
+      },
+      {
+        "service": "Lawley, before Proctor Avenue",
+        "11b": "17:35",
+        "11c": ""
+      },
+      {
+        "service": "Lawley, opposite Wall Close",
+        "11b": "17:36",
+        "11c": ""
+      },
+      {
+        "service": "Lawley, adjacent to Smallhill Road",
+        "11b": "17:36",
+        "11c": ""
+      },
+      {
+        "service": "Lawley, adjacent to Glendale",
+        "11b": "17:37",
+        "11c": ""
+      },
+      {
+        "service": "Lawley, near Community Centre",
+        "11b": "17:38",
+        "11c": ""
+      },
+      {
+        "service": "Lawley, opposite Primary School",
+        "11b": "17:38",
+        "11c": ""
+      },
+      {
+        "service": "Lawley, opposite Bartholomew Road",
+        "11b": "17:39",
+        "11c": ""
+      },
+      {
+        "service": "Dawley, adjacent to Old Office Road",
+        "11b": "17:41",
+        "11c": ""
+      },
+      {
+        "service": "Dawley, opposite Heath Hill Industrial Estate",
+        "11b": "17:41",
+        "11c": ""
+      },
+      {
+        "service": "Dawley Station Road (SW bound)",
+        "11b": "17:42",
+        "11c": ""
+      },
+      {
+        "service": "Dawley, adjacent to Pool Hill Road",
+        "11b": "17:42",
+        "11c": ""
+      },
+      {
+        "service": "Horsehay, opposite Farm Lane",
+        "11b": "17:43",
+        "11c": ""
+      },
+      {
+        "service": "Horsehay, opposite Foresters Arms",
+        "11b": "17:43",
+        "11c": ""
+      },
+      {
+        "service": "Horsehay, adjacent to Myford House",
+        "11b": "17:44",
+        "11c": ""
+      },
+      {
+        "service": "Horsehay, opposite Woodlands Farm",
+        "11b": "17:45",
+        "11c": ""
+      },
+      {
+        "service": "Horsehay, opposite Lightmoor Square",
+        "11b": "17:46",
+        "11c": "17:50"
+      },
+      {
+        "service": "Horsehay, adjacent to Croppings Park",
+        "11b": "",
+        "11c": "17:51"
+      },
+      {
+        "service": "Horsehay, opposite Myford House",
+        "11b": "",
+        "11c": "17:53"
+      },
+      {
+        "service": "Horsehay, adjacent to Foresters Arms",
+        "11b": "",
+        "11c": "17:54"
+      },
+      {
+        "service": "Horsehay, adjacent to Farm Lane",
+        "11b": "",
+        "11c": "17:54"
+      },
+      {
+        "service": "Dawley, opposite Pool Hill Road",
+        "11b": "",
+        "11c": "17:55"
+      },
+      {
+        "service": "Dawley Station Road (NE bound)",
+        "11b": "",
+        "11c": "17:55"
+      },
+      {
+        "service": "Dawley, adjacent to Heath Hill Industrial Estate",
+        "11b": "",
+        "11c": "17:56"
+      },
+      {
+        "service": "Dawley, opposite Old Office Road",
+        "11b": "",
+        "11c": "17:56"
+      },
+      {
+        "service": "Lawley, opposite Wall Close",
+        "11b": "",
+        "11c": "17:57"
+      },
+      {
+        "service": "Lawley, adjacent to Smallhill Road",
+        "11b": "",
+        "11c": "17:57"
+      },
+      {
+        "service": "Lawley, adjacent to Glendale",
+        "11b": "",
+        "11c": "17:58"
+      },
+      {
+        "service": "Lawley, near Community Centre",
+        "11b": "",
+        "11c": "17:59"
+      },
+      {
+        "service": "Lawley, opposite Primary School",
+        "11b": "",
+        "11c": "17:59"
+      },
+      {
+        "service": "Lawley, opposite Bartholomew Road",
+        "11b": "",
+        "11c": "18:00"
+      },
+      {
+        "service": "Lawley, opposite Morrisons",
+        "11b": "",
+        "11c": "18:01"
+      },
+      {
+        "service": "Lawley, adjacent to The Foxholes",
+        "11b": "",
+        "11c": "18:01"
+      },
+      {
+        "service": "Lawley, adjacent to Symon Fold",
+        "11b": "",
+        "11c": "18:02"
+      },
+      {
+        "service": "Lawley Churm Lane",
+        "11b": "",
+        "11c": "18:03"
+      },
+      {
+        "service": "Wrekin Retail Park, adjacent to Tesco Store",
+        "11b": "",
+        "11c": "18:05, 19:56"
+      },
+      {
+        "service": "Wellington Bennetts Bank (W bound)",
+        "11b": "",
+        "11c": "19:57"
+      },
+      {
+        "service": "Arleston, adjacent to Hornbeam Close",
+        "11b": "",
+        "11c": "19:58"
+      },
+      {
+        "service": "Arleston Windsor Road (southbound)",
+        "11b": "",
+        "11c": "19:58"
+      },
+      {
+        "service": "Arleston, adjacent to Harvey Crescent",
+        "11b": "",
+        "11c": "19:59"
+      },
+      {
+        "service": "Arleston Toll Road (SE bound)",
+        "11b": "",
+        "11c": "19:59"
+      },
+      {
+        "service": "Arleston Chartwell Road (northbound)",
+        "11b": "",
+        "11c": "20:00"
+      },
+      {
+        "service": "Arleston, opposite Woollam Road",
+        "11b": "",
+        "11c": "20:00"
+      },
+      {
+        "service": "Arleston Princess Avenue (westbound)",
+        "11b": "",
+        "11c": "20:01"
+      },
+      {
+        "service": "Arleston Kingsway Crescent (southbound)",
+        "11b": "",
+        "11c": "20:01"
+      },
+      {
+        "service": "Arleston, adjacent to Manor Road",
+        "11b": "",
+        "11c": "20:02"
+      },
+      {
+        "service": "Arleston Kingsland (N bound)",
+        "11b": "",
+        "11c": "20:02"
+      },
+      {
+        "service": "Arleston Bayley Road (westbound)",
+        "11b": "",
+        "11c": "20:03"
+      },
+      {
+        "service": "Arleston, opposite Valley Road",
+        "11b": "",
+        "11c": "20:03"
+      },
+      {
+        "service": "Arleston, opposite Hayes Road",
+        "11b": "",
+        "11c": "20:04"
+      },
+      {
+        "service": "Arleston, opposite Festival Gardens",
+        "11b": "",
+        "11c": "20:04"
+      },
+      {
+        "service": "Arleston, adjacent to Churchill Road",
+        "11b": "",
+        "11c": "20:05"
+      },
+      {
+        "service": "Arleston, opposite Primrose Grove",
+        "11b": "",
+        "11c": "20:05"
+      },
+      {
+        "service": "Wellington Cock Hotel (NW bound)",
+        "11b": "",
+        "11c": "20:06"
+      },
+      {
+        "service": "Wellington, adjacent to Cock Hotel",
+        "11b": "",
+        "11c": "20:06"
+      },
+      {
+        "service": "Wellington, adjacent to Princes Street",
+        "11b": "",
+        "11c": "20:07"
+      },
+      {
+        "service": "Wellington, adjacent to School Court",
+        "11b": "",
+        "11c": "20:07"
+      },
+      {
+        "service": "Wellington, opposite Constitution Hill",
+        "11b": "",
+        "11c": "20:08"
+      },
+      {
+        "service": "Wellington Bus Station (Stand A)",
+        "11b": "",
+        "11c": "20:09"
       }
     ]
   }

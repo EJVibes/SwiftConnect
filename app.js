@@ -363,7 +363,13 @@ function buildTableHtml(records) {
                             <thead><tr>`;
     
     headers.forEach(h => {
-        const formattedKey = h.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        let formattedKey = h.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        
+        // INTERCEPTOR: Hides "Bus 1", "Bus 2" columns dynamically
+        if (h.toLowerCase().startsWith('col_')) {
+            formattedKey = '';
+        }
+        
         tableHtml += `<th style="text-align: center; background-color: var(--primary); color: white; padding: 15px;">${formattedKey}</th>`;
     });
     tableHtml += `</tr></thead><tbody>`;

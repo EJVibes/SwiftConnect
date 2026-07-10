@@ -24,7 +24,6 @@ def load_existing_cache():
     return {}
 
 def parse_table_html(soup):
-    """Extracts rows and headers from the raw BeautifulSoup object."""
     tables = soup.find_all('table')
     if not tables: return []
     
@@ -39,11 +38,12 @@ def parse_table_html(soup):
             headers = [th.get_text(strip=True) for th in thead.find_all('th')]
         else:
             first_row_cells = rows[0].find_all(['th', 'td'])
-            if all(cell.name == 'th' for cell in first_row_cells):
+            if all(cell.name == 'th' for cell in first_row_cells) or (first_row_cells and first_row_cells[0].name == 'th'):
                 headers = [cell.get_text(strip=True) for cell in first_row_cells]
                 rows = rows[1:] 
             else:
-                headers = ["Stop Name"] + [f"Bus {i}" for i in range(1, len(first_row_cells))]
+                # Tags inverted tables with col_X so the JS knows to hide the headers
+                headers = ["Stop Name"] + [f"col_{i}" for i in range(1, len(first_row_cells))]
 
         for tr in rows:
             cells = tr.find_all(['td', 'th'])
@@ -52,7 +52,6 @@ def parse_table_html(soup):
             row_data = []
             for cell in cells:
                 text = cell.get_text(separator=", ", strip=True)
-                # Formats XX:XX, XX:XX into Arr/Dep
                 if re.search(r'(\d{2}:\d{2}),\s*(\d{2}:\d{2})', text):
                     text = re.sub(r'(\d{2}:\d{2}),\s*(\d{2}:\d{2})', r'\1 arr<br>\2 dep', text)
                 row_data.append(text)
@@ -60,13 +59,12 @@ def parse_table_html(soup):
             if row_data:
                 row_dict = {}
                 for i, val in enumerate(row_data):
-                    key = headers[i].lower().replace(" ", "_") if i < len(headers) else f"col_{i}"
+                    key = headers[i].lower().replace(" ", "_") if i < len(headers) and headers[i] else f"col_{i}"
                     row_dict[key] = val
                 all_rows.append(row_dict)
     return all_rows
 
 def scrape_html_timetable(route_url):
-    """Scrapes the default direction, then hunts for the opposite direction links."""
     directions_data = []
     try:
         full_url = f"{BASE_URL}{route_url}" if route_url.startswith("/") else route_url
@@ -74,47 +72,58 @@ def scrape_html_timetable(route_url):
         if response.status_code != 200: return []
         
         soup = BeautifulSoup(response.text, 'html.parser')
+        dir_links = {}
         
-        # 1. Parse Default Page
-        default_data = parse_table_html(soup)
-        if default_data:
-            active_dir_name = "Service Timetable"
-            selected_opt = soup.find('option', selected=True)
-            if selected_opt:
-                active_dir_name = selected_opt.get_text(strip=True)
-            
-            directions_data.append({
-                "direction": active_dir_name,
-                "data": default_data
-            })
-
-        # 2. Hunt for Inbound/Outbound Tabs
-        dir_urls = {}
-        for a in soup.find_all('a', href=True):
-            if 'direction=' in a['href'] and a['href'] not in route_url:
-                name = a.get_text(strip=True)
-                if name: dir_urls[name] = a['href']
-                
-        for opt in soup.find_all('option', value=True):
-            if 'direction=' in opt['value'] and not opt.has_attr('selected'):
-                name = opt.get_text(strip=True)
-                if name: dir_urls[name] = opt['value']
-
-        # 3. Scrape the discovered directions
-        for name, href in dir_urls.items():
-            print(f"    -> Scraping discovered direction: {name}")
-            dir_full = full_url.split("?")[0] + href if href.startswith("?") else (f"{BASE_URL}{href}" if href.startswith("/") else href)
-            
-            dir_res = requests.get(dir_full, headers=SCRAPE_HEADERS, timeout=15)
-            if dir_res.status_code == 200:
-                dir_soup = BeautifulSoup(dir_res.text, 'html.parser')
-                dir_data = parse_table_html(dir_soup)
-                if dir_data:
-                    directions_data.append({
-                        "direction": name,
-                        "data": dir_data
-                    })
+        # 1. Aggressively hunt for the direction dropdown menu
+        selects = soup.find_all('select')
+        for select in selects:
+            options = select.find_all('option')
+            if len(options) > 0:
+                for opt in options:
+                    val = opt.get('value', '')
+                    name = opt.get_text(strip=True)
                     
+                    # Regex to completely strip dates out of the title
+                    name = re.sub(r'\s*\(.*?\)', '', name).strip()
+                    name = re.sub(r'\s*[-–]\s*\d{1,2}[/\\]\d{1,2}[/\\]\d{2,4}.*', '', name).strip()
+                    
+                    if val and name:
+                        if not val.startswith("?") and not val.startswith("/") and not val.startswith("http"):
+                            val = f"?direction={val}"
+                        dir_links[name] = val
+                break 
+
+        # 2. If no dropdown, check for tabbed links
+        if not dir_links:
+            for a in soup.find_all('a', href=True):
+                href = a['href']
+                if 'direction=' in href or 'dir=' in href:
+                    name = a.get_text(strip=True)
+                    name = re.sub(r'\s*\(.*?\)', '', name).strip()
+                    if name: dir_links[name] = href
+
+        # 3. Process the discovered directions
+        if not dir_links:
+            data = parse_table_html(soup)
+            if data:
+                directions_data.append({"direction": "Timetable", "data": data})
+        else:
+            for name, href in dir_links.items():
+                print(f"    -> Scraping discovered direction: {name}")
+                if href.startswith("?"):
+                    dir_full = full_url.split("?")[0] + href
+                elif href.startswith("/"):
+                    dir_full = f"{BASE_URL}{href}"
+                else:
+                    dir_full = href
+                    
+                dir_res = requests.get(dir_full, headers=SCRAPE_HEADERS, timeout=15)
+                if dir_res.status_code == 200:
+                    dir_soup = BeautifulSoup(dir_res.text, 'html.parser')
+                    dir_data = parse_table_html(dir_soup)
+                    if dir_data:
+                        directions_data.append({"direction": name, "data": dir_data})
+                        
         return directions_data
     except Exception as e:
         print(f"  -> Failed parsing HTML structure: {e}")

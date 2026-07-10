@@ -288,19 +288,30 @@ async function fetchExpressRoutes() {
 }
 
 function renderRouteList(routes, container) {
-    if (!routes || routes.length === 0) {
+    // FILTERS OUT ROUTES WITH '?' OR MARKED AS HIDDEN
+    let filteredRoutes = routes.filter(r => {
+        const num = (r.route_num || '').toString().trim();
+        const name = (r.route_name || '').toString().toLowerCase();
+        
+        if (num === '?') return false;
+        if (r.hidden === true || r.is_hidden === true || name.includes('hidden')) return false;
+        
+        return true;
+    });
+
+    if (!filteredRoutes || filteredRoutes.length === 0) {
         container.innerHTML = '<p style="color: var(--secondary);">No active routes found for this division.</p>';
         return;
     }
 
-    routes.sort((a, b) => {
+    filteredRoutes.sort((a, b) => {
         const numA = a.route_num ? a.route_num.toString() : '';
         const numB = b.route_num ? b.route_num.toString() : '';
         return numA.localeCompare(numB, undefined, {numeric: true, sensitivity: 'base'});
     });
 
     let html = '';
-    routes.forEach(r => {
+    filteredRoutes.forEach(r => {
         const routeId = r.id || '';
         const routeNum = r.route_num || '?';
         const routeName = r.route_name ? ` (${r.route_name})` : '';
@@ -339,13 +350,13 @@ async function fetchAndRenderTimetable(routeId) {
     try {
         let records = [];
 
-        // 1. Check Python static cache first
+        // ALWAYS check the static Python-generated cache first to bypass CORS completely
         await ensureGlobalRouteCacheLoaded();
         if (SWIFT_ROUTE_CACHE[routeId] && Array.isArray(SWIFT_ROUTE_CACHE[routeId].timetable) && SWIFT_ROUTE_CACHE[routeId].timetable.length > 0) {
             records = SWIFT_ROUTE_CACHE[routeId].timetable;
         }
 
-        // 2. If empty, browser fetches via a secure CORS Proxy bridge to bypass the security block
+        // If the cache is empty, attempt a secure dynamic fetch through an API proxy
         if (records.length === 0) {
             const urlsToTry = [
                 `https://www.mybustimes.cc/api/get_timetables/?route_id=${routeId}`,
@@ -354,13 +365,11 @@ async function fetchAndRenderTimetable(routeId) {
 
             for (const url of urlsToTry) {
                 try {
-                    // allorigins.win proxies the API so the browser allows the download
                     const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
                     const res = await fetch(proxyUrl);
                     if (res.ok) {
                         const data = await res.json();
                         
-                        // Array hunter
                         if (Array.isArray(data)) records = data;
                         else if (data.results && Array.isArray(data.results)) records = data.results;
                         else if (data.data && Array.isArray(data.data)) records = data.data;
@@ -382,8 +391,15 @@ async function fetchAndRenderTimetable(routeId) {
             `;
         }
 
-        // Generic Table Builder - Extracts headers dynamically
-        let headers = Object.keys(records[0]).filter(k => typeof records[0][k] !== 'object' && !Array.isArray(records[0][k]));
+        // Generic Table Builder - Extracts headers dynamically across ALL tables in case inbound/outbound columns differ
+        let headersSet = new Set();
+        records.forEach(row => {
+            Object.keys(row).forEach(k => {
+                if (typeof row[k] !== 'object' && !Array.isArray(row[k])) headersSet.add(k);
+            });
+        });
+        
+        let headers = Array.from(headersSet);
         if (headers.length === 0) headers = Object.keys(records[0]);
         
         let tableHtml = `<div style="overflow-x: auto; border-radius: var(--radius-soft); border: 1px solid #edf2f7;"><table class="route-data-table" style="margin: 0; width: 100%; text-align: center; white-space: nowrap;"><thead><tr>`;
@@ -439,6 +455,13 @@ async function initRoutePage() {
         const res = await fetch(`https://www.mybustimes.cc/api/operator/route/${routeId}/`);
         if (!res.ok) throw new Error("Could not fetch route");
         const data = await res.json();
+
+        // Safety Filter: If someone directly accesses a hidden route URL, kick them back out
+        const num = (data.route_num || '').toString().trim();
+        const name = (data.route_name || '').toString().toLowerCase();
+        if (num === '?' || data.hidden === true || data.is_hidden === true || name.includes('hidden')) {
+            throw new Error("Route is marked as hidden or unassigned.");
+        }
 
         function extractOperatorName(obj) {
             if (obj === null || typeof obj !== 'object') return null;

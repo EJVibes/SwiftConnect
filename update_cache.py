@@ -42,7 +42,6 @@ def parse_table_html(soup):
                 headers = [cell.get_text(strip=True) for cell in first_row_cells]
                 rows = rows[1:] 
             else:
-                # Tags inverted tables with col_X so the JS knows to hide the headers
                 headers = ["Stop Name"] + [f"col_{i}" for i in range(1, len(first_row_cells))]
 
         for tr in rows:
@@ -74,7 +73,6 @@ def scrape_html_timetable(route_url):
         soup = BeautifulSoup(response.text, 'html.parser')
         dir_links = {}
         
-        # 1. Aggressively hunt for the direction dropdown menu
         selects = soup.find_all('select')
         for select in selects:
             options = select.find_all('option')
@@ -82,8 +80,6 @@ def scrape_html_timetable(route_url):
                 for opt in options:
                     val = opt.get('value', '')
                     name = opt.get_text(strip=True)
-                    
-                    # Regex to completely strip dates out of the title
                     name = re.sub(r'\s*\(.*?\)', '', name).strip()
                     name = re.sub(r'\s*[-–]\s*\d{1,2}[/\\]\d{1,2}[/\\]\d{2,4}.*', '', name).strip()
                     
@@ -93,7 +89,6 @@ def scrape_html_timetable(route_url):
                         dir_links[name] = val
                 break 
 
-        # 2. If no dropdown, check for tabbed links
         if not dir_links:
             for a in soup.find_all('a', href=True):
                 href = a['href']
@@ -102,13 +97,20 @@ def scrape_html_timetable(route_url):
                     name = re.sub(r'\s*\(.*?\)', '', name).strip()
                     if name: dir_links[name] = href
 
-        # 3. Process the discovered directions
-        if not dir_links:
+        # Deduplicate links to prevent infinite loops or bloated repeated scans
+        unique_urls = set()
+        filtered_links = {}
+        for name, href in dir_links.items():
+            if href not in unique_urls:
+                unique_urls.add(href)
+                filtered_links[name] = href
+
+        if not filtered_links:
             data = parse_table_html(soup)
             if data:
                 directions_data.append({"direction": "Timetable", "data": data})
         else:
-            for name, href in dir_links.items():
+            for name, href in filtered_links.items():
                 print(f"    -> Scraping discovered direction: {name}")
                 if href.startswith("?"):
                     dir_full = full_url.split("?")[0] + href
@@ -130,7 +132,7 @@ def scrape_html_timetable(route_url):
         return []
 
 def main():
-    print("Initiating FORCE RE-SCRAPE of all routes...")
+    print("Initiating FORCE RE-SCRAPE of all routes (with strict data limits)...")
     route_cache = load_existing_cache()
     
     try:
@@ -158,32 +160,48 @@ def main():
         try:
             api_res = requests.get(f"https://www.mybustimes.cc/api/operator/route/{route_id}/", timeout=10)
             if api_res.status_code == 200:
-                route_data = api_res.json()
+                raw_data = api_res.json()
                 
-                route_num = str(route_data.get("route_num", "")).strip()
-                route_name = str(route_data.get("route_name", "")).strip().lower()
-                is_hidden = route_data.get("hidden") or route_data.get("is_hidden") or "hidden" in route_name
+                route_num = str(raw_data.get("route_num", "")).strip()
+                route_name = str(raw_data.get("route_name", "")).strip().lower()
+                is_hidden = raw_data.get("hidden") or raw_data.get("is_hidden") or "hidden" in route_name
                 
                 if route_num == "?" or is_hidden:
                     print(f"  -> Skipping HTML scrape. Route is hidden.")
-                    route_data["timetable"] = []
+                    continue
+                
+                # --- THE DATA DIET ---
+                # We surgically extract ONLY the fields we need and throw away everything else (like giant map coordinates)
+                slim_route_data = {
+                    "id": raw_data.get("id", route_id),
+                    "route_num": raw_data.get("route_num", ""),
+                    "route_name": raw_data.get("route_name", ""),
+                    "inbound_destination": raw_data.get("inbound_destination", ""),
+                    "outbound_destination": raw_data.get("outbound_destination", ""),
+                    "operator_name": raw_data.get("operator_name") or raw_data.get("operator", ""),
+                    "route_colour": raw_data.get("route_colour", ""),
+                    "timetable": []
+                }
+                
+                timetable_matrix = scrape_html_timetable(route_url)
+                slim_route_data["timetable"] = timetable_matrix
+                
+                if timetable_matrix:
+                    print(f"  -> SUCCESS: Scraped {len(timetable_matrix)} directional sets.")
                 else:
-                    timetable_matrix = scrape_html_timetable(route_url)
-                    route_data["timetable"] = timetable_matrix
-                    if timetable_matrix:
-                        print(f"  -> SUCCESS: Scraped {len(timetable_matrix)} directional sets.")
-                    else:
-                        print("  -> FAILED: Timetable array is empty.")
+                    print("  -> FAILED: Timetable array is empty.")
                     
-                route_cache[route_id] = route_data
+                route_cache[route_id] = slim_route_data
             else:
                 print(f"  -> Skipping route {route_id}: API status {api_res.status_code}")
         except Exception as e:
             print(f"  -> Error during synchronization: {e}")
 
     try:
+        # --- THE MINIFIER ---
+        # separators=(',', ':') removes all blank spaces and compresses the file size significantly
         with open(CACHE_FILE_NAME, "w", encoding="utf-8") as f:
-            json.dump(route_cache, f, indent=2, ensure_ascii=False)
+            json.dump(route_cache, f, separators=(',', ':'), ensure_ascii=False)
         print(f"\nForce sync complete. Static registry holds {len(route_cache)} entries.")
     except Exception as e:
         print(f"\nFile writing block error: {e}")

@@ -27,112 +27,111 @@ def parse_table_html(soup):
     tables = soup.find_all('table')
     if not tables: return []
     
-    all_rows = []
+    all_directions = []
+    
     for table in tables:
         rows = table.find_all('tr')
         if not rows: continue
         
-        headers = []
-        thead = table.find('thead')
-        if thead:
-            headers = [th.get_text(strip=True) for th in thead.find_all('th')]
-        else:
-            first_row_cells = rows[0].find_all(['th', 'td'])
-            if all(cell.name == 'th' for cell in first_row_cells) or (first_row_cells and first_row_cells[0].name == 'th'):
-                headers = [cell.get_text(strip=True) for cell in first_row_cells]
-                rows = rows[1:] 
-            else:
-                headers = ["Stop Name"] + [f"col_{i}" for i in range(1, len(first_row_cells))]
-
+        # 1. Build a raw grid of all text in the table
+        raw_grid = []
         for tr in rows:
             cells = tr.find_all(['td', 'th'])
-            if not cells: continue
-            
-            row_data = []
+            row_text = []
             for cell in cells:
                 text = cell.get_text(separator=", ", strip=True)
+                # Format arr/dep times cleanly
                 if re.search(r'(\d{2}:\d{2}),\s*(\d{2}:\d{2})', text):
                     text = re.sub(r'(\d{2}:\d{2}),\s*(\d{2}:\d{2})', r'\1 arr<br>\2 dep', text)
-                row_data.append(text)
+                row_text.append(text)
                 
-            if row_data:
-                row_dict = {}
-                for i, val in enumerate(row_data):
-                    key = headers[i].lower().replace(" ", "_") if i < len(headers) and headers[i] else f"col_{i}"
-                    row_dict[key] = val
-                all_rows.append(row_dict)
-    return all_rows
+            # Keep rows that aren't completely blank
+            if any(t and t != "-" for t in row_text):
+                raw_grid.append(row_text)
+
+        if not raw_grid: continue
+
+        # 2. Smart Column Profiler: Detect which columns are Stop Names vs Times
+        num_cols = max(len(r) for r in raw_grid)
+        label_indices = []
+        
+        for col_idx in range(num_cols):
+            time_count, text_count = 0, 0
+            for row in raw_grid:
+                if col_idx < len(row):
+                    val = row[col_idx]
+                    if val and val != "-":
+                        if re.search(r'\d{1,2}:\d{2}', val):
+                            time_count += 1
+                        else:
+                            text_count += 1
+            
+            # If a column is primarily text, it is a Stop Name column
+            if text_count > time_count or (time_count == 0 and text_count > 0):
+                label_indices.append(col_idx)
+                
+        if not label_indices:
+            label_indices = [0]
+
+        # 3. Slice the horizontal table into individual directions
+        for idx_pos, start_col in enumerate(label_indices):
+            # Cut from this Stop Name column up to the next Stop Name column
+            end_col = label_indices[idx_pos + 1] if idx_pos + 1 < len(label_indices) else num_cols
+            
+            dir_rows = []
+            headers = ["stop_name"] + [f"col_{i}" for i in range(1, end_col - start_col)]
+            last_valid_stop = ""
+            
+            for row in raw_grid:
+                while len(row) < end_col: row.append("-") # Pad uneven rows
+                
+                sub_row = row[start_col:end_col]
+                stop_name = sub_row[0]
+                
+                # Filter out generic website headers from becoming data rows
+                if stop_name.lower() in ["stop name", "stops", "bus stop"]:
+                    continue
+                    
+                if stop_name and stop_name != "-":
+                    row_dict = {}
+                    has_times = False
+                    for i, val in enumerate(sub_row):
+                        key = headers[i] if i < len(headers) else f"col_{i}"
+                        row_dict[key] = val
+                        if i > 0 and val != "-": has_times = True
+                        
+                    # Only append the row if this specific direction has times scheduled
+                    if has_times:
+                        dir_rows.append(row_dict)
+                        last_valid_stop = stop_name
+
+            if dir_rows:
+                # Dynamically generate the clean title (e.g. "Towards Aeropuerto Norte")
+                dest = last_valid_stop.title()
+                dir_name = f"Towards {dest}" if dest else "Timetable"
+                all_directions.append({
+                    "direction": dir_name,
+                    "data": dir_rows
+                })
+
+    return all_directions
 
 def scrape_html_timetable(route_url):
-    directions_data = []
+    """Fetches the page and runs the smart parsing logic directly."""
     try:
         full_url = f"{BASE_URL}{route_url}" if route_url.startswith("/") else route_url
         response = requests.get(full_url, headers=SCRAPE_HEADERS, timeout=15)
         if response.status_code != 200: return []
         
         soup = BeautifulSoup(response.text, 'html.parser')
-        dir_links = {}
-        
-        selects = soup.find_all('select')
-        for select in selects:
-            options = select.find_all('option')
-            if len(options) > 0:
-                for opt in options:
-                    val = opt.get('value', '')
-                    name = opt.get_text(strip=True)
-                    name = re.sub(r'\s*\(.*?\)', '', name).strip()
-                    name = re.sub(r'\s*[-–]\s*\d{1,2}[/\\]\d{1,2}[/\\]\d{2,4}.*', '', name).strip()
-                    
-                    if val and name:
-                        if not val.startswith("?") and not val.startswith("/") and not val.startswith("http"):
-                            val = f"?direction={val}"
-                        dir_links[name] = val
-                break 
-
-        if not dir_links:
-            for a in soup.find_all('a', href=True):
-                href = a['href']
-                if 'direction=' in href or 'dir=' in href:
-                    name = a.get_text(strip=True)
-                    name = re.sub(r'\s*\(.*?\)', '', name).strip()
-                    if name: dir_links[name] = href
-
-        # Deduplicate links to prevent infinite loops or bloated repeated scans
-        unique_urls = set()
-        filtered_links = {}
-        for name, href in dir_links.items():
-            if href not in unique_urls:
-                unique_urls.add(href)
-                filtered_links[name] = href
-
-        if not filtered_links:
-            data = parse_table_html(soup)
-            if data:
-                directions_data.append({"direction": "Timetable", "data": data})
-        else:
-            for name, href in filtered_links.items():
-                print(f"    -> Scraping discovered direction: {name}")
-                if href.startswith("?"):
-                    dir_full = full_url.split("?")[0] + href
-                elif href.startswith("/"):
-                    dir_full = f"{BASE_URL}{href}"
-                else:
-                    dir_full = href
-                    
-                dir_res = requests.get(dir_full, headers=SCRAPE_HEADERS, timeout=15)
-                if dir_res.status_code == 200:
-                    dir_soup = BeautifulSoup(dir_res.text, 'html.parser')
-                    dir_data = parse_table_html(dir_soup)
-                    if dir_data:
-                        directions_data.append({"direction": name, "data": dir_data})
-                        
-        return directions_data
+        # We no longer need to scrape dates/tabs because the page holds all directions side-by-side
+        return parse_table_html(soup)
     except Exception as e:
         print(f"  -> Failed parsing HTML structure: {e}")
         return []
 
 def main():
-    print("Initiating FORCE RE-SCRAPE of all routes (with strict data limits)...")
+    print("Initiating FORCE RE-SCRAPE of all routes (Horizontal Splitter Active)...")
     route_cache = load_existing_cache()
     
     try:
@@ -170,8 +169,6 @@ def main():
                     print(f"  -> Skipping HTML scrape. Route is hidden.")
                     continue
                 
-                # --- THE DATA DIET ---
-                # We surgically extract ONLY the fields we need and throw away everything else (like giant map coordinates)
                 slim_route_data = {
                     "id": raw_data.get("id", route_id),
                     "route_num": raw_data.get("route_num", ""),
@@ -198,8 +195,6 @@ def main():
             print(f"  -> Error during synchronization: {e}")
 
     try:
-        # --- THE MINIFIER ---
-        # separators=(',', ':') removes all blank spaces and compresses the file size significantly
         with open(CACHE_FILE_NAME, "w", encoding="utf-8") as f:
             json.dump(route_cache, f, separators=(',', ':'), ensure_ascii=False)
         print(f"\nForce sync complete. Static registry holds {len(route_cache)} entries.")

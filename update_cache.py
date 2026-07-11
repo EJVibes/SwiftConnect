@@ -33,173 +33,120 @@ def parse_table_html(soup):
         rows = table.find_all('tr')
         if not rows: continue
         
-        # 1. Build a raw grid of all text in the table
         raw_grid = []
         for tr in rows:
             cells = tr.find_all(['td', 'th'])
             row_text = []
             for cell in cells:
                 text = cell.get_text(separator=", ", strip=True)
-                # Format arr/dep times cleanly
                 if re.search(r'(\d{2}:\d{2}),\s*(\d{2}:\d{2})', text):
                     text = re.sub(r'(\d{2}:\d{2}),\s*(\d{2}:\d{2})', r'\1 arr<br>\2 dep', text)
                 row_text.append(text)
-                
-            # Keep rows that aren't completely blank
-            if any(t and t != "-" for t in row_text):
-                raw_grid.append(row_text)
+            if any(t and t != "-" for t in row_text): raw_grid.append(row_text)
 
         if not raw_grid: continue
 
-        # 2. Smart Column Profiler: Detect which columns are Stop Names vs Times
         num_cols = max(len(r) for r in raw_grid)
         label_indices = []
-        
         for col_idx in range(num_cols):
             time_count, text_count = 0, 0
             for row in raw_grid:
                 if col_idx < len(row):
                     val = row[col_idx]
                     if val and val != "-":
-                        if re.search(r'\d{1,2}:\d{2}', val):
-                            time_count += 1
-                        else:
-                            text_count += 1
-            
-            # If a column is primarily text, it is a Stop Name column
-            if text_count > time_count or (time_count == 0 and text_count > 0):
-                label_indices.append(col_idx)
+                        if re.search(r'\d{1,2}:\d{2}', val): time_count += 1
+                        else: text_count += 1
+            if text_count > time_count or (time_count == 0 and text_count > 0): label_indices.append(col_idx)
                 
-        if not label_indices:
-            label_indices = [0]
+        if not label_indices: label_indices = [0]
 
-        # 3. Slice the horizontal table into individual directions
         for idx_pos, start_col in enumerate(label_indices):
-            # Cut from this Stop Name column up to the next Stop Name column
             end_col = label_indices[idx_pos + 1] if idx_pos + 1 < len(label_indices) else num_cols
-            
             dir_rows = []
             headers = ["stop_name"] + [f"col_{i}" for i in range(1, end_col - start_col)]
             last_valid_stop = ""
             
             for row in raw_grid:
-                while len(row) < end_col: row.append("-") # Pad uneven rows
-                
+                while len(row) < end_col: row.append("-")
                 sub_row = row[start_col:end_col]
                 stop_name = sub_row[0]
-                
-                # Filter out generic website headers from becoming data rows
-                if stop_name.lower() in ["stop name", "stops", "bus stop"]:
-                    continue
-                    
+                if stop_name.lower() in ["stop name", "stops", "bus stop"]: continue
                 if stop_name and stop_name != "-":
                     row_dict = {}
                     has_times = False
                     for i, val in enumerate(sub_row):
-                        key = headers[i] if i < len(headers) else f"col_{i}"
+                        key = headers[i].lower().replace(" ", "_") if i < len(headers) and headers[i] else f"col_{i}"
                         row_dict[key] = val
                         if i > 0 and val != "-": has_times = True
-                        
-                    # Only append the row if this specific direction has times scheduled
                     if has_times:
                         dir_rows.append(row_dict)
                         last_valid_stop = stop_name
 
             if dir_rows:
-                # Dynamically generate the clean title (e.g. "Towards Aeropuerto Norte")
                 dest = last_valid_stop.title()
-                dir_name = f"Towards {dest}" if dest else "Timetable"
-                all_directions.append({
-                    "direction": dir_name,
-                    "data": dir_rows
-                })
-
+                all_directions.append({"direction": f"Towards {dest}" if dest else "Timetable", "data": dir_rows})
     return all_directions
 
 def scrape_html_timetable(route_url):
-    """Fetches the page and runs the smart parsing logic directly."""
     try:
         full_url = f"{BASE_URL}{route_url}" if route_url.startswith("/") else route_url
         response = requests.get(full_url, headers=SCRAPE_HEADERS, timeout=15)
         if response.status_code != 200: return []
-        
         soup = BeautifulSoup(response.text, 'html.parser')
-        # We no longer need to scrape dates/tabs because the page holds all directions side-by-side
-        return parse_table_html(soup)
+        dir_links = {}
+        
+        selects = soup.find_all('select')
+        for select in selects:
+            for opt in select.find_all('option'):
+                val, name = opt.get('value', ''), opt.get_text(strip=True)
+                name = re.sub(r'\s*\(.*?\)', '', name).strip()
+                name = re.sub(r'\s*[-–]\s*\d{1,2}[/\\]\d{1,2}[/\\]\d{2,4}.*', '', name).strip()
+                if val and name:
+                    if not val.startswith("?") and not val.startswith("/") and not val.startswith("http"): val = f"?direction={val}"
+                    dir_links[name] = val
+            break 
+
+        if not dir_links:
+            for a in soup.find_all('a', href=True):
+                if 'direction=' in a['href'] or 'dir=' in a['href']:
+                    name = re.sub(r'\s*\(.*?\)', '', a.get_text(strip=True)).strip()
+                    if name: dir_links[name] = a['href']
+
+        if not dir_links:
+            data = parse_table_html(soup)
+            if data: return data
+        else:
+            final_data = []
+            for name, href in {k: v for k, v in dir_links.items()}.items():
+                dir_full = (full_url.split("?")[0] + href) if href.startswith("?") else (f"{BASE_URL}{href}" if href.startswith("/") else href)
+                dir_res = requests.get(dir_full, headers=SCRAPE_HEADERS, timeout=15)
+                if dir_res.status_code == 200:
+                    dir_data = parse_table_html(BeautifulSoup(dir_res.text, 'html.parser'))
+                    if dir_data: final_data.extend(dir_data)
+            return final_data
+        return []
     except Exception as e:
-        print(f"  -> Failed parsing HTML structure: {e}")
+        print(f"  -> Failed: {e}")
         return []
 
 def main():
-    print("Initiating FORCE RE-SCRAPE of all routes (Horizontal Splitter Active)...")
+    print("Initiating FORCE RE-SCRAPE...")
     route_cache = load_existing_cache()
-    
     try:
-        response = requests.get(VEHICLES_API_URL, timeout=15)
-        response.raise_for_status()
-        data = response.json()
+        data = requests.get(VEHICLES_API_URL, timeout=15).json()
         vehicles = data.get("results", data) if isinstance(data, dict) else data
-    except Exception as e:
-        print(f"Network error: Could not fetch active tracking fleet: {e}")
-        return
-
-    discovered_routes = {}
-    for record in vehicles:
-        service = record.get("service") or {}
-        url_path = service.get("url") or ""
-        match = re.search(r"/route/(\d+)/?", url_path)
-        if match:
-            route_id = match.group(1)
-            discovered_routes[route_id] = url_path
-
-    print(f"Discovered {len(discovered_routes)} operational routes.")
-
-    for route_id, route_url in discovered_routes.items():
-        print(f"\nForce Syncing Route ID: {route_id}")
+    except Exception as e: return
+    discovered = {}
+    for r in vehicles:
+        m = re.search(r"/route/(\d+)/?", r.get("service", {}).get("url", ""))
+        if m: discovered[m.group(1)] = r.get("service", {}).get("url", "")
+    for route_id, route_url in discovered.items():
         try:
-            api_res = requests.get(f"https://www.mybustimes.cc/api/operator/route/{route_id}/", timeout=10)
-            if api_res.status_code == 200:
-                raw_data = api_res.json()
-                
-                route_num = str(raw_data.get("route_num", "")).strip()
-                route_name = str(raw_data.get("route_name", "")).strip().lower()
-                is_hidden = raw_data.get("hidden") or raw_data.get("is_hidden") or "hidden" in route_name
-                
-                if route_num == "?" or is_hidden:
-                    print(f"  -> Skipping HTML scrape. Route is hidden.")
-                    continue
-                
-                slim_route_data = {
-                    "id": raw_data.get("id", route_id),
-                    "route_num": raw_data.get("route_num", ""),
-                    "route_name": raw_data.get("route_name", ""),
-                    "inbound_destination": raw_data.get("inbound_destination", ""),
-                    "outbound_destination": raw_data.get("outbound_destination", ""),
-                    "operator_name": raw_data.get("operator_name") or raw_data.get("operator", ""),
-                    "route_colour": raw_data.get("route_colour", ""),
-                    "timetable": []
-                }
-                
-                timetable_matrix = scrape_html_timetable(route_url)
-                slim_route_data["timetable"] = timetable_matrix
-                
-                if timetable_matrix:
-                    print(f"  -> SUCCESS: Scraped {len(timetable_matrix)} directional sets.")
-                else:
-                    print("  -> FAILED: Timetable array is empty.")
-                    
-                route_cache[route_id] = slim_route_data
-            else:
-                print(f"  -> Skipping route {route_id}: API status {api_res.status_code}")
-        except Exception as e:
-            print(f"  -> Error during synchronization: {e}")
-
-    try:
-        with open(CACHE_FILE_NAME, "w", encoding="utf-8") as f:
-            json.dump(route_cache, f, separators=(',', ':'), ensure_ascii=False)
-        print(f"\nForce sync complete. Static registry holds {len(route_cache)} entries.")
-    except Exception as e:
-        print(f"\nFile writing block error: {e}")
-
-if __name__ == "__main__":
-    main()
+            raw = requests.get(f"https://www.mybustimes.cc/api/operator/route/{route_id}/", timeout=10).json()
+            if str(raw.get("route_num", "")).strip() == "?" or raw.get("hidden"): continue
+            slim = {k: raw.get(k, "") for k in ["id", "route_num", "route_name", "inbound_destination", "outbound_destination", "operator_name", "route_colour"]}
+            slim["timetable"] = scrape_html_timetable(route_url)
+            route_cache[route_id] = slim
+        except Exception as e: print(f"Error {route_id}: {e}")
+    with open(CACHE_FILE_NAME, "w", encoding="utf-8") as f: json.dump(route_cache, f, separators=(',', ':'), ensure_ascii=False)
+if __name__ == "__main__": main()

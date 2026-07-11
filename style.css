@@ -729,4 +729,24 @@ a.card:hover {
     .route-pill {
         flex: 1 1 100%;
     }
+
+   /* ==========================================
+   GLOBAL WARNING BANNER
+   ========================================== */
+.fictional-warning-banner {
+    background-color: #dc2626; /* Bright Red */
+    color: #ffffff;
+    text-align: center;
+    padding: 12px 20px;
+    font-size: 1.15rem;
+    font-family: system-ui, -apple-system, sans-serif;
+    font-weight: 900; /* Extra bold */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 999999; /* Forces it above all maps, headers, and menus */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+   }
 }

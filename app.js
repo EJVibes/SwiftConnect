@@ -16,9 +16,16 @@ document.addEventListener("DOMContentLoaded", () => {
 function injectGlobalStyling() {
     const style = document.createElement('style');
     style.innerHTML = `
+        /* Warning Banner */
         .fictional-warning-banner { background-color: #dc2626; color: #ffffff; text-align: center; padding: 12px 20px; font-size: 1.15rem; font-family: system-ui, -apple-system, sans-serif; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; width: 100%; position: sticky; top: 0; z-index: 999999; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
-        .route-page-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-        @media (max-width: 960px) { .route-page-layout { grid-template-columns: 1fr; } }
+        
+        /* Layout Fixes: minmax(0, 1fr) is critical to stop tables from clipping off-screen */
+        .route-page-layout { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: 30px; width: 100%; }
+        @media (max-width: 1200px) { .route-page-layout { grid-template-columns: 1fr; } }
+        
+        .timetable-column { min-width: 0; } /* Prevents CSS Grid blowout */
+        .map-column { min-width: 0; }
+
         .day-tabs-container { display: flex; gap: 10px; margin-bottom: 25px; overflow-x: auto; padding-bottom: 10px; }
         .day-tab-btn { padding: 12px 24px; background: #e2e8f0; color: #1e293b; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.95rem; white-space: nowrap; transition: 0.2s; }
         .day-tab-btn:hover { background: #cbd5e1; }
@@ -26,6 +33,22 @@ function injectGlobalStyling() {
         .route-detail-map { height: 750px; width: 100%; border-radius: 12px; position: sticky; top: 80px; z-index: 1; border: 2px solid #edf2f7; background: #f8fafc; }
     `;
     document.head.appendChild(style);
+
+    // Aggressive override to make the route page take up the FULL width of the monitor
+    if (window.location.pathname.includes('/route')) {
+        const fullWidthStyle = document.createElement('style');
+        fullWidthStyle.innerHTML = `
+            body, html { overflow-x: hidden; }
+            main, .container, .wrapper, #route-detail-container { 
+                max-width: 96% !important; 
+                width: 100% !important; 
+                margin: 0 auto !important; 
+                padding-left: 2% !important;
+                padding-right: 2% !important;
+            }
+        `;
+        document.head.appendChild(fullWidthStyle);
+    }
 }
 
 function injectFictionalWarning() {
@@ -281,7 +304,7 @@ function buildTableHtml(records) {
     let headers = Array.from(headersSet);
     if (headers.length === 0) headers = Object.keys(records[0]);
     
-    let tableHtml = `<div style="overflow-x: auto; border-radius: var(--radius-soft); border: 1px solid #edf2f7; margin-bottom: 40px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+    let tableHtml = `<div style="overflow-x: auto; width: 100%; border-radius: var(--radius-soft); border: 1px solid #edf2f7; margin-bottom: 40px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
                         <table class="route-data-table" style="margin: 0; width: 100%; text-align: center; white-space: nowrap;">
                             <thead><tr>`;
     headers.forEach(h => {
@@ -387,21 +410,28 @@ async function initRoutePage() {
         loadingState.classList.add('hidden');
         container.classList.remove('hidden');
 
-        // Crash Prevention Check for missing Leaflet scripts
         if (typeof L !== 'undefined') {
             const map = L.map('route-detail-map').setView([52.5, -2.0], 11);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap' }).addTo(map);
 
             let mapBounds = [];
-            const drawColor = liveMapData.route_colour ? (liveMapData.route_colour.startsWith('#') ? liveMapData.route_colour : `#${liveMapData.route_colour}`) : 'var(--primary)';
+            
+            // Map Crash Fix: Check if color is null before trying to use .startsWith
+            let drawColor = '#2292ef'; 
+            if (liveMapData.route_colour && typeof liveMapData.route_colour === 'string') {
+                drawColor = liveMapData.route_colour.startsWith('#') ? liveMapData.route_colour : `#${liveMapData.route_colour}`;
+            }
 
             if (liveMapData.directions && Array.isArray(liveMapData.directions)) {
                 liveMapData.directions.forEach(dir => {
                     if (dir.paths) {
                         dir.paths.forEach(path => {
-                            const latLngs = path.map(coord => [coord[1], coord[0]]); 
-                            const polyline = L.polyline(latLngs, { color: drawColor, weight: 5, opacity: 0.8 }).addTo(map);
-                            mapBounds.push(polyline.getBounds());
+                            // Ensure the path has coordinates before parsing to avoid map crash
+                            const latLngs = path.filter(c => c && c.length >= 2).map(coord => [coord[1], coord[0]]); 
+                            if (latLngs.length > 0) {
+                                const polyline = L.polyline(latLngs, { color: drawColor, weight: 5, opacity: 0.8 }).addTo(map);
+                                mapBounds.push(polyline.getBounds());
+                            }
                         });
                     }
                     if (dir.stops) {
@@ -415,12 +445,19 @@ async function initRoutePage() {
                     }
                 });
             }
+            
             if (mapBounds.length > 0) {
                 const group = new L.featureGroup(mapBounds.map(b => L.rectangle(b)));
                 map.fitBounds(group.getBounds(), { padding: [40, 40] });
+            } else {
+                // If the API returns no map coordinates at all, display a polite message over the map
+                const mapDiv = document.getElementById('route-detail-map');
+                const overlay = document.createElement('div');
+                overlay.innerHTML = '<div style="position:absolute; top:0; left:0; right:0; bottom:0; background:rgba(255,255,255,0.85); z-index:999; display:flex; align-items:center; justify-content:center; text-align:center; padding:20px; border-radius:12px;"><strong style="font-size:1.2rem; color:var(--dark);">GPS Pathing Data is currently unavailable for this route.</strong></div>';
+                mapDiv.style.position = 'relative';
+                mapDiv.appendChild(overlay);
             }
         } else {
-            console.warn("Leaflet map library is missing from this HTML file.");
             document.getElementById('route-detail-map').innerHTML = `<div style="display: flex; align-items: center; justify-content: center; height: 100%; text-align: center; color: #64748b; font-weight: bold; padding: 20px;">Interactive Map System offline.<br><br>Please add the Leaflet code to your route.html file.</div>`;
         }
 

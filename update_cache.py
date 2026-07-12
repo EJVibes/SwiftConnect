@@ -39,7 +39,6 @@ def parse_table_html(soup):
             if th_cells:
                 cls_str += " " + " ".join(th_cells[0].get('class', []))
             
-            # Identify Timing Points via HTML Classes
             is_timing = 'major' in cls_str.lower() or 'timing' in cls_str.lower()
             
             cells = tr.find_all(['td', 'th'])
@@ -55,7 +54,6 @@ def parse_table_html(soup):
 
         if not raw_grid: continue
 
-        # Filter out non-timing points to declutter the UI (falls back to all stops if none are marked)
         has_explicit_timing = any(r['is_timing'] for r in raw_grid)
         filtered_grid = [r['text'] for r in raw_grid if (not has_explicit_timing) or r['is_timing']]
 
@@ -109,7 +107,6 @@ def get_day_links(soup):
             for opt in opts:
                 val = opt.get('value')
                 name = opt.get_text(strip=True)
-                # Strips out strict dates to categorize by pure weekday string
                 clean_name = re.sub(r'\s*\d{1,2}\s+[A-Za-z]+\s+\d{4}.*', '', name).strip()
                 clean_name = re.sub(r'\s*\d{1,2}\s+[A-Za-z]+.*', '', clean_name).strip()
                 if not clean_name: clean_name = name 
@@ -164,7 +161,6 @@ def main():
         m = re.search(r"/route/(\d+)/?", r.get("service", {}).get("url", ""))
         if m: discovered[m.group(1)] = r.get("service", {}).get("url", "")
 
-    # Incremental logic: Find only routes not in cache
     missing_routes = {rid: url for rid, url in discovered.items() if rid not in route_cache}
     
     if not missing_routes:

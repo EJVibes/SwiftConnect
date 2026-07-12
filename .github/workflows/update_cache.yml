@@ -2,7 +2,7 @@ name: Update Global Transit Route Cache
 
 on:
   schedule:
-    - cron: '*/30 * * * *'
+    - cron: '*/15 * * * *'
   workflow_dispatch: 
 
 permissions:
@@ -39,8 +39,8 @@ jobs:
           
           if git status --porcelain | grep -q "global_routes_cache.json"; then
             git add global_routes_cache.json
-            git commit -m "Automated update to global routes static cache"
+            git commit -m "Automated cache update: New routes added"
             git push
           else
-            echo "No changes found in routes cache file. Skipping commit."
+            echo "No missing routes discovered. Static cache remains perfectly synchronized."
           fi

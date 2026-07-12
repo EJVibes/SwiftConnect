@@ -39,7 +39,7 @@ jobs:
           
           if git status --porcelain | grep -q "global_routes_cache.json"; then
             git add global_routes_cache.json
-            git commit -m "Automated cache update: New routes added"
+            git commit -m "Automated cache update: New routes discovered and added"
             git push
           else
             echo "No missing routes discovered. Static cache remains perfectly synchronized."

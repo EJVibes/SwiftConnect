@@ -16,14 +16,13 @@ document.addEventListener("DOMContentLoaded", () => {
 function injectGlobalStyling() {
     const style = document.createElement('style');
     style.innerHTML = `
-        /* Warning Banner */
-        .fictional-warning-banner { background-color: #dc2626; color: #ffffff; text-align: center; padding: 12px 20px; font-size: 1.15rem; font-family: system-ui, -apple-system, sans-serif; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; width: 100%; position: sticky; top: 0; z-index: 999999; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        /* Fictional Warning Banner */
+        .fictional-warning-banner { background-color: #dc2626; color: #ffffff; text-align: center; padding: 14px 20px; font-size: 1.25rem; font-family: system-ui, -apple-system, sans-serif; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; width: 100%; position: sticky; top: 0; z-index: 999999; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
         
-        /* Layout Fixes: minmax(0, 1fr) is critical to stop tables from clipping off-screen */
         .route-page-layout { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: 30px; width: 100%; }
         @media (max-width: 1200px) { .route-page-layout { grid-template-columns: 1fr; } }
         
-        .timetable-column { min-width: 0; } /* Prevents CSS Grid blowout */
+        .timetable-column { min-width: 0; }
         .map-column { min-width: 0; }
 
         .day-tabs-container { display: flex; gap: 10px; margin-bottom: 25px; overflow-x: auto; padding-bottom: 10px; }
@@ -34,7 +33,7 @@ function injectGlobalStyling() {
     `;
     document.head.appendChild(style);
 
-    // Aggressive override to make the route page take up the FULL width of the monitor
+    // Full Width Screen Override
     if (window.location.pathname.includes('/route')) {
         const fullWidthStyle = document.createElement('style');
         fullWidthStyle.innerHTML = `
@@ -339,7 +338,7 @@ window.switchTimetableDay = function(dayName) {
 };
 
 async function initRoutePage() {
-    const urlParams = new URLSearchParams(window.location.search);
+    const urlParams = newSearchParams(window.location.search);
     const routeId = urlParams.get('id');
 
     const loadingState = document.getElementById('route-loading');
@@ -415,42 +414,65 @@ async function initRoutePage() {
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap' }).addTo(map);
 
             let mapBounds = [];
-            
-            // Map Crash Fix: Check if color is null before trying to use .startsWith
             let drawColor = '#2292ef'; 
             if (liveMapData.route_colour && typeof liveMapData.route_colour === 'string') {
                 drawColor = liveMapData.route_colour.startsWith('#') ? liveMapData.route_colour : `#${liveMapData.route_colour}`;
             }
 
-            if (liveMapData.directions && Array.isArray(liveMapData.directions)) {
-                liveMapData.directions.forEach(dir => {
-                    if (dir.paths) {
-                        dir.paths.forEach(path => {
-                            // Ensure the path has coordinates before parsing to avoid map crash
-                            const latLngs = path.filter(c => c && c.length >= 2).map(coord => [coord[1], coord[0]]); 
-                            if (latLngs.length > 0) {
-                                const polyline = L.polyline(latLngs, { color: drawColor, weight: 5, opacity: 0.8 }).addTo(map);
-                                mapBounds.push(polyline.getBounds());
+            // Universal Geo-Finder: Scans the entire API response recursively for coordinates
+            let mapPaths = [];
+            let mapStops = [];
+
+            function findMapData(obj) {
+                if (!obj || typeof obj !== 'object') return;
+                
+                if (Array.isArray(obj)) {
+                    // Check if it's an array of raw coordinates e.g. [[lat, lon], [lat, lon]]
+                    if (obj.length > 1 && Array.isArray(obj[0]) && typeof obj[0][0] === 'number') {
+                        let path = [];
+                        obj.forEach(coord => {
+                            if(Array.isArray(coord) && coord.length >= 2) {
+                                // Maps to UK boundaries to guarantee Lat/Lon orientation
+                                let lat = Math.abs(coord[0]) > 49 ? coord[0] : coord[1];
+                                let lon = Math.abs(coord[0]) > 49 ? coord[1] : coord[0];
+                                path.push([lat, lon]);
                             }
                         });
+                        if (path.length > 1) mapPaths.push(path);
+                        return;
                     }
-                    if (dir.stops) {
-                        dir.stops.forEach(stop => {
-                            if (stop.latitude && stop.longitude) {
-                                L.circleMarker([stop.latitude, stop.longitude], {
-                                    radius: 5, color: '#1e293b', fillColor: 'white', fillOpacity: 1, weight: 2
-                                }).addTo(map).bindPopup(`<strong>${stop.name || 'Stop'}</strong>`);
-                            }
-                        });
+                    obj.forEach(child => findMapData(child));
+                } else {
+                    if ((obj.latitude || obj.lat) && (obj.longitude || obj.lon)) {
+                        mapStops.push(obj);
+                    }
+                    Object.values(obj).forEach(child => findMapData(child));
+                }
+            }
+
+            findMapData(liveMapData);
+
+            if (mapPaths.length > 0 || mapStops.length > 0) {
+                mapPaths.forEach(path => {
+                    const polyline = L.polyline(path, { color: drawColor, weight: 5, opacity: 0.8 }).addTo(map);
+                    mapBounds.push(polyline.getBounds());
+                });
+
+                mapStops.forEach(stop => {
+                    let lat = stop.latitude || stop.lat;
+                    let lon = stop.longitude || stop.lon;
+                    if (lat && lon) {
+                        L.circleMarker([lat, lon], {
+                            radius: 5, color: '#1e293b', fillColor: 'white', fillOpacity: 1, weight: 2
+                        }).addTo(map).bindPopup(`<strong>${stop.name || stop.stop_name || 'Stop'}</strong>`);
                     }
                 });
-            }
-            
-            if (mapBounds.length > 0) {
-                const group = new L.featureGroup(mapBounds.map(b => L.rectangle(b)));
-                map.fitBounds(group.getBounds(), { padding: [40, 40] });
+
+                if (mapBounds.length > 0) {
+                    const group = new L.featureGroup(mapBounds.map(b => L.rectangle(b)));
+                    map.fitBounds(group.getBounds(), { padding: [40, 40] });
+                }
             } else {
-                // If the API returns no map coordinates at all, display a polite message over the map
                 const mapDiv = document.getElementById('route-detail-map');
                 const overlay = document.createElement('div');
                 overlay.innerHTML = '<div style="position:absolute; top:0; left:0; right:0; bottom:0; background:rgba(255,255,255,0.85); z-index:999; display:flex; align-items:center; justify-content:center; text-align:center; padding:20px; border-radius:12px;"><strong style="font-size:1.2rem; color:var(--dark);">GPS Pathing Data is currently unavailable for this route.</strong></div>';
@@ -458,7 +480,7 @@ async function initRoutePage() {
                 mapDiv.appendChild(overlay);
             }
         } else {
-            document.getElementById('route-detail-map').innerHTML = `<div style="display: flex; align-items: center; justify-content: center; height: 100%; text-align: center; color: #64748b; font-weight: bold; padding: 20px;">Interactive Map System offline.<br><br>Please add the Leaflet code to your route.html file.</div>`;
+            document.getElementById('route-detail-map').innerHTML = `<div style="display: flex; align-items: center; justify-content: center; height: 100%; text-align: center; color: #64748b; font-weight: bold; padding: 20px;">Interactive Map System offline.</div>`;
         }
 
     } catch (e) {

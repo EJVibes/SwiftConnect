@@ -32,15 +32,17 @@ def parse_table_html(soup):
         rows = table.find_all('tr')
         if not rows: continue
         
-        raw_grid = []
+        filtered_grid = []
         for tr in rows:
             cls_str = " ".join(tr.get('class', []))
             th_cells = tr.find_all('th')
             if th_cells:
                 cls_str += " " + " ".join(th_cells[0].get('class', []))
             
-            is_timing = 'major' in cls_str.lower() or 'timing' in cls_str.lower()
-            
+            # MAGIC FILTER: Automatically skips rows marked as minor/non-timing points
+            if 'minor' in cls_str.lower() or 'stop-minor' in cls_str.lower():
+                continue
+                
             cells = tr.find_all(['td', 'th'])
             row_text = []
             for cell in cells:
@@ -50,12 +52,9 @@ def parse_table_html(soup):
                 row_text.append(text)
                 
             if any(t and t != "-" for t in row_text): 
-                raw_grid.append({'text': row_text, 'is_timing': is_timing})
+                filtered_grid.append(row_text)
 
-        if not raw_grid: continue
-
-        has_explicit_timing = any(r['is_timing'] for r in raw_grid)
-        filtered_grid = [r['text'] for r in raw_grid if (not has_explicit_timing) or r['is_timing']]
+        if not filtered_grid: continue
 
         num_cols = max(len(r) for r in filtered_grid)
         label_indices = []
@@ -148,7 +147,7 @@ def scrape_html_timetable(route_url):
         return {}
 
 def main():
-    print("Initiating Smart Cache Differential Scanner...")
+    print("Initiating Smart Differential Scanner...")
     route_cache = load_existing_cache()
     
     try:
@@ -161,10 +160,11 @@ def main():
         m = re.search(r"/route/(\d+)/?", r.get("service", {}).get("url", ""))
         if m: discovered[m.group(1)] = r.get("service", {}).get("url", "")
 
+    # Incremental Engine: Find only routes NOT currently in the JSON cache
     missing_routes = {rid: url for rid, url in discovered.items() if rid not in route_cache}
     
     if not missing_routes:
-        print(f"All {len(discovered)} active routes are already cached. Sleeping.")
+        print(f"All {len(discovered)} active routes are already cached. Shutting down gracefully.")
         return
         
     print(f"Discovered {len(missing_routes)} missing routes. Commencing targeted extraction.")
@@ -175,16 +175,18 @@ def main():
             if str(raw.get("route_num", "")).strip() == "?" or raw.get("hidden"): continue
             
             slim = {k: raw.get(k, "") for k in ["id", "route_num", "route_name", "inbound_destination", "outbound_destination", "operator_name", "route_colour"]}
-            print(f"  -> Scraping Timetables & Days for Route: {slim['route_num']}")
+            print(f"  -> Scraping Timetables & Days for Target Route: {slim['route_num']}")
             slim["timetable_by_day"] = scrape_html_timetable(route_url)
             
             route_cache[route_id] = slim
+            
+            # Incremental Save: Saves instantly so progress isn't lost if the script drops
+            with open(CACHE_FILE_NAME, "w", encoding="utf-8") as f: 
+                json.dump(route_cache, f, separators=(',', ':'), ensure_ascii=False)
+                
         except Exception as e: 
             print(f"Error {route_id}: {e}")
             
-    with open(CACHE_FILE_NAME, "w", encoding="utf-8") as f: 
-        json.dump(route_cache, f, separators=(',', ':'), ensure_ascii=False)
-        
     print(f"Targeted extraction complete. Static registry holds {len(route_cache)} entries.")
 
 if __name__ == "__main__": main()

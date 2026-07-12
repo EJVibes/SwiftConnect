@@ -23,7 +23,7 @@ function injectGlobalStyling() {
         .day-tab-btn { padding: 12px 24px; background: #e2e8f0; color: #1e293b; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.95rem; white-space: nowrap; transition: 0.2s; }
         .day-tab-btn:hover { background: #cbd5e1; }
         .day-tab-btn.active { background: var(--primary); color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        .route-detail-map { height: 750px; width: 100%; border-radius: 12px; position: sticky; top: 80px; z-index: 1; border: 2px solid #edf2f7; }
+        .route-detail-map { height: 750px; width: 100%; border-radius: 12px; position: sticky; top: 80px; z-index: 1; border: 2px solid #edf2f7; background: #f8fafc; }
     `;
     document.head.appendChild(style);
 }
@@ -271,11 +271,9 @@ function showOperatorError() {
     document.getElementById('api-error-state').classList.remove('hidden');
 }
 
-
 /* ==========================================
    ROUTE DETAIL PAGE LOGIC (DAY TABS & MAP)
    ========================================== */
-
 function buildTableHtml(records) {
     if (!records || records.length === 0) return '';
     let headersSet = new Set();
@@ -302,6 +300,7 @@ function buildTableHtml(records) {
 }
 
 function renderDayTables(dayData) {
+    if (!dayData || !Array.isArray(dayData)) return '';
     let fullHtml = '';
     dayData.forEach(dir => {
         fullHtml += `<h3 style="margin: 0 0 15px 0; color: var(--dark); font-size: 1.3rem;">${dir.direction}</h3>`;
@@ -310,7 +309,6 @@ function renderDayTables(dayData) {
     return fullHtml;
 }
 
-// Global scope attached for inline onclick event support
 window.switchTimetableDay = function(dayName) {
     document.querySelectorAll('.day-tab-btn').forEach(btn => btn.classList.remove('active'));
     document.querySelector(`.day-tab-btn[data-day="${dayName}"]`).classList.add('active');
@@ -330,7 +328,6 @@ async function initRoutePage() {
     if (!routeId) { loadingState.classList.add('hidden'); errorState.classList.remove('hidden'); return; }
 
     try {
-        // Fetch Live Map Data directly from the network
         const apiRes = await fetch(`https://www.mybustimes.cc/api/operator/route/${routeId}/`);
         if (!apiRes.ok) throw new Error("Could not fetch route map data");
         const liveMapData = await apiRes.json();
@@ -349,9 +346,8 @@ async function initRoutePage() {
         titleHeader.innerText = titleString;
         subHeader.innerText = `Operated by ${opName}`;
 
-        // Fetch Timetable Data from Static Cache
         await ensureGlobalRouteCacheLoaded();
-        let timetableSectionHtml = `<div class="timetable-placeholder"><p>Timetable data currently unavailable.</p></div>`;
+        let timetableSectionHtml = `<div class="timetable-placeholder"><p>Timetable data currently unavailable. The system may still be scraping this route.</p></div>`;
         
         if (SWIFT_ROUTE_CACHE[routeId] && SWIFT_ROUTE_CACHE[routeId].timetable_by_day) {
             const dataObj = SWIFT_ROUTE_CACHE[routeId].timetable_by_day;
@@ -364,12 +360,10 @@ async function initRoutePage() {
                     tabsHtml += `<button class="day-tab-btn ${idx === 0 ? 'active' : ''}" data-day="${day}" onclick="switchTimetableDay('${day}')">${day}</button>`;
                 });
                 tabsHtml += `</div>`;
-                
                 timetableSectionHtml = tabsHtml + `<div id="timetable-dynamic-content">${renderDayTables(dataObj[days[0]])}</div>`;
-            } else if (Array.isArray(SWIFT_ROUTE_CACHE[routeId].timetable)) {
-                // Fallback for legacy cached data
-                timetableSectionHtml = `<div id="timetable-dynamic-content">${renderDayTables(SWIFT_ROUTE_CACHE[routeId].timetable)}</div>`;
             }
+        } else if (SWIFT_ROUTE_CACHE[routeId] && Array.isArray(SWIFT_ROUTE_CACHE[routeId].timetable) && SWIFT_ROUTE_CACHE[routeId].timetable.length > 0) {
+            timetableSectionHtml = `<div id="timetable-dynamic-content">${renderDayTables(SWIFT_ROUTE_CACHE[routeId].timetable)}</div>`;
         }
 
         const html = `
@@ -393,48 +387,50 @@ async function initRoutePage() {
         loadingState.classList.add('hidden');
         container.classList.remove('hidden');
 
-        // Render Live Interactive Leaflet Map
-        const map = L.map('route-detail-map').setView([52.5, -2.0], 11);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19, attribution: '&copy; OpenStreetMap'
-        }).addTo(map);
+        // Crash Prevention Check for missing Leaflet scripts
+        if (typeof L !== 'undefined') {
+            const map = L.map('route-detail-map').setView([52.5, -2.0], 11);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap' }).addTo(map);
 
-        let mapBounds = [];
-        const drawColor = liveMapData.route_colour ? (liveMapData.route_colour.startsWith('#') ? liveMapData.route_colour : `#${liveMapData.route_colour}`) : 'var(--primary)';
+            let mapBounds = [];
+            const drawColor = liveMapData.route_colour ? (liveMapData.route_colour.startsWith('#') ? liveMapData.route_colour : `#${liveMapData.route_colour}`) : 'var(--primary)';
 
-        if (liveMapData.directions && Array.isArray(liveMapData.directions)) {
-            liveMapData.directions.forEach(dir => {
-                if (dir.paths) {
-                    dir.paths.forEach(path => {
-                        // Flips coordinates because GeoJSON commonly uses [lon, lat] but Leaflet requires [lat, lon]
-                        const latLngs = path.map(coord => [coord[1], coord[0]]); 
-                        const polyline = L.polyline(latLngs, { color: drawColor, weight: 5, opacity: 0.8 }).addTo(map);
-                        mapBounds.push(polyline.getBounds());
-                    });
-                }
-                if (dir.stops) {
-                    dir.stops.forEach(stop => {
-                        if (stop.latitude && stop.longitude) {
-                            L.circleMarker([stop.latitude, stop.longitude], {
-                                radius: 5, color: '#1e293b', fillColor: 'white', fillOpacity: 1, weight: 2
-                            }).addTo(map).bindPopup(`<strong>${stop.name || 'Stop'}</strong>`);
-                        }
-                    });
-                }
-            });
-        }
-        
-        if (mapBounds.length > 0) {
-            const group = new L.featureGroup(mapBounds.map(b => L.rectangle(b)));
-            map.fitBounds(group.getBounds(), { padding: [40, 40] });
+            if (liveMapData.directions && Array.isArray(liveMapData.directions)) {
+                liveMapData.directions.forEach(dir => {
+                    if (dir.paths) {
+                        dir.paths.forEach(path => {
+                            const latLngs = path.map(coord => [coord[1], coord[0]]); 
+                            const polyline = L.polyline(latLngs, { color: drawColor, weight: 5, opacity: 0.8 }).addTo(map);
+                            mapBounds.push(polyline.getBounds());
+                        });
+                    }
+                    if (dir.stops) {
+                        dir.stops.forEach(stop => {
+                            if (stop.latitude && stop.longitude) {
+                                L.circleMarker([stop.latitude, stop.longitude], {
+                                    radius: 5, color: '#1e293b', fillColor: 'white', fillOpacity: 1, weight: 2
+                                }).addTo(map).bindPopup(`<strong>${stop.name || 'Stop'}</strong>`);
+                            }
+                        });
+                    }
+                });
+            }
+            if (mapBounds.length > 0) {
+                const group = new L.featureGroup(mapBounds.map(b => L.rectangle(b)));
+                map.fitBounds(group.getBounds(), { padding: [40, 40] });
+            }
+        } else {
+            console.warn("Leaflet map library is missing from this HTML file.");
+            document.getElementById('route-detail-map').innerHTML = `<div style="display: flex; align-items: center; justify-content: center; height: 100%; text-align: center; color: #64748b; font-weight: bold; padding: 20px;">Interactive Map System offline.<br><br>Please add the Leaflet code to your route.html file.</div>`;
         }
 
     } catch (e) {
+        console.error("Route Loading Error: ", e);
         loadingState.classList.add('hidden');
+        container.classList.add('hidden');
         errorState.classList.remove('hidden');
     }
 }
-
 
 /* ==========================================
    LIVE FLEET TRACKING LOGIC (GRID VIEW)

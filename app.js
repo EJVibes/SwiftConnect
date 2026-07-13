@@ -33,7 +33,7 @@ function injectGlobalStyling() {
     `;
     document.head.appendChild(style);
 
-    // Full Width Screen Override
+    // Full Width Layout Breakout
     if (window.location.pathname.includes('/route')) {
         const fullWidthStyle = document.createElement('style');
         fullWidthStyle.innerHTML = `
@@ -338,7 +338,7 @@ window.switchTimetableDay = function(dayName) {
 };
 
 async function initRoutePage() {
-    const urlParams = newSearchParams(window.location.search);
+    const urlParams = new URLSearchParams(window.location.search);
     const routeId = urlParams.get('id');
 
     const loadingState = document.getElementById('route-loading');
@@ -419,7 +419,6 @@ async function initRoutePage() {
                 drawColor = liveMapData.route_colour.startsWith('#') ? liveMapData.route_colour : `#${liveMapData.route_colour}`;
             }
 
-            // Universal Geo-Finder: Scans the entire API response recursively for coordinates
             let mapPaths = [];
             let mapStops = [];
 
@@ -427,12 +426,10 @@ async function initRoutePage() {
                 if (!obj || typeof obj !== 'object') return;
                 
                 if (Array.isArray(obj)) {
-                    // Check if it's an array of raw coordinates e.g. [[lat, lon], [lat, lon]]
                     if (obj.length > 1 && Array.isArray(obj[0]) && typeof obj[0][0] === 'number') {
                         let path = [];
                         obj.forEach(coord => {
                             if(Array.isArray(coord) && coord.length >= 2) {
-                                // Maps to UK boundaries to guarantee Lat/Lon orientation
                                 let lat = Math.abs(coord[0]) > 49 ? coord[0] : coord[1];
                                 let lon = Math.abs(coord[0]) > 49 ? coord[1] : coord[0];
                                 path.push([lat, lon]);

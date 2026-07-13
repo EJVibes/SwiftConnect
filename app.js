@@ -350,6 +350,7 @@ async function initRoutePage() {
     if (!routeId) { loadingState.classList.add('hidden'); errorState.classList.remove('hidden'); return; }
 
     try {
+        // Fetch static route metadata (colors, destinations, etc.)
         const apiRes = await fetch(`https://www.mybustimes.cc/api/operator/route/${routeId}/`);
         if (!apiRes.ok) throw new Error("Could not fetch route map data");
         const liveMapData = await apiRes.json();
@@ -422,14 +423,17 @@ async function initRoutePage() {
             let mapPaths = [];
             let mapStops = [];
 
+            // Universal Geo-Finder: Dynamically scans arrays and objects for raw GPS values
             function findMapData(obj) {
                 if (!obj || typeof obj !== 'object') return;
                 
                 if (Array.isArray(obj)) {
+                    // Check if it's an array of coordinates e.g. [[lon, lat], [lon, lat]]
                     if (obj.length > 1 && Array.isArray(obj[0]) && typeof obj[0][0] === 'number') {
                         let path = [];
                         obj.forEach(coord => {
                             if(Array.isArray(coord) && coord.length >= 2) {
+                                // Forces coordinates to align properly to the UK map
                                 let lat = Math.abs(coord[0]) > 49 ? coord[0] : coord[1];
                                 let lon = Math.abs(coord[0]) > 49 ? coord[1] : coord[0];
                                 path.push([lat, lon]);
@@ -440,15 +444,36 @@ async function initRoutePage() {
                     }
                     obj.forEach(child => findMapData(child));
                 } else {
-                    if ((obj.latitude || obj.lat) && (obj.longitude || obj.lon)) {
+                    let lat = obj.latitude || obj.lat || obj.y;
+                    let lon = obj.longitude || obj.lon || obj.x;
+                    if (lat !== undefined && lon !== undefined && typeof lat !== 'object') {
                         mapStops.push(obj);
                     }
                     Object.values(obj).forEach(child => findMapData(child));
                 }
             }
 
-            findMapData(liveMapData);
+            // Real-Time Snapping Data Override 
+            // Bypass GitHub Cache and request heavy drawing data directly on load
+            try {
+                const [inboundRes, outboundRes] = await Promise.all([
+                    fetch(`https://www.mybustimes.cc/api/routes/${routeId}/stops/?direction=inbound`).catch(() => null),
+                    fetch(`https://www.mybustimes.cc/api/routes/${routeId}/stops/?direction=outbound`).catch(() => null)
+                ]);
+                
+                if (inboundRes && inboundRes.ok) {
+                    const inboundData = await inboundRes.json();
+                    findMapData(inboundData);
+                }
+                if (outboundRes && outboundRes.ok) {
+                    const outboundData = await outboundRes.json();
+                    findMapData(outboundData);
+                }
+            } catch (err) {
+                console.warn("Dynamic API fetching for GPS paths failed: ", err);
+            }
 
+            // Render Map Results
             if (mapPaths.length > 0 || mapStops.length > 0) {
                 mapPaths.forEach(path => {
                     const polyline = L.polyline(path, { color: drawColor, weight: 5, opacity: 0.8 }).addTo(map);
@@ -456,12 +481,12 @@ async function initRoutePage() {
                 });
 
                 mapStops.forEach(stop => {
-                    let lat = stop.latitude || stop.lat;
-                    let lon = stop.longitude || stop.lon;
+                    let lat = stop.latitude || stop.lat || stop.y;
+                    let lon = stop.longitude || stop.lon || stop.x;
                     if (lat && lon) {
                         L.circleMarker([lat, lon], {
                             radius: 5, color: '#1e293b', fillColor: 'white', fillOpacity: 1, weight: 2
-                        }).addTo(map).bindPopup(`<strong>${stop.name || stop.stop_name || 'Stop'}</strong>`);
+                        }).addTo(map).bindPopup(`<strong>${stop.name || stop.stop_name || stop.commonName || 'Stop'}</strong>`);
                     }
                 });
 

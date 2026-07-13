@@ -39,7 +39,7 @@ def parse_table_html(soup):
             if th_cells:
                 cls_str += " " + " ".join(th_cells[0].get('class', []))
             
-            # MAGIC FILTER: Automatically skips rows marked as minor/non-timing points
+            # Filters out non-timing points instantly
             if 'minor' in cls_str.lower() or 'stop-minor' in cls_str.lower():
                 continue
                 
@@ -115,6 +115,15 @@ def get_day_links(soup):
                         val = f"?date={val}"
                     date_links[clean_name] = val
             break
+            
+    if not date_links:
+        for a in soup.find_all('a', href=True):
+            href = a['href']
+            if 'date=' in href or 'day=' in href or 'timetable=' in href:
+                name = a.get_text(strip=True)
+                clean_name = re.sub(r'\s*\d{1,2}\s+[A-Za-z]+\s+\d{4}.*', '', name).strip()
+                if not clean_name: clean_name = name
+                date_links[clean_name] = href
     return date_links
 
 def scrape_html_timetable(route_url):
@@ -125,7 +134,6 @@ def scrape_html_timetable(route_url):
         
         soup = BeautifulSoup(response.text, 'html.parser')
         day_links = get_day_links(soup)
-        
         timetable_by_day = {}
         
         if not day_links:
@@ -147,7 +155,7 @@ def scrape_html_timetable(route_url):
         return {}
 
 def main():
-    print("Initiating Smart Differential Scanner...")
+    print("Initiating Smart Cache Differential Scanner...")
     route_cache = load_existing_cache()
     
     try:
@@ -160,11 +168,10 @@ def main():
         m = re.search(r"/route/(\d+)/?", r.get("service", {}).get("url", ""))
         if m: discovered[m.group(1)] = r.get("service", {}).get("url", "")
 
-    # Incremental Engine: Find only routes NOT currently in the JSON cache
     missing_routes = {rid: url for rid, url in discovered.items() if rid not in route_cache}
     
     if not missing_routes:
-        print(f"All {len(discovered)} active routes are already cached. Shutting down gracefully.")
+        print(f"All {len(discovered)} active routes are already cached. Sleeping.")
         return
         
     print(f"Discovered {len(missing_routes)} missing routes. Commencing targeted extraction.")
@@ -180,7 +187,6 @@ def main():
             
             route_cache[route_id] = slim
             
-            # Incremental Save: Saves instantly so progress isn't lost if the script drops
             with open(CACHE_FILE_NAME, "w", encoding="utf-8") as f: 
                 json.dump(route_cache, f, separators=(',', ':'), ensure_ascii=False)
                 
